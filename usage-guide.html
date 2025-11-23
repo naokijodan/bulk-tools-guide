@@ -304,6 +304,8 @@
                     <li><a href="#getting-started">使用開始方法</a></li>
                     <li><a href="#initial-setup">初期設定</a></li>
                     <li><a href="#eagle-integration">EAGLEとの連携</a></li>
+                    <li><a href="#template-naming">AIが判定可能なテンプレート名の設定</a></li>
+                    <li><a href="#shipping-policy">新しくなったシッピングポリシーの説明</a></li>
                     <li><a href="#import-sheet">以前のシートやご自身でご利用されているシートのインポート方法</a></li>
                     <li><a href="#import-settings">以前のシートの設定の引き継ぎ方法</a></li>
                     <li><a href="#sheet-structure">一括登録シートの各シートの説明</a></li>
@@ -433,9 +435,116 @@
                 </div>
             </section>
 
-            <!-- 4. 以前のシートのインポート -->
+            <!-- 4. AIが判定可能なテンプレート名の設定 -->
+            <section id="template-naming" class="section">
+                <h2><span class="emoji">📝</span>4. AIが判定可能なテンプレート名の設定</h2>
+
+                <p>
+                    テンプレートの自動判定を正しく機能させるためには、テンプレート名を適切に設定する必要があります。
+                    テンプレート名は、<strong>「任意の名前　商品状態　配送方法」</strong>の3つのセクションで構成します。
+                    各セクションは半角または全角スペースで区切ってください。
+                </p>
+
+                <h3>テンプレート名の構成</h3>
+
+                <div class="highlight-box">
+                    <strong>命名ルール</strong>
+                    <p style="font-size: 1.1em; margin: 15px 0;">
+                        <code style="background: white; padding: 10px; display: block; border-radius: 5px;">
+                            [任意の名前]　[商品状態]　[配送方法]
+                        </code>
+                    </p>
+                </div>
+
+                <h4>1. 任意の名前</h4>
+                <p>商品のカテゴリやジャンルなどを自由に設定できます（例：一般、時計、アパレル、ゲーム）</p>
+
+                <h4>2. 商品状態</h4>
+                <p>商品の状態を明記します（例：新品、中古、未開封）</p>
+
+                <h4>3. 配送方法</h4>
+                <p>配送サービスを明記します（例：エコノミー、クーリエ、スタンダード）</p>
+
+                <h3>テンプレート名の例</h3>
+                <div class="note-box success">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 10px 0; font-size: 1.05em;"><code style="background: white; padding: 8px 12px; border-radius: 4px;">一般　中古　エコノミー</code></li>
+                        <li style="margin: 10px 0; font-size: 1.05em;"><code style="background: white; padding: 8px 12px; border-radius: 4px;">一般　新品　クーリエ</code></li>
+                        <li style="margin: 10px 0; font-size: 1.05em;"><code style="background: white; padding: 8px 12px; border-radius: 4px;">時計　中古　スタンダード</code></li>
+                        <li style="margin: 10px 0; font-size: 1.05em;"><code style="background: white; padding: 8px 12px; border-radius: 4px;">アパレル　新品　エコノミー</code></li>
+                    </ul>
+                </div>
+
+                <h3>推奨設定</h3>
+                <div class="note-box warning">
+                    <strong>⚠️ 重要：1つのカテゴリごとに4パターンのテンプレートを用意</strong>
+                    <p style="margin-top: 10px;">
+                        判定基準に該当するテンプレートがない場合、「該当なし」となってしまいます。
+                        これを防ぐため、1つのカテゴリ（任意の名前）ごとに、以下の4パターンを用意することをお勧めします：
+                    </p>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>[カテゴリ名]　新品　エコノミー</strong></li>
+                        <li><strong>[カテゴリ名]　新品　クーリエ</strong></li>
+                        <li><strong>[カテゴリ名]　中古　エコノミー</strong></li>
+                        <li><strong>[カテゴリ名]　中古　クーリエ</strong></li>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 0.95em; color: #856404;">
+                        例：「一般」カテゴリであれば、「一般　新品　エコノミー」「一般　新品　クーリエ」「一般　中古　エコノミー」「一般　中古　クーリエ」の4つを作成
+                    </p>
+                </div>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        🎥 動画: テンプレート名の設定方法
+                    </div>
+                    <!-- 動画を差し込む -->
+                </div>
+            </section>
+
+            <!-- 5. 新しくなったシッピングポリシーの説明 -->
+            <section id="shipping-policy" class="section">
+                <h2><span class="emoji">📦</span>5. 新しくなったシッピングポリシーの説明</h2>
+
+                <p>
+                    Ver.40では、シッピングポリシーの判定基準が大きく変わりました。
+                    従来の販売価格帯ベースから、<strong>関税額ベース</strong>に変更されたことで、より細かい価格設定や様々な販売戦略に対応できるようになりました。
+                </p>
+
+                <h3>変更点</h3>
+                <div class="highlight-box">
+                    <strong>Ver.40の新しい仕様</strong>
+                    <ul style="margin-top: 15px;">
+                        <li><strong>旧仕様：</strong> 販売価格帯でシッピングポリシーを判定</li>
+                        <li><strong>新仕様：</strong> 関税額でシッピングポリシーを判定</li>
+                    </ul>
+                </div>
+
+                <h3>関税額ベースのメリット</h3>
+                <ul>
+                    <li><strong>より柔軟な価格設定</strong> - 関税率の異なる商品でも適切なポリシーを選択</li>
+                    <li><strong>様々な販売戦略に対応</strong> - 利益率や手数料を変更しても、関税額に基づいた判定が可能</li>
+                    <li><strong>異なる関税率に対応</strong> - 商品カテゴリごとの関税率の違いを考慮した適切なポリシー選択</li>
+                </ul>
+
+                <div class="note-box info">
+                    <strong>💡 ポイント</strong>
+                    <p>
+                        関税額ベースの判定により、販売価格が同じでも関税額が異なる商品に対して、
+                        適切なシッピングポリシーを自動的に選択できるようになりました。
+                    </p>
+                </div>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        🎥 動画: 新しいシッピングポリシーの説明
+                    </div>
+                    <!-- 動画を差し込む -->
+                </div>
+            </section>
+
+            <!-- 6. 以前のシートのインポート -->
             <section id="import-sheet" class="section">
-                <h2><span class="emoji">📥</span>4. 以前のシートやご自身でご利用されているシートのインポート方法</h2>
+                <h2><span class="emoji">📥</span>6. 以前のシートやご自身でご利用されているシートのインポート方法</h2>
 
                 <p>以前使用していたシートのデータを新しいシートにインポートする方法を説明します。</p>
 
@@ -469,7 +578,7 @@
 
             <!-- 5. 以前のシートの設定の引き継ぎ -->
             <section id="import-settings" class="section">
-                <h2><span class="emoji">🔄</span>5. 以前のシートの設定の引き継ぎ方法</h2>
+                <h2><span class="emoji">🔄</span>7. 以前のシートの設定の引き継ぎ方法</h2>
 
                 <p>以前のシートで使用していた設定（テンプレート、シッピングポリシーなど）を引き継ぐ方法を説明します。</p>
 
