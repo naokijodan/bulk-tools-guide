@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一括登録シート 総合ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .intro-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 6px solid #667eea;
+        }
+
+        .intro-box h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+
+        .intro-box p {
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #f0f0f0;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .link-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .link-box.primary {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe5cc 100%);
+            border-left-color: #ffc107;
+        }
+
+        .link-box.secondary {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left-color: #28a745;
+        }
+
+        .link-box.info {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            border-left-color: #17a2b8;
+        }
+
+        .link-box h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .link-box p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px 10px 10px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(23, 162, 184, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        .feature-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px 20px 20px 40px;
+            margin: 20px 0;
+        }
+
+        .feature-list li {
+            margin: 12px 0;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .note-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .note-box strong {
+            color: #856404;
+            font-size: 1.1em;
+        }
+
+        code {
+            background: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 3px solid #e9ecef;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .section h2 {
+                font-size: 1.4em;
+            }
+
+            .btn {
+                display: block;
+                text-align: center;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>一括登録シート 総合ガイド</h1>
+            <p>すべてのツールとリソースを一箇所に</p>
+        </header>
+
+        <div class="content">
+            <!-- イントロ -->
+            <div class="intro-box">
+                <h2>このガイドについて</h2>
+                <p>
+                    一括登録シートVer.40と関連ツールの使い方、ダウンロードリンク、詳しいガイドへのリンクを
+                    すべてまとめた総合ガイドです。このページをブックマークしておけば、必要な情報にすぐアクセスできます。
+                </p>
+            </div>
+
+            <!-- 1. 一括登録シート Ver.40 -->
+            <div class="section">
+                <h2><span class="emoji">📊</span>一括登録シート Ver.40</h2>
+                <div class="link-box primary">
+                    <h3>最新版スプレッドシート</h3>
+                    <p>
+                        <strong>Ver.40の主な特徴：</strong>
+                    </p>
+                    <ul class="feature-list">
+                        <li>関税率39％に完全対応</li>
+                        <li>為替レート取得の最適化（1時間ごと）</li>
+                        <li>AI自動翻訳・計算機能搭載</li>
+                        <li>ワンクリックで計算式の再出力が可能</li>
+                        <li>設定の可視化（AI～AS列）</li>
+                    </ul>
+                    <a href="YOUR_SPREADSHEET_LINK_HERE" target="_blank" class="btn btn-warning">
+                        <span class="emoji">🌟</span>一括登録シート Ver.40 を開く
+                    </a>
+                </div>
+
+                <div class="note-box">
+                    <p><strong>💡 ヒント：</strong> スプレッドシートを開いたら、ブラウザのブックマークに保存しておくと便利です。</p>
+                </div>
+            </div>
+
+            <!-- 2. Universal Scraper Chrome拡張機能 -->
+            <div class="section">
+                <h2><span class="emoji">🔧</span>Universal Scraper Chrome拡張機能</h2>
+                <div class="link-box secondary">
+                    <h3>最新版ダウンロード（v1.1.2）</h3>
+                    <p>
+                        商品情報を自動で取得してスプレッドシートに転送できるChrome拡張機能です。
+                        作業効率が大幅に向上します。
+                    </p>
+                    <a href="https://github.com/naokijodan/universal-scraper/releases/download/v1.1.2/universal-scraper.zip"
+                       download
+                       class="btn btn-success">
+                        <span class="emoji">📥</span>Universal Scraper v1.1.2 をダウンロード (ZIP)
+                    </a>
+                </div>
+
+                <h3>インストール手順</h3>
+                <ol class="step-list">
+                    <li>上記のボタンからZIPファイルをダウンロード</li>
+                    <li>ダウンロードしたZIPファイルを解凍</li>
+                    <li>Chromeブラウザで <code>chrome://extensions/</code> を開く</li>
+                    <li>右上の「デベロッパーモード」をオンにする</li>
+                    <li>「パッケージ化されていない拡張機能を読み込む」をクリック</li>
+                    <li>解凍したフォルダを選択</li>
+                </ol>
+
+                <div class="link-box info">
+                    <h3>詳細な使用方法</h3>
+                    <p>拡張機能の詳しい使い方、設定方法については以下のガイドをご覧ください。</p>
+                    <a href="https://htmlpreview.github.io/?https://github.com/naokijodan/universal-scraper/blob/main/README.html"
+                       target="_blank"
+                       class="btn btn-info">
+                        <span class="emoji">📖</span>Universal Scraper 使用方法を見る
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. プロンプト例集 -->
+            <div class="section">
+                <h2><span class="emoji">💡</span>プロンプト例集</h2>
+                <div class="link-box secondary">
+                    <h3>AIプロンプトのサンプル集</h3>
+                    <p>
+                        商品説明の翻訳に使えるプロンプトの例を集めたファイルです。
+                        用途に応じて選んで使うことができます。
+                    </p>
+                    <a href="YOUR_PROMPT_ZIP_LINK_HERE"
+                       download
+                       class="btn btn-success">
+                        <span class="emoji">📥</span>プロンプト例集をダウンロード (ZIP)
+                    </a>
+                </div>
+
+                <div class="link-box info">
+                    <h3>プロンプト編集ガイド</h3>
+                    <p>プロンプトの編集方法、カスタマイズ方法については以下のガイドをご覧ください。</p>
+                    <a href="YOUR_PROMPT_GUIDE_LINK_HERE"
+                       target="_blank"
+                       class="btn btn-info">
+                        <span class="emoji">📝</span>プロンプト編集ガイドを見る
+                    </a>
+                </div>
+            </div>
+
+            <!-- 4. 価格計算ツール -->
+            <div class="section">
+                <h2><span class="emoji">💰</span>価格計算ツール</h2>
+                <div class="link-box info">
+                    <h3>商品価格の計算方法</h3>
+                    <p>
+                        関税率、為替レート、利益率などを考慮した価格計算の方法を解説しています。
+                        スプレッドシートでの計算式の仕組みを理解するのに役立ちます。
+                    </p>
+                    <a href="YOUR_PRICE_CALC_GUIDE_LINK_HERE"
+                       target="_blank"
+                       class="btn btn-info">
+                        <span class="emoji">📊</span>価格計算ツール 使い方ガイド
+                    </a>
+                </div>
+            </div>
+
+            <!-- 5. 一括登録シート 詳しい操作方法 -->
+            <div class="section">
+                <h2><span class="emoji">📚</span>一括登録シート 詳しい操作方法</h2>
+                <div class="link-box info">
+                    <h3>ステップバイステップガイド</h3>
+                    <p>
+                        一括登録シートの基本的な使い方から応用的な機能まで、
+                        画像付きで詳しく解説しています。初めての方はこちらをご覧ください。
+                    </p>
+                    <a href="YOUR_DETAILED_GUIDE_LINK_HERE"
+                       target="_blank"
+                       class="btn btn-primary">
+                        <span class="emoji">📖</span>詳しい操作方法を見る
+                    </a>
+                </div>
+
+                <h3>主な操作内容</h3>
+                <ul class="feature-list">
+                    <li>商品情報の入力方法</li>
+                    <li>AI翻訳の実行と確認</li>
+                    <li>価格計算の仕組みと調整</li>
+                    <li>シッピングポリシーの設定</li>
+                    <li>データの一括出力方法</li>
+                    <li>トラブルシューティング</li>
+                </ul>
+            </div>
+
+            <!-- 6. よくある質問 -->
+            <div class="section">
+                <h2><span class="emoji">❓</span>よくある質問</h2>
+
+                <h3>Q: どのツールから使い始めればいいですか？</h3>
+                <p>
+                    まず「一括登録シート Ver.40」を開いて、次に「Universal Scraper」をインストールするのがおすすめです。
+                    その後、必要に応じて「詳しい操作方法」を参照してください。
+                </p>
+
+                <h3>Q: 拡張機能がうまく動作しません</h3>
+                <p>
+                    「Universal Scraper 使用方法」のガイドをご確認ください。
+                    トラブルシューティングのセクションに解決方法が記載されています。
+                </p>
+
+                <h3>Q: プロンプトをカスタマイズしたいです</h3>
+                <p>
+                    「プロンプト編集ガイド」に詳しい編集方法が載っています。
+                    まずはプロンプト例集をダウンロードして、参考にしてみてください。
+                </p>
+
+                <h3>Q: 価格計算の仕組みがわかりません</h3>
+                <p>
+                    「価格計算ツール 使い方ガイド」で、計算式の詳細を解説しています。
+                    関税率や為替レートがどのように反映されるかを確認できます。
+                </p>
+            </div>
+
+            <!-- 7. サポート情報 -->
+            <div class="section">
+                <h2><span class="emoji">🆘</span>サポート情報</h2>
+                <p>
+                    このガイドやツールに関してご質問がある場合は、以下の方法でお問い合わせください。
+                </p>
+                <ul class="feature-list">
+                    <li>各ガイドページのトラブルシューティングセクションを確認</li>
+                    <li>GitHubリポジトリのIssuesページで質問</li>
+                    <li>スプレッドシートのコメント機能を使用</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>一括登録シート総合ガイド</strong></p>
+            <p>最終更新: 2025年11月24日</p>
+            <p>Universal Scraper v1.1.2 | 一括登録シート Ver.40</p>
+        </footer>
+    </div>
+</body>
+</html>
