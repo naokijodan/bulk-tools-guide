@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一括登録シート 詳しい操作方法ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        /* 目次 */
+        .toc {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 6px solid #667eea;
+        }
+
+        .toc h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .toc ol {
+            padding-left: 25px;
+        }
+
+        .toc li {
+            margin: 12px 0;
+            font-size: 1.1em;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        /* セクション */
+        .section {
+            background: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 2em;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .section h4 {
+            color: #495057;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+
+        .section p {
+            margin: 15px 0;
+            font-size: 1.05em;
+            line-height: 1.9;
+        }
+
+        .section ul, .section ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .section li {
+            margin: 10px 0;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        /* 画像エリア */
+        .image-area {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px dashed #dee2e6;
+        }
+
+        .image-area img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-placeholder {
+            background: #e9ecef;
+            padding: 60px 20px;
+            border-radius: 8px;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .image-caption {
+            margin-top: 12px;
+            color: #6c757d;
+            font-size: 0.95em;
+            font-style: italic;
+        }
+
+        /* ステップリスト */
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            background: #f8f9fa;
+            padding: 20px 20px 20px 70px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: "Step " counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* 注意ボックス */
+        .note-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .note-box.warning {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .note-box.info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+        }
+
+        .note-box.success {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .note-box strong {
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* ハイライトボックス */
+        .highlight-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        code {
+            background: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 3px solid #e9ecef;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .step-list li {
+                padding-left: 20px;
+                padding-top: 50px;
+            }
+
+            .step-list li::before {
+                left: 20px;
+                top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>一括登録シート 詳しい操作方法ガイド</h1>
+            <p>Ver.40 完全マニュアル</p>
+            <p style="margin-top: 15px;">
+                <a href="index.html" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 5px; display: inline-block; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    ← 総合ガイドに戻る
+                </a>
+            </p>
+        </header>
+
+        <div class="content">
+            <!-- 目次 -->
+            <div class="toc">
+                <h2>📑 目次</h2>
+                <ol>
+                    <li><a href="#getting-started">使用開始方法</a></li>
+                    <li><a href="#initial-setup">初期設定</a></li>
+                    <li><a href="#eagle-integration">EAGLEとの連携</a></li>
+                    <li><a href="#import-sheet">以前のシートやご自身でご利用されているシートのインポート方法</a></li>
+                    <li><a href="#import-settings">以前のシートの設定の引き継ぎ方法</a></li>
+                    <li><a href="#sheet-structure">一括登録シートの各シートの説明</a></li>
+                    <li><a href="#cell-description">作業シートの各セルの説明</a></li>
+                    <li><a href="#extension-integration">拡張機能との連携方法</a></li>
+                    <li><a href="#extension-usage">拡張機能の使い方</a></li>
+                    <li><a href="#basic-usage">基本的な使い方</a></li>
+                    <li><a href="#edit-data">出てきた情報の編集方法</a></li>
+                    <li><a href="#change-settings">設定の変更方法</a></li>
+                    <li><a href="#cautions">シートを使う場合の注意すべき項目</a></li>
+                    <li><a href="#features">各種機能の説明</a></li>
+                    <li><a href="#tips">便利な機能</a></li>
+                </ol>
+            </div>
+
+            <!-- 1. 使用開始方法 -->
+            <section id="getting-started" class="section">
+                <h2><span class="emoji">🚀</span>1. 使用開始方法</h2>
+
+                <p>一括登録シートVer.40を使い始めるための手順を説明します。</p>
+
+                <div class="highlight-box">
+                    <strong>必要なもの</strong>
+                    <ul>
+                        <li>Googleアカウント</li>
+                        <li>OpenAI APIキー（AI翻訳機能を使用する場合）</li>
+                        <li>Chrome拡張機能「Universal Scraper」（推奨）</li>
+                    </ul>
+                </div>
+
+                <ol class="step-list">
+                    <li>
+                        <strong>スプレッドシートを開く</strong>
+                        <p>以下のリンクから一括登録シートVer.40を開きます。</p>
+                        <div class="image-area">
+                            <div class="image-placeholder">
+                                📸 画像: スプレッドシートのリンクをクリックする様子
+                            </div>
+                            <!-- <img src="images/01-open-sheet.png" alt="スプレッドシートを開く"> -->
+                        </div>
+                    </li>
+                    <li>
+                        <strong>自分のGoogleドライブにコピーする</strong>
+                        <p>「ファイル」→「コピーを作成」でご自身のGoogleドライブに保存します。</p>
+                        <div class="image-area">
+                            <div class="image-placeholder">
+                                📸 画像: コピーを作成する手順
+                            </div>
+                            <!-- <img src="images/01-copy-sheet.png" alt="コピーを作成"> -->
+                        </div>
+                    </li>
+                    <li>
+                        <strong>権限を許可する</strong>
+                        <p>初回起動時、Apps Scriptの実行権限を求められます。「続行」をクリックして権限を許可してください。</p>
+                        <div class="image-area">
+                            <div class="image-placeholder">
+                                📸 画像: 権限許可画面
+                            </div>
+                            <!-- <img src="images/01-permission.png" alt="権限を許可"> -->
+                        </div>
+                    </li>
+                </ol>
+
+                <div class="note-box warning">
+                    <strong>⚠️ 注意</strong>
+                    <p>権限許可画面で「このアプリは確認されていません」と表示される場合がありますが、これは正常です。「詳細」→「安全ではないページに移動」をクリックして続行してください。</p>
+                </div>
+            </section>
+
+            <!-- 2. 初期設定 -->
+            <section id="initial-setup" class="section">
+                <h2><span class="emoji">⚙️</span>2. 初期設定</h2>
+
+                <p>シートを初めて使用する際に必要な設定を行います。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 初期設定ダイアログ全体
+                    </div>
+                    <!-- <img src="images/02-setup-dialog.png" alt="初期設定ダイアログ"> -->
+                </div>
+
+                <h3>設定項目</h3>
+
+                <h4>1. OpenAI APIキー</h4>
+                <p>AI翻訳機能を使用する場合は、OpenAIのAPIキーを入力します。</p>
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: APIキー入力欄
+                    </div>
+                    <!-- <img src="images/02-api-key.png" alt="APIキー設定"> -->
+                </div>
+
+                <h4>2. 為替レート設定</h4>
+                <p>価格計算に使用する為替レートの設定を行います。自動取得または手動入力を選択できます。</p>
+
+                <h4>3. 送料設定</h4>
+                <p>eパケットの送料を重量別に設定します。</p>
+
+                <h4>4. 利益率・手数料設定</h4>
+                <ul>
+                    <li>目標利益率</li>
+                    <li>eBay手数料率</li>
+                    <li>広告費率</li>
+                    <li>決済手数料</li>
+                </ul>
+
+                <div class="note-box info">
+                    <strong>💡 ヒント</strong>
+                    <p>設定は後からいつでも変更できます。まずは仮の値で設定して、実際に使いながら調整することをおすすめします。</p>
+                </div>
+            </section>
+
+            <!-- 3. EAGLEとの連携 -->
+            <section id="eagle-integration" class="section">
+                <h2><span class="emoji">🦅</span>3. EAGLEとの連携</h2>
+
+                <p>EAGLEアプリと連携することで、商品画像やデータを効率的に管理できます。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: EAGLE連携設定画面
+                    </div>
+                    <!-- <img src="images/03-eagle-setup.png" alt="EAGLE連携"> -->
+                </div>
+
+                <h3>連携手順</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>EAGLEサーバーを起動</strong>
+                        <p>EAGLEアプリで「ライブラリ」→「サーバーを開く」を選択します。</p>
+                    </li>
+                    <li>
+                        <strong>サーバーURLを取得</strong>
+                        <p>表示されたURLをコピーします（例: http://localhost:41595）</p>
+                    </li>
+                    <li>
+                        <strong>シートに設定</strong>
+                        <p>一括登録シートのEAGLE設定欄にURLとライブラリIDを入力します。</p>
+                    </li>
+                </ol>
+
+                <div class="note-box success">
+                    <strong>✅ 連携のメリット</strong>
+                    <ul>
+                        <li>商品画像を自動取得</li>
+                        <li>タグ情報を活用した分類</li>
+                        <li>画像の一括管理が可能</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 4. 以前のシートのインポート -->
+            <section id="import-sheet" class="section">
+                <h2><span class="emoji">📥</span>4. 以前のシートやご自身でご利用されているシートのインポート方法</h2>
+
+                <p>以前使用していたシートのデータを新しいシートにインポートする方法を説明します。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: データインポートダイアログ
+                    </div>
+                    <!-- <img src="images/04-import-dialog.png" alt="データインポート"> -->
+                </div>
+
+                <h3>インポート手順</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>メニューから「データインポート」を選択</strong>
+                        <p>シートのメニューバーから選択します。</p>
+                    </li>
+                    <li>
+                        <strong>インポート元のシートを指定</strong>
+                        <p>URLまたはシートIDを入力します。</p>
+                    </li>
+                    <li>
+                        <strong>インポートする列を選択</strong>
+                        <p>必要な列のみを選択してインポートできます。</p>
+                    </li>
+                    <li>
+                        <strong>インポート実行</strong>
+                        <p>「インポート」ボタンをクリックしてデータを取り込みます。</p>
+                    </li>
+                </ol>
+            </section>
+
+            <!-- 5. 以前のシートの設定の引き継ぎ -->
+            <section id="import-settings" class="section">
+                <h2><span class="emoji">🔄</span>5. 以前のシートの設定の引き継ぎ方法</h2>
+
+                <p>以前のシートで使用していた設定（テンプレート、シッピングポリシーなど）を引き継ぐ方法を説明します。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 設定インポート画面
+                    </div>
+                    <!-- <img src="images/05-import-settings.png" alt="設定の引き継ぎ"> -->
+                </div>
+
+                <h3>引き継げる設定</h3>
+                <ul>
+                    <li>テンプレート設定</li>
+                    <li>シッピングポリシー設定</li>
+                    <li>カテゴリ設定</li>
+                    <li>プロンプト設定</li>
+                </ul>
+            </section>
+
+            <!-- 6. 各シートの説明 -->
+            <section id="sheet-structure" class="section">
+                <h2><span class="emoji">📊</span>6. 一括登録シートの各シートの説明</h2>
+
+                <p>一括登録シートは複数のシートで構成されています。それぞれの役割を説明します。</p>
+
+                <h3>主要シート</h3>
+
+                <h4>作業シート</h4>
+                <p>商品データの入力・編集を行うメインシートです。</p>
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 作業シート全体
+                    </div>
+                    <!-- <img src="images/06-work-sheet.png" alt="作業シート"> -->
+                </div>
+
+                <h4>GPT_Prompts</h4>
+                <p>AI翻訳に使用するプロンプトを管理するシートです。</p>
+
+                <h4>Templates</h4>
+                <p>eBayのテンプレート情報を管理します。</p>
+
+                <h4>ShippingPolicies</h4>
+                <p>シッピングポリシーの情報を管理します。</p>
+
+                <h4>設定</h4>
+                <p>各種設定値を保存するシートです（通常は非表示）。</p>
+            </section>
+
+            <!-- 7. 作業シートの各セルの説明 -->
+            <section id="cell-description" class="section">
+                <h2><span class="emoji">📝</span>7. 作業シートの各セルの説明</h2>
+
+                <p>作業シートの各列（セル）が何を意味するのか、詳しく説明します。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 作業シートの列ヘッダー
+                    </div>
+                    <!-- <img src="images/07-cell-headers.png" alt="列ヘッダー"> -->
+                </div>
+
+                <h3>入力列</h3>
+                <ul>
+                    <li><strong>A列 - 商品タイトル（原文）</strong>: 商品の元のタイトル</li>
+                    <li><strong>B列 - 商品説明（原文）</strong>: 商品の元の説明文</li>
+                    <li><strong>C列 - 仕入れ値</strong>: 商品の仕入れ価格</li>
+                    <li><strong>D列 - 重量</strong>: 商品の重量（g）</li>
+                </ul>
+
+                <h3>自動計算列</h3>
+                <ul>
+                    <li><strong>E列 - 翻訳タイトル</strong>: AI翻訳されたタイトル</li>
+                    <li><strong>F列 - 翻訳説明</strong>: AI翻訳された説明文</li>
+                    <li><strong>G列 - 販売価格</strong>: 自動計算された販売価格</li>
+                    <li><strong>H列 - シッピングポリシー</strong>: 自動選択されたポリシー</li>
+                </ul>
+
+                <div class="note-box">
+                    <strong>💡 ヒント</strong>
+                    <p>自動計算列は数式が設定されているため、直接編集しないでください。設定を変更することで値を調整できます。</p>
+                </div>
+            </section>
+
+            <!-- 8. 拡張機能との連携方法 -->
+            <section id="extension-integration" class="section">
+                <h2><span class="emoji">🔌</span>8. 拡張機能との連携方法</h2>
+
+                <p>Universal Scraper Chrome拡張機能と一括登録シートを連携させる方法を説明します。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 拡張機能設定画面
+                    </div>
+                    <!-- <img src="images/08-extension-settings.png" alt="拡張機能設定"> -->
+                </div>
+
+                <h3>連携手順</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>スプレッドシートIDを取得</strong>
+                        <p>シートのURLから抽出します。</p>
+                    </li>
+                    <li>
+                        <strong>拡張機能に設定</strong>
+                        <p>拡張機能の設定画面でスプレッドシートIDを入力します。</p>
+                    </li>
+                    <li>
+                        <strong>接続テスト</strong>
+                        <p>「接続テスト」ボタンで正常に接続できるか確認します。</p>
+                    </li>
+                </ol>
+            </section>
+
+            <!-- 9. 拡張機能の使い方 -->
+            <section id="extension-usage" class="section">
+                <h2><span class="emoji">🎯</span>9. 拡張機能の使い方</h2>
+
+                <p>Universal Scraper拡張機能を使った商品情報の取得方法を説明します。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 拡張機能の使用例
+                    </div>
+                    <!-- <img src="images/09-extension-usage.png" alt="拡張機能の使い方"> -->
+                </div>
+
+                <h3>基本的な使い方</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>商品ページを開く</strong>
+                        <p>取り込みたい商品のページを開きます。</p>
+                    </li>
+                    <li>
+                        <strong>拡張機能アイコンをクリック</strong>
+                        <p>Chromeツールバーの拡張機能アイコンをクリックします。</p>
+                    </li>
+                    <li>
+                        <strong>情報を確認</strong>
+                        <p>自動抽出された商品情報を確認します。</p>
+                    </li>
+                    <li>
+                        <strong>シートに送信</strong>
+                        <p>「シートに送信」ボタンで一括登録シートに転送します。</p>
+                    </li>
+                </ol>
+
+                <div class="note-box success">
+                    <strong>✅ メリット</strong>
+                    <ul>
+                        <li>シートを開かなくても商品情報を追加できる</li>
+                        <li>タイトル、説明、価格、画像URLを自動取得</li>
+                        <li>作業効率が大幅に向上</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 10. 基本的な使い方 -->
+            <section id="basic-usage" class="section">
+                <h2><span class="emoji">📖</span>10. 基本的な使い方</h2>
+
+                <p>一括登録シートを使った基本的なワークフローを説明します。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 基本ワークフロー図
+                    </div>
+                    <!-- <img src="images/10-workflow.png" alt="基本ワークフロー"> -->
+                </div>
+
+                <h3>標準的な作業の流れ</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>商品情報を入力</strong>
+                        <p>拡張機能または手動で商品情報を入力します。</p>
+                    </li>
+                    <li>
+                        <strong>AI翻訳を実行</strong>
+                        <p>メニューから「AI翻訳」を選択します。</p>
+                    </li>
+                    <li>
+                        <strong>翻訳結果を確認</strong>
+                        <p>翻訳されたタイトルと説明文を確認・修正します。</p>
+                    </li>
+                    <li>
+                        <strong>価格とポリシーを確認</strong>
+                        <p>自動計算された販売価格とシッピングポリシーを確認します。</p>
+                    </li>
+                    <li>
+                        <strong>データを出力</strong>
+                        <p>eBayにアップロードする形式でデータを出力します。</p>
+                    </li>
+                </ol>
+            </section>
+
+            <!-- 11. 出てきた情報の編集方法 -->
+            <section id="edit-data" class="section">
+                <h2><span class="emoji">✏️</span>11. 出てきた情報の編集方法</h2>
+
+                <p>自動生成された情報を編集・カスタマイズする方法を説明します。</p>
+
+                <h3>翻訳結果の編集</h3>
+                <p>AI翻訳された内容は、セルを直接編集することで変更できます。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: 翻訳結果の編集
+                    </div>
+                    <!-- <img src="images/11-edit-translation.png" alt="翻訳結果の編集"> -->
+                </div>
+
+                <h3>価格の調整</h3>
+                <p>販売価格を手動で変更する場合は、対応するセルを編集します。</p>
+
+                <div class="note-box warning">
+                    <strong>⚠️ 注意</strong>
+                    <p>数式が入っているセルを直接編集すると、数式が消えてしまいます。価格を手動で変更する場合は、設定値を調整するか、別の列に値を入力してください。</p>
+                </div>
+            </section>
+
+            <!-- 12. 設定の変更方法 -->
+            <section id="change-settings" class="section">
+                <h2><span class="emoji">🔧</span>12. 設定の変更方法</h2>
+
+                <p>初期設定後に設定を変更する方法を説明します。</p>
+
+                <h3>シート上での設定変更</h3>
+                <p>Ver.40では、初期設定に戻らずシート上で直接設定を変更できます。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: シート上の設定エリア（AI～AS列）
+                    </div>
+                    <!-- <img src="images/12-settings-area.png" alt="設定エリア"> -->
+                </div>
+
+                <h3>変更可能な設定</h3>
+                <ul>
+                    <li>為替レート</li>
+                    <li>利益率</li>
+                    <li>手数料率</li>
+                    <li>送料設定</li>
+                    <li>使用するプロンプト</li>
+                </ul>
+
+                <h3>設定反映方法</h3>
+                <p>設定を変更した後、「式の再出力」ボタンをクリックすると、新しい設定が反映されます。</p>
+            </section>
+
+            <!-- 13. 注意すべき項目 -->
+            <section id="cautions" class="section">
+                <h2><span class="emoji">⚠️</span>13. シートを使う場合の注意すべき項目</h2>
+
+                <h3>数式の保護</h3>
+                <p>自動計算列の数式を誤って削除しないよう注意してください。</p>
+
+                <div class="note-box warning">
+                    <strong>⚠️ 重要</strong>
+                    <ul>
+                        <li>数式が入っている列（E～H列など）は直接編集しない</li>
+                        <li>行の挿入・削除は慎重に行う</li>
+                        <li>定期的にバックアップを取る</li>
+                    </ul>
+                </div>
+
+                <h3>APIキーの管理</h3>
+                <p>OpenAI APIキーは機密情報です。シートを共有する際は注意してください。</p>
+
+                <h3>権限設定</h3>
+                <p>シートを他の人と共有する場合、編集権限を適切に設定してください。</p>
+            </section>
+
+            <!-- 14. 各種機能の説明 -->
+            <section id="features" class="section">
+                <h2><span class="emoji">⚡</span>14. 各種機能の説明</h2>
+
+                <h3>AI翻訳機能</h3>
+                <p>OpenAI APIを使用した高品質な商品説明の翻訳機能です。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: AI翻訳実行画面
+                    </div>
+                    <!-- <img src="images/14-ai-translation.png" alt="AI翻訳"> -->
+                </div>
+
+                <h3>価格自動計算</h3>
+                <p>仕入れ値、送料、手数料、利益率を考慮した自動価格計算機能です。</p>
+
+                <h3>シッピングポリシー自動選択</h3>
+                <p>関税額に基づいて最適なシッピングポリシーを自動選択します。</p>
+
+                <h3>バッチ処理</h3>
+                <p>複数の商品を一括で処理できます。</p>
+            </section>
+
+            <!-- 15. 便利な機能 -->
+            <section id="tips" class="section">
+                <h2><span class="emoji">💡</span>15. 便利な機能</h2>
+
+                <h3>プロンプトの切り替え</h3>
+                <p>AS2セルでプロンプトを選択するだけで、次の翻訳から新しいプロンプトが適用されます。</p>
+
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        📸 画像: プロンプト選択ドロップダウン
+                    </div>
+                    <!-- <img src="images/15-prompt-selection.png" alt="プロンプト選択"> -->
+                </div>
+
+                <h3>式の再出力</h3>
+                <p>計算式を誤って削除してしまった場合でも、「式の再出力」ボタンで元に戻せます。</p>
+
+                <h3>カテゴリ別テンプレート</h3>
+                <p>商品カテゴリごとに異なるテンプレートを設定できます。</p>
+
+                <h3>データインポート</h3>
+                <p>他のシートやCSVファイルからデータを一括インポートできます。</p>
+
+                <div class="note-box success">
+                    <strong>✅ おすすめの使い方</strong>
+                    <ul>
+                        <li>よく使うプロンプトをカスタマイズして保存</li>
+                        <li>カテゴリごとにテンプレートを作成</li>
+                        <li>拡張機能と組み合わせて効率化</li>
+                        <li>EAGLEで画像を一元管理</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- お問い合わせ -->
+            <section class="section">
+                <div class="note-box info" style="text-align: center;">
+                    <p style="font-size: 1.1em;">
+                        <strong>💬 ご不明な点がございましたら、お気軽にスクールにお問い合わせください。</strong>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p><strong>一括登録シート Ver.40 詳しい操作方法ガイド</strong></p>
+            <p>最終更新: 2025年11月24日</p>
+        </footer>
+    </div>
+</body>
+</html>
