@@ -4,7 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>一括登録シート（関税ベース）総合ガイド</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
+        /* ========================================
+           CSS Variables - Theme Definitions
+           ======================================== */
+
+        /* 通常テーマ (Default) */
+        :root, [data-theme="default"] {
+            --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-container: #ffffff;
+            --bg-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-card: #ffffff;
+            --bg-card-hover: #ffffff;
+            --bg-feature: #f8f9fa;
+            --bg-highlight: linear-gradient(135deg, #fff3cd 0%, #ffe5cc 100%);
+            --bg-intro: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            --bg-footer: #f8f9fa;
+
+            --text-primary: #333333;
+            --text-secondary: #6c757d;
+            --text-header: #ffffff;
+            --text-muted: #64748b;
+
+            --accent-primary: #667eea;
+            --accent-secondary: #764ba2;
+            --accent-success: #28a745;
+            --accent-warning: #ffc107;
+            --accent-danger: #dc3545;
+            --accent-info: #17a2b8;
+
+            --border-color: #f0f0f0;
+            --border-card: 2px solid #f0f0f0;
+            --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --card-radius: 15px;
+
+            --btn-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            --container-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+            --font-base: 16px;
+            --header-animation: none;
+        }
+
+        /* シンプルテーマ (Minimal) */
+        [data-theme="simple"] {
+            --bg-body: #ffffff;
+            --bg-container: #ffffff;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #ffffff;
+            --bg-feature: #f5f5f5;
+            --bg-highlight: #e6f0ff;
+            --bg-intro: #f5f5f5;
+            --bg-footer: #ffffff;
+
+            --text-primary: #111111;
+            --text-secondary: #666666;
+            --text-header: #111111;
+            --text-muted: #999999;
+
+            --accent-primary: #111111;
+            --accent-secondary: #0066ff;
+            --accent-success: #111111;
+            --accent-warning: #111111;
+            --accent-danger: #cc0000;
+            --accent-info: #0066ff;
+
+            --border-color: #e5e5e5;
+            --border-card: none;
+            --card-shadow: none;
+            --card-radius: 0;
+
+            --btn-shadow: none;
+            --container-shadow: none;
+
+            --font-base: 16px;
+            --header-animation: none;
+        }
+
+        /* ダークテーマ (Neon) */
+        [data-theme="dark"] {
+            --bg-body: #141428;
+            --bg-container: #141428;
+            --bg-header: transparent;
+            --bg-card: #1a1a35;
+            --bg-card-hover: #1f1f40;
+            --bg-feature: rgba(255, 255, 255, 0.03);
+            --bg-highlight: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(191, 0, 255, 0.1));
+            --bg-intro: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(191, 0, 255, 0.1));
+            --bg-footer: transparent;
+
+            --text-primary: #ffffff;
+            --text-secondary: #8888aa;
+            --text-header: #ffffff;
+            --text-muted: #6666aa;
+
+            --accent-primary: #00d4ff;
+            --accent-secondary: #bf00ff;
+            --accent-success: #00ff88;
+            --accent-warning: #ffdd00;
+            --accent-danger: #ff0080;
+            --accent-info: #00d4ff;
+
+            --border-color: #2a2a50;
+            --border-card: 1px solid #2a2a50;
+            --card-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+            --card-radius: 20px;
+
+            --btn-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            --container-shadow: none;
+
+            --font-base: 17px;
+            --header-animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        /* ========================================
+           Base Styles
+           ======================================== */
         * {
             margin: 0;
             padding: 0;
@@ -12,56 +128,376 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: var(--font-base);
             line-height: 1.8;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
+            color: var(--text-primary);
+            background: var(--bg-body);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+
+        /* ダークテーマ用グリッド背景 */
+        [data-theme="dark"] body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background: white;
+            background: var(--bg-container);
+            box-shadow: var(--container-shadow);
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .container {
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: 20px auto;
             overflow: hidden;
         }
 
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        [data-theme="simple"] .container {
+            padding: 80px 24px;
+            max-width: 800px;
+        }
+
+        [data-theme="dark"] .container {
+            padding: 60px 24px;
+            background: transparent;
+        }
+
+        /* ========================================
+           Theme Switcher
+           ======================================== */
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 12px;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] .theme-switcher {
+            background: rgba(20, 20, 40, 0.95);
+            border: 1px solid #2a2a50;
+        }
+
+        .theme-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .theme-btn[data-target="default"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
+        }
+
+        .theme-btn[data-target="simple"] {
+            background: #111;
+            color: white;
+        }
+
+        .theme-btn[data-target="dark"] {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            color: #0a0a0f;
+        }
+
+        .theme-btn:not(.active) {
+            opacity: 0.4;
+        }
+
+        .theme-btn:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .theme-btn.active {
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========================================
+           Header
+           ======================================== */
+        header {
+            background: var(--bg-header);
+            color: var(--text-header);
             padding: 50px 30px;
             text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header {
+            padding: 0;
+            margin-bottom: 80px;
+            text-align: left;
+        }
+
+        [data-theme="dark"] header {
+            padding: 80px 40px;
+            position: relative;
+        }
+
+        [data-theme="dark"] header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         header h1 {
             font-size: 2.5em;
-            margin-bottom: 10px;
             font-weight: 700;
+            margin-bottom: 10px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header h1 {
+            font-size: 2.2em;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            white-space: nowrap;
+        }
+
+        [data-theme="dark"] header h1 {
+            font-size: 2.4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff, #bf00ff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(0, 212, 255, 0.5);
+            position: relative;
+            white-space: nowrap;
         }
 
         header p {
-            font-size: 1.2em;
+            font-size: 1.1em;
             opacity: 0.95;
+            transition: all 0.4s ease;
         }
 
+        [data-theme="simple"] header p {
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        [data-theme="dark"] header p {
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .version-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        [data-theme="simple"] .version-badge {
+            background: #111;
+            color: white;
+            letter-spacing: 0.05em;
+        }
+
+        [data-theme="dark"] .version-badge {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            color: white;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            animation: var(--header-animation);
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
+            to { box-shadow: 0 0 40px rgba(191, 0, 255, 0.6); }
+        }
+
+        /* ========================================
+           Content Area
+           ======================================== */
         .content {
             padding: 40px 30px;
+            transition: all 0.4s ease;
         }
 
+        [data-theme="simple"] .content {
+            padding: 0;
+        }
+
+        [data-theme="dark"] .content {
+            padding: 20px 0;
+        }
+
+        /* ========================================
+           Alert Box
+           ======================================== */
+        .alert {
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .alert {
+            background: #ffe0e0;
+            border: 3px solid var(--accent-danger);
+        }
+
+        [data-theme="simple"] .alert {
+            background: #fff5f5;
+            border-left: 3px solid #ff4444;
+            border-radius: 0;
+            text-align: left;
+            padding: 24px 28px;
+            margin-bottom: 60px;
+        }
+
+        [data-theme="dark"] .alert {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.1), rgba(255, 0, 128, 0.05));
+            border: 1px solid #ff0080;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 128, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            to { left: 100%; }
+        }
+
+        .alert h3 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            position: relative;
+        }
+
+        [data-theme="default"] .alert h3,
+        [data-theme="simple"] .alert h3 {
+            color: var(--accent-danger);
+        }
+
+        [data-theme="dark"] .alert h3 {
+            color: #ff0080;
+        }
+
+        .alert p {
+            position: relative;
+        }
+
+        [data-theme="default"] .alert p {
+            color: var(--text-primary);
+        }
+
+        [data-theme="simple"] .alert p {
+            color: var(--text-primary);
+            font-size: 0.95em;
+        }
+
+        [data-theme="dark"] .alert p {
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           Intro / Highlight Box
+           ======================================== */
         .intro-box {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            background: var(--bg-intro);
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 40px;
-            border-left: 6px solid #667eea;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .intro-box {
+            border-left: 6px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .intro-box {
+            border-radius: 0;
+            padding: 28px;
+        }
+
+        [data-theme="dark"] .intro-box {
+            border: 1px solid #bf00ff;
+            border-radius: 16px;
+        }
+
+        .intro-box.highlight {
+            background: var(--bg-highlight);
+        }
+
+        [data-theme="default"] .intro-box.highlight {
+            border-left-color: #ff9800;
         }
 
         .intro-box h2 {
-            color: #667eea;
             margin-bottom: 15px;
-            font-size: 1.6em;
+            font-size: 1.5em;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .intro-box h2 {
+            color: var(--accent-primary);
+        }
+
+        [data-theme="simple"] .intro-box h2 {
+            color: var(--accent-info);
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        [data-theme="dark"] .intro-box h2 {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.2em;
         }
 
         .intro-box p {
@@ -69,57 +505,143 @@
             line-height: 1.8;
         }
 
+        [data-theme="dark"] .intro-box p {
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           Section / Card
+           ======================================== */
         .section {
-            background: white;
-            border-radius: 15px;
+            background: var(--bg-card);
+            border: var(--border-card);
+            border-radius: var(--card-radius);
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 2px solid #f0f0f0;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] .section {
+            padding: 0;
+            padding-bottom: 60px;
+            margin-bottom: 60px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        [data-theme="simple"] .section:last-of-type {
+            border-bottom: none;
+        }
+
+        [data-theme="dark"] .section:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.1);
         }
 
         .section h2 {
-            color: #667eea;
+            color: var(--accent-primary);
             margin-bottom: 20px;
             font-size: 1.8em;
-            border-bottom: 3px solid #667eea;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .section h2 {
+            border-bottom: 3px solid var(--accent-primary);
             padding-bottom: 10px;
         }
 
+        [data-theme="simple"] .section h2 {
+            font-size: 1.6em;
+            letter-spacing: -0.01em;
+        }
+
+        [data-theme="dark"] .section h2 {
+            color: var(--text-primary);
+        }
+
+        .section-label {
+            display: none;
+        }
+
+        [data-theme="simple"] .section-label {
+            display: block;
+            font-size: 0.75em;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .section h2 small {
+            display: block;
+            font-size: 0.6em;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 6px;
+        }
+
         .section h3 {
-            color: #764ba2;
+            color: var(--accent-secondary);
             margin-top: 25px;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
 
+        [data-theme="dark"] .section h3 {
+            color: var(--accent-primary);
+        }
+
+        /* ========================================
+           Link Box
+           ======================================== */
         .link-box {
-            background: #f8f9fa;
+            background: var(--bg-feature);
             border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
-            border-left: 5px solid #28a745;
+            transition: all 0.4s ease;
         }
 
-        .link-box.primary {
+        [data-theme="default"] .link-box {
+            border-left: 5px solid var(--accent-success);
+        }
+
+        [data-theme="default"] .link-box.primary {
             background: linear-gradient(135deg, #fff3cd 0%, #ffe5cc 100%);
-            border-left-color: #ffc107;
+            border-left-color: var(--accent-warning);
         }
 
-        .link-box.secondary {
+        [data-theme="default"] .link-box.secondary {
             background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            border-left-color: #28a745;
+            border-left-color: var(--accent-success);
         }
 
-        .link-box.info {
+        [data-theme="default"] .link-box.info {
             background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-            border-left-color: #17a2b8;
+            border-left-color: var(--accent-info);
+        }
+
+        [data-theme="simple"] .link-box {
+            border-radius: 0;
+            padding: 28px;
+        }
+
+        [data-theme="dark"] .link-box {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        [data-theme="dark"] .link-box:hover {
+            border-color: var(--accent-primary);
+            background: rgba(0, 212, 255, 0.05);
         }
 
         .link-box h3 {
             margin-top: 0;
             margin-bottom: 15px;
-            font-size: 1.4em;
+            font-size: 1.3em;
         }
 
         .link-box p {
@@ -127,8 +649,14 @@
             line-height: 1.8;
         }
 
+        /* ========================================
+           Buttons
+           ======================================== */
         .btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             padding: 15px 30px;
             margin: 10px 10px 10px 0;
             border-radius: 8px;
@@ -136,103 +664,192 @@
             font-weight: 600;
             font-size: 1.05em;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--btn-shadow);
+            cursor: pointer;
+            border: none;
+        }
+
+        [data-theme="simple"] .btn {
+            border-radius: 0;
+            padding: 16px 28px;
+            font-size: 0.95em;
+        }
+
+        [data-theme="dark"] .btn {
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        [data-theme="dark"] .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        [data-theme="simple"] .btn-primary {
+            background: #111;
+            color: white;
+        }
+
+        [data-theme="dark"] .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #0a0a0f;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, var(--accent-success) 0%, #20c997 100%);
             color: white;
         }
 
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+        [data-theme="simple"] .btn-success {
+            background: #0066ff;
+            color: white;
+        }
+
+        [data-theme="dark"] .btn-success {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #0a0a0f;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
         }
 
         .btn-info {
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            background: linear-gradient(135deg, var(--accent-info) 0%, #138496 100%);
             color: white;
         }
 
-        .btn-info:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(23, 162, 184, 0.4);
+        [data-theme="dark"] .btn-info {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            color: white;
         }
 
         .btn-warning {
-            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            background: linear-gradient(135deg, var(--accent-warning) 0%, #ff9800 100%);
             color: #333;
         }
 
-        .btn-warning:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
+        [data-theme="dark"] .btn-warning {
+            background: linear-gradient(135deg, #ffdd00, #ff9900);
+            color: #0a0a0f;
+            box-shadow: 0 0 30px rgba(255, 221, 0, 0.4);
         }
 
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="simple"] .btn-outline {
+            border: 1.5px solid #111;
+            color: #111;
+        }
+
+        [data-theme="simple"] .btn-outline:hover {
+            background: #111;
+            color: white;
+        }
+
+        [data-theme="dark"] .btn-outline {
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .btn-outline:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ========================================
+           Feature List
+           ======================================== */
         .feature-list {
-            background: #f8f9fa;
+            background: var(--bg-feature);
             border-radius: 10px;
             padding: 20px 20px 20px 40px;
             margin: 20px 0;
+            list-style: none;
+        }
+
+        [data-theme="simple"] .feature-list {
+            border-radius: 0;
+            padding: 28px;
+            padding-left: 28px;
+        }
+
+        [data-theme="dark"] .feature-list {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .feature-list li {
             margin: 12px 0;
             font-size: 1.05em;
             line-height: 1.8;
-        }
-
-        .step-list {
-            counter-reset: step-counter;
-            list-style: none;
-            padding: 0;
-        }
-
-        .step-list li {
-            counter-increment: step-counter;
-            background: #f8f9fa;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            border-left: 5px solid #667eea;
+            padding-left: 25px;
             position: relative;
-            padding-left: 60px;
         }
 
-        .step-list li::before {
-            content: counter(step-counter);
+        .feature-list li::before {
+            content: "→";
             position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #667eea;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2em;
+            left: 0;
+            color: var(--accent-primary);
         }
 
+        [data-theme="simple"] .feature-list li::before {
+            content: "—";
+            color: var(--text-muted);
+        }
+
+        [data-theme="dark"] .feature-list li {
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        [data-theme="dark"] .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* ========================================
+           Note Box
+           ======================================== */
         .note-box {
             background: #fff3cd;
-            border: 2px solid #ffc107;
+            border: 2px solid var(--accent-warning);
             border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
+        }
+
+        [data-theme="dark"] .note-box {
+            background: rgba(255, 221, 0, 0.1);
+            border: 1px solid #ffdd00;
         }
 
         .note-box strong {
@@ -240,6 +857,17 @@
             font-size: 1.1em;
         }
 
+        [data-theme="dark"] .note-box strong {
+            color: #ffdd00;
+        }
+
+        [data-theme="dark"] .note-box p {
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           Code
+           ======================================== */
         code {
             background: #e9ecef;
             padding: 3px 8px;
@@ -248,26 +876,101 @@
             font-size: 0.95em;
         }
 
+        [data-theme="dark"] code {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent-primary);
+        }
+
+        /* ========================================
+           Footer
+           ======================================== */
         footer {
-            background: #f8f9fa;
+            background: var(--bg-footer);
             padding: 30px;
             text-align: center;
-            color: #6c757d;
+            color: var(--text-secondary);
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] footer {
             border-top: 3px solid #e9ecef;
+        }
+
+        [data-theme="simple"] footer {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9em;
+        }
+
+        [data-theme="dark"] footer {
+            border-top: 1px solid var(--border-color);
+            margin-top: 50px;
+            padding: 50px;
         }
 
         footer p {
             margin: 5px 0;
         }
 
+        /* ========================================
+           Emoji
+           ======================================== */
         .emoji {
             font-size: 1.3em;
             margin-right: 5px;
         }
 
+        /* ========================================
+           Legacy/Developer Section Styles
+           ======================================== */
+        .section.legacy {
+            opacity: 0.7;
+        }
+
+        [data-theme="default"] .section.legacy {
+            border: 2px dashed #999;
+            background: #fafafa;
+        }
+
+        [data-theme="dark"] .section.legacy {
+            border-color: #333;
+        }
+
+        .section.developer {
+            opacity: 0.8;
+        }
+
+        [data-theme="default"] .section.developer {
+            border: 2px dashed #6c757d;
+            background: #f8f9fa;
+        }
+
+        /* ========================================
+           Responsive
+           ======================================== */
         @media (max-width: 768px) {
+            .theme-switcher {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+            }
+
+            .theme-btn {
+                padding: 6px 12px;
+                font-size: 0.75em;
+            }
+
             header h1 {
                 font-size: 1.8em;
+            }
+
+            [data-theme="simple"] header h1 {
+                font-size: 2em;
+            }
+
+            [data-theme="dark"] header h1 {
+                font-size: 2em;
             }
 
             .section h2 {
@@ -279,32 +982,47 @@
                 text-align: center;
                 margin: 10px 0;
             }
+
+            .section {
+                padding: 25px;
+            }
+
+            [data-theme="simple"] .section {
+                padding: 0;
+                padding-bottom: 40px;
+            }
         }
     </style>
 </head>
-<body>
+<body data-theme="default">
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+        <button class="theme-btn active" data-target="default">通常</button>
+        <button class="theme-btn" data-target="simple">シンプル</button>
+        <button class="theme-btn" data-target="dark">ダーク</button>
+    </div>
+
     <div class="container">
         <header>
             <h1>一括登録シート（関税ベース）総合ガイド</h1>
             <p>すべてのツールとリソースを一箇所に</p>
+            <span class="version-badge">VER.42 NEW</span>
         </header>
 
         <div class="content">
             <!-- 更新のお知らせ -->
-            <div class="note-box" style="background: #ffe0e0; border: 3px solid #dc3545; margin-bottom: 30px;">
-                <p style="font-size: 1.1em; text-align: center; margin-bottom: 10px;">
-                    <strong>🔔 重要なお知らせ（2025年11月27日 15:00 更新）</strong>
-                </p>
-                <p style="text-align: center;">
+            <div class="alert">
+                <h3>重要なお知らせ（2025年11月27日 15:00 更新）</h3>
+                <p>
                     一括登録シートと拡張機能を更新しました。<br>
-                    <strong style="color: #dc3545;">以前のバージョンではシッピングポリシーの判定にエラーが出ます。</strong><br>
+                    <strong>以前のバージョンではシッピングポリシーの判定にエラーが出ます。</strong><br>
                     必ずこちらから最新版をダウンロードしてください。
                 </p>
             </div>
 
             <!-- Ver.42 改修概要 -->
-            <div class="intro-box" style="background: linear-gradient(135deg, #fff3cd 0%, #ffe5cc 100%); border-left-color: #ff9800;">
-                <h2>🎉 Ver.42 主な改修内容：関税ベースへの移行</h2>
+            <div class="intro-box highlight">
+                <h2>Ver.42 主な改修内容：関税ベースへの移行</h2>
                 <p style="margin-bottom: 15px;">
                     <strong>シッピングポリシーの算出方法が「販売額ベース」から「関税ベース」に変更されました。</strong>
                 </p>
@@ -330,12 +1048,10 @@
 
             <!-- 1. 一括登録シート（関税ベース）Ver.42 -->
             <div class="section">
-                <h2><span class="emoji">📊</span>一括登録シート（関税ベース）Ver.42</h2>
+                <p class="section-label">Spreadsheet</p>
+                <h2><span class="emoji">📊</span>一括登録シート（関税ベース）Ver.42<small>最新版スプレッドシート</small></h2>
                 <div class="link-box primary">
-                    <h3>最新版スプレッドシート</h3>
-                    <p>
-                        <strong>Ver.42の主な特徴：</strong>
-                    </p>
+                    <h3>主な特徴</h3>
                     <ul class="feature-list">
                         <li>拡張機能からワンクリックでシートに商品情報をエクスポート（シートを開かなくても商品情報を貼り付け可能）</li>
                         <li>1日ごとの実効レート取得に変更</li>
@@ -345,8 +1061,8 @@
                         <li>AI自動翻訳・計算機能搭載</li>
                         <li>ワンクリックで計算式の再出力が可能</li>
                     </ul>
-                    <a href="https://docs.google.com/spreadsheets/d/1E-WBZ4s9jsPOjTzOj9l9xSgz5Wg9g8YbIF_ssVqUS_8/edit?gid=1116471535#gid=1116471535" target="_blank" class="btn btn-warning">
-                        <span class="emoji">🌟</span>一括登録シート（関税ベース）Ver.42 を開く
+                    <a href="https://docs.google.com/spreadsheets/d/1E-WBZ4s9jsPOjTzOj9l9xSgz5Wg9g8YbIF_ssVqUS_8/edit?gid=1116471535#gid=1116471535" target="_blank" class="btn btn-warning btn-block">
+                        <span class="emoji">🌟</span>一括登録シート Ver.42 を開く
                     </a>
                 </div>
 
@@ -357,16 +1073,17 @@
 
             <!-- 2. Universal Scraper Chrome拡張機能 -->
             <div class="section">
-                <h2><span class="emoji">🔧</span>Universal Scraper Chrome拡張機能</h2>
+                <p class="section-label">Chrome Extension</p>
+                <h2><span class="emoji">🔧</span>Universal Scraper<small>Chrome拡張機能 v1.1.3</small></h2>
                 <div class="link-box secondary">
-                    <h3>最新版ダウンロード（v1.1.3）</h3>
+                    <h3>最新版ダウンロード</h3>
                     <p>
                         商品情報を自動で取得してスプレッドシートに転送できるChrome拡張機能です。
                         作業効率が大幅に向上します。
                     </p>
                     <a href="https://github.com/naokijodan/universal-scraper/releases/download/v1.1.3/universal-scraper.zip"
                        download
-                       class="btn btn-success">
+                       class="btn btn-success btn-block">
                         <span class="emoji">📥</span>Universal Scraper v1.1.3 をダウンロード (ZIP)
                     </a>
                 </div>
@@ -377,16 +1094,16 @@
                     <a href="https://htmlpreview.github.io/?https://github.com/naokijodan/universal-scraper/blob/main/README.html"
                        target="_blank"
                        class="btn btn-info">
-                        <span class="emoji">📖</span>Universal Scraper 使用方法を見る
+                        <span class="emoji">📖</span>使用方法を見る
                     </a>
                 </div>
             </div>
 
             <!-- 3. プロンプト例集 -->
             <div class="section">
-                <h2><span class="emoji">💡</span>プロンプト例集</h2>
+                <p class="section-label">AI Prompts</p>
+                <h2><span class="emoji">💡</span>プロンプト例集<small>AIプロンプトのサンプル集</small></h2>
                 <div class="link-box secondary">
-                    <h3>AIプロンプトのサンプル集</h3>
                     <p>
                         商品説明の翻訳に使えるプロンプトの例を集めたファイルです。
                         汎用、時計専用、ブランドアパレル、日本ブランド、ゲーム、フィギュア向けのカテゴリ別プロンプトが含まれています。
@@ -394,26 +1111,21 @@
                     <a href="https://naokijodan.github.io/prompt-editor-guide/%E3%83%97%E3%83%AD%E3%83%B3%E3%83%97%E3%83%88%E4%BD%9C%E4%BE%8B.zip"
                        download
                        class="btn btn-success">
-                        <span class="emoji">📥</span>プロンプト作例をダウンロード (ZIP)
+                        <span class="emoji">📥</span>プロンプト作例をダウンロード
                     </a>
-                </div>
-
-                <div class="link-box info">
-                    <h3>プロンプト編集ガイド</h3>
-                    <p>プロンプトの編集方法、カスタマイズ方法、ChatGPTを活用したプロンプト生成方法については以下のガイドをご覧ください。</p>
                     <a href="https://naokijodan.github.io/prompt-editor-guide/"
                        target="_blank"
                        class="btn btn-info">
-                        <span class="emoji">📝</span>プロンプト編集ガイドを見る
+                        <span class="emoji">📝</span>編集ガイドを見る
                     </a>
                 </div>
             </div>
 
             <!-- 4. 価格計算ツール -->
             <div class="section">
-                <h2><span class="emoji">💰</span>価格計算ツール</h2>
+                <p class="section-label">Calculator</p>
+                <h2><span class="emoji">💰</span>価格計算ツール<small>商品価格の計算方法</small></h2>
                 <div class="link-box info">
-                    <h3>商品価格の計算方法</h3>
                     <p>
                         eBayで商品を売るときの正確な売値を計算するツールです。
                         為替レート、手数料、送料、関税などを考慮した4つの計算機能を提供しています。
@@ -421,7 +1133,7 @@
                     </p>
                     <a href="https://naokijodan.github.io/price-calc-guide/"
                        target="_blank"
-                       class="btn btn-info">
+                       class="btn btn-info btn-block">
                         <span class="emoji">📊</span>価格計算ツール 使い方ガイド
                     </a>
                 </div>
@@ -429,9 +1141,9 @@
 
             <!-- 5. Watch Worksheet 作成ツール -->
             <div class="section">
-                <h2><span class="emoji">⌚</span>Watch Worksheet 作成ツール</h2>
+                <p class="section-label">Watch Tools</p>
+                <h2><span class="emoji">⌚</span>Watch Worksheet 作成ツール<small>時計出品用ワークシート</small></h2>
                 <div class="link-box primary">
-                    <h3>時計出品用ワークシート</h3>
                     <p>
                         時計の出品に特化したワークシートです。
                         専用のGPTsと連携することで、時計の商品情報を効率的に作成できます。
@@ -444,7 +1156,7 @@
                     <a href="https://chatgpt.com/g/g-690a197b31d08191915c44890a1c31a1-gai-liang-ban-watch-worksheetzuo-cheng-yong-gpts"
                        target="_blank"
                        class="btn btn-success">
-                        <span class="emoji">🤖</span>Watch Worksheet 作成用 GPTs
+                        <span class="emoji">🤖</span>作成用 GPTs
                     </a>
                 </div>
 
@@ -461,16 +1173,16 @@
 
             <!-- 6. 一括登録シート 詳しい操作方法 -->
             <div class="section">
-                <h2><span class="emoji">📚</span>一括登録シート 詳しい操作方法</h2>
+                <p class="section-label">Guide</p>
+                <h2><span class="emoji">📚</span>一括登録シート 詳しい操作方法<small>ステップバイステップガイド</small></h2>
                 <div class="link-box info">
-                    <h3>ステップバイステップガイド</h3>
                     <p>
                         一括登録シートの基本的な使い方から応用的な機能まで、
                         画像付きで詳しく解説しています。初めての方はこちらをご覧ください。
                     </p>
                     <a href="usage-guide.html"
                        target="_blank"
-                       class="btn btn-primary">
+                       class="btn btn-primary btn-block">
                         <span class="emoji">📖</span>詳しい操作方法を見る
                     </a>
                 </div>
@@ -488,6 +1200,7 @@
 
             <!-- 7. よくある質問 -->
             <div class="section">
+                <p class="section-label">FAQ</p>
                 <h2><span class="emoji">❓</span>よくある質問</h2>
 
                 <h3>Q: どのツールから使い始めればいいですか？</h3>
@@ -514,7 +1227,7 @@
                     関税率や為替レートがどのように反映されるかを確認できます。
                 </p>
 
-                <div class="note-box" style="margin-top: 30px; background: #e7f3ff; border-color: #0066cc;">
+                <div class="note-box" style="margin-top: 30px;">
                     <p style="font-size: 1.05em; text-align: center;">
                         <strong>💬 上記で解決しない場合は、お気軽にスクールにお問い合わせください。</strong>
                     </p>
@@ -522,9 +1235,10 @@
             </div>
 
             <!-- 8. 旧バージョン -->
-            <div class="section" style="border: 2px dashed #999; background: #fafafa;">
-                <h2><span class="emoji">📦</span>旧バージョン：一括登録シート（販売価格ベース）Ver.34.2</h2>
-                <div class="link-box" style="background: #f0f0f0; border-left-color: #999;">
+            <div class="section legacy">
+                <p class="section-label">Legacy Version</p>
+                <h2><span class="emoji">📦</span>旧バージョン<small>一括登録シート（販売価格ベース）Ver.34.2</small></h2>
+                <div class="link-box">
                     <h3>販売価格ベース版をお使いの方へ</h3>
                     <p>
                         従来の販売価格ベースでシッピングポリシーを算出するバージョンです。
@@ -536,8 +1250,7 @@
                     <div style="margin-top: 20px;">
                         <a href="https://htmlpreview.github.io/?https://github.com/naokijodan/bulk-sheet-report/blob/main/index.html"
                            target="_blank"
-                           class="btn"
-                           style="background: linear-gradient(135deg, #999 0%, #777 100%); color: white;">
+                           class="btn btn-outline">
                             <span class="emoji">📦</span>旧バージョンご利用の方はこちら
                         </a>
                     </div>
@@ -545,10 +1258,10 @@
             </div>
 
             <!-- 9. 開発者向け -->
-            <div class="section" style="border: 2px dashed #6c757d; background: #f8f9fa;">
-                <h2><span class="emoji">👨‍💻</span>開発者・カスタマイズ向け</h2>
-                <div class="link-box" style="background: #e9ecef; border-left-color: #6c757d;">
-                    <h3>一括登録シート スクリプト全集（GitHub）</h3>
+            <div class="section developer">
+                <p class="section-label">Developer</p>
+                <h2><span class="emoji">👨‍💻</span>開発者・カスタマイズ向け<small>一括登録シート スクリプト全集（GitHub）</small></h2>
+                <div class="link-box">
                     <p>
                         一括登録シートのGoogle Apps Scriptコード全集のGitHubリポジトリです。
                         ご自身でカスタマイズしたい方、機能を追加したい方、コードを学びたい開発者向けのリソースです。
@@ -563,9 +1276,8 @@
                     </ul>
                     <a href="https://github.com/naokijodan/bulk-sheet-apps-v2"
                        target="_blank"
-                       class="btn"
-                       style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white;">
-                        <span class="emoji">🔗</span>一括シートApps_v2 GitHubリポジトリを見る
+                       class="btn btn-outline">
+                        <span class="emoji">🔗</span>GitHubリポジトリを見る
                     </a>
                 </div>
             </div>
@@ -577,5 +1289,40 @@
             <p>Universal Scraper v1.1.3 | 一括登録シート（関税ベース）Ver.42</p>
         </footer>
     </div>
+
+    <!-- Theme Switcher JavaScript -->
+    <script>
+        // テーマ切り替え機能
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const themeBtns = document.querySelectorAll('.theme-btn');
+
+            // LocalStorageから保存されたテーマを取得
+            const savedTheme = localStorage.getItem('bulk-guide-theme') || 'default';
+            setTheme(savedTheme);
+
+            // ボタンクリックイベント
+            themeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-target');
+                    setTheme(theme);
+                    localStorage.setItem('bulk-guide-theme', theme);
+                });
+            });
+
+            function setTheme(theme) {
+                body.setAttribute('data-theme', theme);
+
+                // アクティブボタンの更新
+                themeBtns.forEach(btn => {
+                    if (btn.getAttribute('data-target') === theme) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
