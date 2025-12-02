@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シートと各種アカウントの共有について</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS Variables - Theme Definitions
+           ======================================== */
+
+        /* 通常テーマ (Default) */
+        :root, [data-theme="default"] {
+            --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-container: #ffffff;
+            --bg-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-card: #ffffff;
+            --bg-feature: #f8f9fa;
+            --bg-highlight: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            --bg-toc: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --bg-footer: #f8f9fa;
+            --bg-step: #f8f9fa;
+            --bg-image-area: #f8f9fa;
+
+            --text-primary: #333333;
+            --text-secondary: #6c757d;
+            --text-header: #ffffff;
+            --text-muted: #495057;
+
+            --accent-primary: #667eea;
+            --accent-secondary: #764ba2;
+            --accent-success: #28a745;
+            --accent-warning: #ffc107;
+            --accent-danger: #dc3545;
+            --accent-info: #17a2b8;
+
+            --border-color: #f0f0f0;
+            --border-section: 2px solid #f0f0f0;
+            --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --card-radius: 20px;
+
+            --font-base: 16px;
+        }
+
+        /* シンプルテーマ (Minimal) */
+        [data-theme="simple"] {
+            --bg-body: #ffffff;
+            --bg-container: #ffffff;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-feature: #f5f5f5;
+            --bg-highlight: #f5f5f5;
+            --bg-toc: #f5f5f5;
+            --bg-footer: #ffffff;
+            --bg-step: #f5f5f5;
+            --bg-image-area: #f5f5f5;
+
+            --text-primary: #111111;
+            --text-secondary: #666666;
+            --text-header: #111111;
+            --text-muted: #999999;
+
+            --accent-primary: #111111;
+            --accent-secondary: #0066ff;
+            --accent-success: #111111;
+            --accent-warning: #111111;
+            --accent-danger: #cc0000;
+            --accent-info: #0066ff;
+
+            --border-color: #e5e5e5;
+            --border-section: 1px solid #e5e5e5;
+            --card-shadow: none;
+            --card-radius: 0;
+
+            --font-base: 16px;
+        }
+
+        /* ダークテーマ (Neon) */
+        [data-theme="dark"] {
+            --bg-body: #141428;
+            --bg-container: transparent;
+            --bg-header: transparent;
+            --bg-card: #1a1a35;
+            --bg-feature: rgba(255, 255, 255, 0.03);
+            --bg-highlight: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(191, 0, 255, 0.1));
+            --bg-toc: rgba(0, 212, 255, 0.05);
+            --bg-footer: transparent;
+            --bg-step: rgba(0, 212, 255, 0.05);
+            --bg-image-area: rgba(255, 255, 255, 0.02);
+
+            --text-primary: #ffffff;
+            --text-secondary: #8888aa;
+            --text-header: #ffffff;
+            --text-muted: #6666aa;
+
+            --accent-primary: #00d4ff;
+            --accent-secondary: #bf00ff;
+            --accent-success: #00ff88;
+            --accent-warning: #ffdd00;
+            --accent-danger: #ff0080;
+            --accent-info: #00d4ff;
+
+            --border-color: #2a2a50;
+            --border-section: 1px solid #2a2a50;
+            --card-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+            --card-radius: 20px;
+
+            --font-base: 17px;
+        }
+
+        /* ========================================
+           Base Styles
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: var(--font-base);
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--bg-body);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] body {
+            padding: 20px;
+        }
+
+        /* ダークテーマ用グリッド背景 */
+        [data-theme="dark"] body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--bg-container);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] .container {
+            max-width: 900px;
+            padding: 80px 24px;
+        }
+
+        [data-theme="dark"] .container {
+            padding: 60px 24px;
+        }
+
+        /* ========================================
+           Theme Switcher
+           ======================================== */
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 12px;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] .theme-switcher {
+            background: rgba(20, 20, 40, 0.95);
+            border: 1px solid #2a2a50;
+        }
+
+        .theme-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .theme-btn[data-target="default"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .theme-btn[data-target="simple"] {
+            background: #111;
+            color: white;
+        }
+
+        .theme-btn[data-target="dark"] {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            color: #0a0a0f;
+        }
+
+        .theme-btn:not(.active) {
+            opacity: 0.4;
+        }
+
+        .theme-btn:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .theme-btn.active {
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========================================
+           Header
+           ======================================== */
+        header {
+            background: var(--bg-header);
+            color: var(--text-header);
+            padding: 50px 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header {
+            padding: 0;
+            margin-bottom: 60px;
+            text-align: left;
+        }
+
+        [data-theme="dark"] header {
+            padding: 80px 40px;
+            position: relative;
+        }
+
+        [data-theme="dark"] header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header h1 {
+            font-size: 2.2em;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        [data-theme="dark"] header h1 {
+            font-size: 2.4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff, #bf00ff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(0, 212, 255, 0.5);
+            position: relative;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header p {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 1.1em;
+        }
+
+        [data-theme="dark"] header p {
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="default"] .back-link {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        [data-theme="default"] .back-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        [data-theme="simple"] .back-link {
+            background: transparent;
+            border: 1.5px solid #111;
+            color: #111;
+            margin-top: 24px;
+        }
+
+        [data-theme="simple"] .back-link:hover {
+            background: #111;
+            color: white;
+        }
+
+        [data-theme="dark"] .back-link {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            margin-top: 24px;
+        }
+
+        [data-theme="dark"] .back-link:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* ========================================
+           Content Area
+           ======================================== */
+        .content {
+            padding: 40px 30px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] .content {
+            padding: 0;
+        }
+
+        [data-theme="dark"] .content {
+            padding: 20px 0;
+        }
+
+        /* ========================================
+           Table of Contents
+           ======================================== */
+        .toc {
+            background: var(--bg-toc);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .toc {
+            border-left: 6px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .toc {
+            border-radius: 0;
+            padding: 28px;
+        }
+
+        [data-theme="dark"] .toc {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        .toc h2 {
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        [data-theme="dark"] .toc h2 {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .toc ol {
+            padding-left: 25px;
+        }
+
+        .toc li {
+            margin: 12px 0;
+            font-size: 1.1em;
+        }
+
+        .toc a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        [data-theme="dark"] .toc a {
+            color: var(--accent-primary);
+        }
+
+        [data-theme="dark"] .toc a:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* ========================================
+           Section
+           ======================================== */
+        .section {
+            background: var(--bg-card);
+            padding: 40px 0;
+            margin-bottom: 30px;
+            border-bottom: var(--border-section);
+            transition: all 0.4s ease;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        [data-theme="simple"] .section {
+            padding: 0;
+            padding-bottom: 60px;
+            margin-bottom: 60px;
+        }
+
+        [data-theme="dark"] .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--card-radius);
+            padding: 35px;
+            margin-bottom: 25px;
+        }
+
+        [data-theme="dark"] .section:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--card-shadow);
+        }
+
+        .section h2 {
+            color: var(--accent-primary);
+            margin-bottom: 25px;
+            font-size: 2em;
+            padding-bottom: 15px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .section h2 {
+            border-bottom: 3px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .section h2 {
+            font-size: 1.8em;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        [data-theme="dark"] .section h2 {
+            color: var(--text-primary);
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .section h3 {
+            color: var(--accent-secondary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        [data-theme="dark"] .section h3 {
+            color: var(--accent-primary);
+        }
+
+        .section p {
+            margin: 15px 0;
+            font-size: 1.05em;
+            line-height: 1.9;
+        }
+
+        .section ul, .section ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .section li {
+            margin: 10px 0;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        /* ========================================
+           Note Box
+           ======================================== */
+        .note-box {
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .note-box {
+            background: #fff3cd;
+            border: 2px solid var(--accent-warning);
+        }
+
+        [data-theme="default"] .note-box.warning {
+            background: #f8d7da;
+            border-color: var(--accent-danger);
+        }
+
+        [data-theme="default"] .note-box.info {
+            background: #d1ecf1;
+            border-color: var(--accent-info);
+        }
+
+        [data-theme="default"] .note-box.success {
+            background: #d4edda;
+            border-color: var(--accent-success);
+        }
+
+        [data-theme="simple"] .note-box {
+            border-radius: 0;
+            background: #fffbeb;
+            border-left: 3px solid #f59e0b;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        [data-theme="simple"] .note-box.warning {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+
+        [data-theme="simple"] .note-box.info {
+            background: #eff6ff;
+            border-left-color: #3b82f6;
+        }
+
+        [data-theme="simple"] .note-box.success {
+            background: #f0fdf4;
+            border-left-color: #22c55e;
+        }
+
+        [data-theme="dark"] .note-box {
+            background: rgba(255, 221, 0, 0.1);
+            border: 1px solid #ffdd00;
+            border-radius: 12px;
+        }
+
+        [data-theme="dark"] .note-box.warning {
+            background: rgba(255, 0, 128, 0.1);
+            border-color: #ff0080;
+        }
+
+        [data-theme="dark"] .note-box.info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+        }
+
+        [data-theme="dark"] .note-box.success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+
+        .note-box strong {
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        [data-theme="dark"] .note-box p,
+        [data-theme="dark"] .note-box li {
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           Highlight Box
+           ======================================== */
+        .highlight-box {
+            background: var(--bg-highlight);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .highlight-box {
+            border-left: 5px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .highlight-box {
+            border-radius: 0;
+            border-left: 3px solid #111;
+        }
+
+        [data-theme="dark"] .highlight-box {
+            border: 1px solid var(--accent-secondary);
+            border-radius: 12px;
+        }
+
+        /* ========================================
+           Share Status Box
+           ======================================== */
+        .share-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            transition: all 0.4s ease;
+        }
+
+        .share-status.ok {
+            background: #d4edda;
+            border: 2px solid var(--accent-success);
+        }
+
+        .share-status.caution {
+            background: #fff3cd;
+            border: 2px solid var(--accent-warning);
+        }
+
+        .share-status.ng {
+            background: #f8d7da;
+            border: 2px solid var(--accent-danger);
+        }
+
+        [data-theme="dark"] .share-status.ok {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+
+        [data-theme="dark"] .share-status.caution {
+            background: rgba(255, 221, 0, 0.1);
+            border-color: #ffdd00;
+        }
+
+        [data-theme="dark"] .share-status.ng {
+            background: rgba(255, 0, 128, 0.1);
+            border-color: #ff0080;
+        }
+
+        .share-status .icon {
+            font-size: 2em;
+        }
+
+        .share-status .text {
+            flex: 1;
+        }
+
+        .share-status .text strong {
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* ========================================
+           Code
+           ======================================== */
+        code {
+            background: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        [data-theme="dark"] code {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent-primary);
+        }
+
+        /* ========================================
+           Links
+           ======================================== */
+        a {
+            transition: color 0.3s ease;
+        }
+
+        [data-theme="dark"] .section a {
+            color: var(--accent-primary);
+        }
+
+        [data-theme="dark"] .section a:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* ========================================
+           Footer
+           ======================================== */
+        footer {
+            background: var(--bg-footer);
+            padding: 30px;
+            text-align: center;
+            color: var(--text-secondary);
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] footer {
+            border-top: 3px solid #e9ecef;
+        }
+
+        [data-theme="simple"] footer {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9em;
+        }
+
+        [data-theme="dark"] footer {
+            border-top: 1px solid var(--border-color);
+            margin-top: 50px;
+            padding: 50px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        /* ========================================
+           Emoji
+           ======================================== */
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+
+        /* ========================================
+           Responsive
+           ======================================== */
+        @media (max-width: 768px) {
+            .theme-switcher {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+            }
+
+            .theme-btn {
+                padding: 6px 12px;
+                font-size: 0.75em;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .share-status {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body data-theme="default">
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+        <button class="theme-btn active" data-target="default">通常</button>
+        <button class="theme-btn" data-target="simple">シンプル</button>
+        <button class="theme-btn" data-target="dark">ダーク</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>シートと各種アカウントの共有について</h1>
+            <p>外注さんやチームメンバーとの共有ガイド</p>
+            <a href="usage-guide.html" class="back-link">← 詳しい操作方法ガイドに戻る</a>
+        </header>
+
+        <div class="content">
+            <!-- 目次 -->
+            <div class="toc">
+                <h2><span class="emoji">📑</span>目次</h2>
+                <ol>
+                    <li><a href="#overview">はじめに</a></li>
+                    <li><a href="#spreadsheet">一括登録シートの共有</a></li>
+                    <li><a href="#google-account">Googleアカウントの共有</a></li>
+                    <li><a href="#openai-api">OpenAI APIキーの共有</a></li>
+                    <li><a href="#eagle-api">EAGLE APIトークンの共有</a></li>
+                    <li><a href="#extension">Chrome拡張機能の共有</a></li>
+                    <li><a href="#summary">おすすめの共有方法まとめ</a></li>
+                </ol>
+            </div>
+
+            <!-- 1. はじめに -->
+            <section id="overview" class="section">
+                <h2><span class="emoji">👋</span>1. はじめに</h2>
+
+                <p>
+                    一括登録シートを外注さんやチームメンバーと共有して使いたいというご質問をよくいただきます。
+                    このページでは、各種アカウントやツールの共有について、何が共有できて何に注意が必要かを詳しく解説します。
+                </p>
+
+                <div class="highlight-box">
+                    <strong>📌 基本的な考え方</strong>
+                    <p>
+                        一括登録シートは共有可能です。シートを共有すれば、設定済みのAPIキーやトークンの<strong>機能</strong>も共有されます。
+                        ただし、APIキーやトークンの<strong>値（文字列）自体</strong>を他人に直接教えるのは避けましょう。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. 一括登録シートの共有 -->
+            <section id="spreadsheet" class="section">
+                <h2><span class="emoji">📊</span>2. 一括登録シートの共有</h2>
+
+                <div class="share-status ok">
+                    <div class="icon">✅</div>
+                    <div class="text">
+                        <strong>共有可能</strong>
+                        <p>Googleスプレッドシートの共有機能を使って、他の人と共有できます。</p>
+                    </div>
+                </div>
+
+                <h3>共有方法</h3>
+                <ol>
+                    <li>スプレッドシートの右上「共有」ボタンをクリック</li>
+                    <li>共有したい人のメールアドレスを入力</li>
+                    <li>権限（閲覧者/編集者）を選択して共有</li>
+                </ol>
+
+                <h3>共有時のポイント</h3>
+                <ul>
+                    <li>シートを共有すると、設定済みのAPIキーやトークンの<strong>機能</strong>も一緒に使えるようになります</li>
+                    <li>共有相手にAPIキーの値が見えることはありません（スクリプトプロパティに保存されているため）</li>
+                    <li>編集権限を与える場合は、信頼できる相手に限定しましょう</li>
+                </ul>
+
+                <div class="note-box info">
+                    <strong>💡 ヒント</strong>
+                    <p>
+                        外注さんには「編集者」権限で共有すれば、AI翻訳機能なども使えます。
+                        APIキーの設定は自分で行い、シートだけを共有するのがおすすめです。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 3. Googleアカウントの共有 -->
+            <section id="google-account" class="section">
+                <h2><span class="emoji">👤</span>3. Googleアカウントの共有</h2>
+
+                <div class="share-status caution">
+                    <div class="icon">⚠️</div>
+                    <div class="text">
+                        <strong>家族：OK ／ 外注さん：非推奨</strong>
+                        <p>Googleアカウント自体の共有は、相手との関係性によって判断が必要です。</p>
+                    </div>
+                </div>
+
+                <h3>家族との共有</h3>
+                <p>
+                    ご家族であれば、Googleアカウントを共有しても問題ありません。
+                    同じアカウントでログインすれば、Chrome拡張機能の設定なども共有されます。
+                </p>
+
+                <h3>外注さんとの共有が非推奨な理由</h3>
+                <ul>
+                    <li><strong>セキュリティリスク：</strong>Googleアカウントには、Gmail、Googleドライブ、支払い情報など多くの個人情報が紐づいています</li>
+                    <li><strong>プライバシー：</strong>メールの内容や他のドキュメントも見られてしまいます</li>
+                    <li><strong>アカウント管理：</strong>パスワード変更やアカウント削除などの操作が可能になります</li>
+                </ul>
+
+                <div class="note-box warning">
+                    <strong>⚠️ 注意</strong>
+                    <p>
+                        外注さんとの作業では、Googleアカウント自体を共有するのではなく、
+                        <strong>スプレッドシートだけを共有</strong>する方法をおすすめします。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 4. OpenAI APIキーの共有 -->
+            <section id="openai-api" class="section">
+                <h2><span class="emoji">🔑</span>4. OpenAI APIキーの共有</h2>
+
+                <div class="share-status caution">
+                    <div class="icon">⚠️</div>
+                    <div class="text">
+                        <strong>シート経由での機能共有：OK ／ キーの値を直接渡す：NG</strong>
+                        <p>シートを共有すれば翻訳機能は使えます。キーの値自体を教える必要はありません。</p>
+                    </div>
+                </div>
+
+                <h3>シート経由での共有（推奨）</h3>
+                <p>
+                    一括登録シートを共有すれば、共有相手もAI翻訳機能を使用できます。
+                    APIキーはスクリプトプロパティに安全に保存されているため、共有相手に値が見えることはありません。
+                </p>
+
+                <div class="highlight-box">
+                    <strong>✅ こうすれば安全</strong>
+                    <ol>
+                        <li>自分でOpenAI APIキーを取得・設定</li>
+                        <li>一括登録シートを外注さんに共有</li>
+                        <li>外注さんは翻訳機能を使用可能（APIキーの値は見えない）</li>
+                    </ol>
+                </div>
+
+                <h3>キーの値を直接渡すのがNGな理由</h3>
+                <ul>
+                    <li><strong>課金リスク：</strong>APIキーを使われると、あなたのアカウントに課金が発生します</li>
+                    <li><strong>悪用リスク：</strong>大量のリクエストを送られると、高額な請求につながる可能性があります</li>
+                    <li><strong>管理困難：</strong>誰がどれだけ使ったか追跡が難しくなります</li>
+                </ul>
+
+                <div class="note-box warning">
+                    <strong>❌ やってはいけないこと</strong>
+                    <p>
+                        APIキーの値（<code>sk-...</code>で始まる文字列）を、メールやチャットで他人に送ることは避けてください。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 5. EAGLE APIトークンの共有 -->
+            <section id="eagle-api" class="section">
+                <h2><span class="emoji">🦅</span>5. EAGLE APIトークンの共有</h2>
+
+                <div class="share-status caution">
+                    <div class="icon">⚠️</div>
+                    <div class="text">
+                        <strong>シート経由での機能共有：OK ／ トークンの値を直接渡す：NG</strong>
+                        <p>OpenAI APIキーと同様、シートを共有すれば機能は使えます。</p>
+                    </div>
+                </div>
+
+                <h3>シート経由での共有（推奨）</h3>
+                <p>
+                    一括登録シートを共有すれば、共有相手もEAGLE連携機能を使用できます。
+                    ただし、画像の保存先はあなたのEAGLEライブラリになります。
+                </p>
+
+                <h3>トークンの値を直接渡すのがNGな理由</h3>
+                <ul>
+                    <li><strong>ライブラリへのアクセス：</strong>トークンがあれば、あなたのEAGLEライブラリにアクセスできてしまいます</li>
+                    <li><strong>データの改変：</strong>ライブラリ内の画像やフォルダを操作される可能性があります</li>
+                </ul>
+
+                <div class="note-box info">
+                    <strong>💡 外注さんごとにEAGLEを使う場合</strong>
+                    <p>
+                        外注さんが自分のEAGLEライブラリに保存したい場合は、
+                        外注さん自身でEAGLEをインストールし、自分のAPIトークンを取得・設定してもらいましょう。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 6. Chrome拡張機能の共有 -->
+            <section id="extension" class="section">
+                <h2><span class="emoji">🧩</span>6. Chrome拡張機能の共有</h2>
+
+                <div class="share-status caution">
+                    <div class="icon">⚠️</div>
+                    <div class="text">
+                        <strong>同じGoogleアカウント：共有される ／ 別アカウント：個別にインストール必要</strong>
+                        <p>Chrome拡張機能はGoogleアカウントに紐づいています。</p>
+                    </div>
+                </div>
+
+                <h3>同じGoogleアカウントを共有している場合</h3>
+                <p>
+                    同じGoogleアカウントでChromeにログインしていれば、拡張機能は自動的に同期されます。
+                    別途インストールする必要はありません。
+                </p>
+
+                <h3>別のGoogleアカウントを使う場合</h3>
+                <p>
+                    外注さんが別のGoogleアカウントを使う場合は、それぞれのアカウントで拡張機能をインストールする必要があります。
+                </p>
+
+                <div class="highlight-box">
+                    <strong>拡張機能のインストール手順</strong>
+                    <ol>
+                        <li><a href="index.html">総合ガイド</a>から拡張機能をダウンロード</li>
+                        <li>Chromeの拡張機能管理ページ（<code>chrome://extensions/</code>）を開く</li>
+                        <li>デベロッパーモードをONにして、「パッケージ化されていない拡張機能を読み込む」</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 7. おすすめの共有方法まとめ -->
+            <section id="summary" class="section">
+                <h2><span class="emoji">📋</span>7. おすすめの共有方法まとめ</h2>
+
+                <div class="highlight-box">
+                    <strong>🏆 外注さんとの安全な共有方法</strong>
+                    <ol>
+                        <li><strong>自分で設定を完了：</strong>OpenAI APIキーとEAGLE APIトークンは自分で設定</li>
+                        <li><strong>シートを共有：</strong>一括登録シートを「編集者」権限で共有</li>
+                        <li><strong>拡張機能は個別に：</strong>外注さんには自分のアカウントで拡張機能をインストールしてもらう</li>
+                    </ol>
+                </div>
+
+                <h3>共有早見表</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr style="background: var(--accent-primary); color: white;">
+                            <th style="padding: 12px; text-align: left;">項目</th>
+                            <th style="padding: 12px; text-align: center;">家族</th>
+                            <th style="padding: 12px; text-align: center;">外注さん</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: var(--bg-feature);">
+                            <td style="padding: 12px; border: 1px solid var(--border-color);">一括登録シート</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ OK</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ OK</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid var(--border-color);">Googleアカウント</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ OK</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">❌ NG</td>
+                        </tr>
+                        <tr style="background: var(--bg-feature);">
+                            <td style="padding: 12px; border: 1px solid var(--border-color);">OpenAI APIキー（シート経由）</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ OK</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ OK</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid var(--border-color);">OpenAI APIキー（値を渡す）</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">⚠️ 注意</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">❌ NG</td>
+                        </tr>
+                        <tr style="background: var(--bg-feature);">
+                            <td style="padding: 12px; border: 1px solid var(--border-color);">EAGLE APIトークン（シート経由）</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ OK</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ OK</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid var(--border-color);">EAGLE APIトークン（値を渡す）</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">⚠️ 注意</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">❌ NG</td>
+                        </tr>
+                        <tr style="background: var(--bg-feature);">
+                            <td style="padding: 12px; border: 1px solid var(--border-color);">Chrome拡張機能</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">✅ 同期</td>
+                            <td style="padding: 12px; border: 1px solid var(--border-color); text-align: center;">📥 個別インストール</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note-box success">
+                    <strong>✅ まとめ</strong>
+                    <p>
+                        シートを共有すれば、APIキーやトークンの機能も一緒に共有されます。
+                        値自体を教える必要はありませんので、安心して外注さんと作業を分担できます。
+                    </p>
+                </div>
+            </section>
+
+            <!-- お問い合わせ -->
+            <section class="section">
+                <div class="note-box info" style="text-align: center;">
+                    <p style="font-size: 1.1em;">
+                        <strong>💬 ご不明な点がございましたら、お気軽にスクールにお問い合わせください。</strong>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p><strong>シートと各種アカウントの共有について</strong></p>
+            <p>最終更新: 2025年12月2日</p>
+        </footer>
+    </div>
+
+    <!-- Theme Switcher JavaScript -->
+    <script>
+        // テーマ切り替え機能
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const themeBtns = document.querySelectorAll('.theme-btn');
+
+            // LocalStorageから保存されたテーマを取得
+            const savedTheme = localStorage.getItem('bulk-guide-theme') || 'default';
+            setTheme(savedTheme);
+
+            // ボタンクリックイベント
+            themeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-target');
+                    setTheme(theme);
+                    localStorage.setItem('bulk-guide-theme', theme);
+                });
+            });
+
+            function setTheme(theme) {
+                body.setAttribute('data-theme', theme);
+
+                // アクティブボタンの更新
+                themeBtns.forEach(btn => {
+                    if (btn.getAttribute('data-target') === theme) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
