@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI APIキー取得ガイド</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS Variables - Theme Definitions
+           ======================================== */
+
+        /* 通常テーマ (Default) */
+        :root, [data-theme="default"] {
+            --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-container: #ffffff;
+            --bg-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-card: #ffffff;
+            --bg-feature: #f8f9fa;
+            --bg-highlight: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            --bg-toc: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --bg-footer: #f8f9fa;
+            --bg-step: #f8f9fa;
+            --bg-image-area: #f8f9fa;
+
+            --text-primary: #333333;
+            --text-secondary: #6c757d;
+            --text-header: #ffffff;
+            --text-muted: #495057;
+
+            --accent-primary: #667eea;
+            --accent-secondary: #764ba2;
+            --accent-success: #28a745;
+            --accent-warning: #ffc107;
+            --accent-danger: #dc3545;
+            --accent-info: #17a2b8;
+
+            --border-color: #f0f0f0;
+            --border-section: 2px solid #f0f0f0;
+            --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --card-radius: 20px;
+
+            --font-base: 16px;
+        }
+
+        /* シンプルテーマ (Minimal) */
+        [data-theme="simple"] {
+            --bg-body: #ffffff;
+            --bg-container: #ffffff;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-feature: #f5f5f5;
+            --bg-highlight: #f5f5f5;
+            --bg-toc: #f5f5f5;
+            --bg-footer: #ffffff;
+            --bg-step: #f5f5f5;
+            --bg-image-area: #f5f5f5;
+
+            --text-primary: #111111;
+            --text-secondary: #666666;
+            --text-header: #111111;
+            --text-muted: #999999;
+
+            --accent-primary: #111111;
+            --accent-secondary: #0066ff;
+            --accent-success: #111111;
+            --accent-warning: #111111;
+            --accent-danger: #cc0000;
+            --accent-info: #0066ff;
+
+            --border-color: #e5e5e5;
+            --border-section: 1px solid #e5e5e5;
+            --card-shadow: none;
+            --card-radius: 0;
+
+            --font-base: 16px;
+        }
+
+        /* ダークテーマ (Neon) */
+        [data-theme="dark"] {
+            --bg-body: #141428;
+            --bg-container: transparent;
+            --bg-header: transparent;
+            --bg-card: #1a1a35;
+            --bg-feature: rgba(255, 255, 255, 0.03);
+            --bg-highlight: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(191, 0, 255, 0.1));
+            --bg-toc: rgba(0, 212, 255, 0.05);
+            --bg-footer: transparent;
+            --bg-step: rgba(0, 212, 255, 0.05);
+            --bg-image-area: rgba(255, 255, 255, 0.02);
+
+            --text-primary: #ffffff;
+            --text-secondary: #8888aa;
+            --text-header: #ffffff;
+            --text-muted: #6666aa;
+
+            --accent-primary: #00d4ff;
+            --accent-secondary: #bf00ff;
+            --accent-success: #00ff88;
+            --accent-warning: #ffdd00;
+            --accent-danger: #ff0080;
+            --accent-info: #00d4ff;
+
+            --border-color: #2a2a50;
+            --border-section: 1px solid #2a2a50;
+            --card-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+            --card-radius: 20px;
+
+            --font-base: 17px;
+        }
+
+        /* ========================================
+           Base Styles
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: var(--font-base);
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--bg-body);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] body {
+            padding: 20px;
+        }
+
+        /* ダークテーマ用グリッド背景 */
+        [data-theme="dark"] body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--bg-container);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] .container {
+            max-width: 900px;
+            padding: 80px 24px;
+        }
+
+        [data-theme="dark"] .container {
+            padding: 60px 24px;
+        }
+
+        /* ========================================
+           Theme Switcher
+           ======================================== */
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 12px;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] .theme-switcher {
+            background: rgba(20, 20, 40, 0.95);
+            border: 1px solid #2a2a50;
+        }
+
+        .theme-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .theme-btn[data-target="default"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .theme-btn[data-target="simple"] {
+            background: #111;
+            color: white;
+        }
+
+        .theme-btn[data-target="dark"] {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            color: #0a0a0f;
+        }
+
+        .theme-btn:not(.active) {
+            opacity: 0.4;
+        }
+
+        .theme-btn:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .theme-btn.active {
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========================================
+           Header
+           ======================================== */
+        header {
+            background: var(--bg-header);
+            color: var(--text-header);
+            padding: 50px 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header {
+            padding: 0;
+            margin-bottom: 60px;
+            text-align: left;
+        }
+
+        [data-theme="dark"] header {
+            padding: 80px 40px;
+            position: relative;
+        }
+
+        [data-theme="dark"] header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header h1 {
+            font-size: 2.2em;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            white-space: nowrap;
+        }
+
+        [data-theme="dark"] header h1 {
+            font-size: 2.4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff, #bf00ff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(0, 212, 255, 0.5);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] header p {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 1.1em;
+        }
+
+        [data-theme="dark"] header p {
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="default"] .back-link {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        [data-theme="default"] .back-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        [data-theme="simple"] .back-link {
+            background: transparent;
+            border: 1.5px solid #111;
+            color: #111;
+            margin-top: 24px;
+        }
+
+        [data-theme="simple"] .back-link:hover {
+            background: #111;
+            color: white;
+        }
+
+        [data-theme="dark"] .back-link {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            margin-top: 24px;
+        }
+
+        [data-theme="dark"] .back-link:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* ========================================
+           Content Area
+           ======================================== */
+        .content {
+            padding: 40px 30px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="simple"] .content {
+            padding: 0;
+        }
+
+        [data-theme="dark"] .content {
+            padding: 20px 0;
+        }
+
+        /* ========================================
+           Table of Contents
+           ======================================== */
+        .toc {
+            background: var(--bg-toc);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .toc {
+            border-left: 6px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .toc {
+            border-radius: 0;
+            padding: 28px;
+        }
+
+        [data-theme="dark"] .toc {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        .toc h2 {
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        [data-theme="dark"] .toc h2 {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .toc ol {
+            padding-left: 25px;
+        }
+
+        .toc li {
+            margin: 12px 0;
+            font-size: 1.1em;
+        }
+
+        .toc a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        [data-theme="dark"] .toc a {
+            color: var(--accent-primary);
+        }
+
+        [data-theme="dark"] .toc a:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* ========================================
+           Section
+           ======================================== */
+        .section {
+            background: var(--bg-card);
+            padding: 40px 0;
+            margin-bottom: 30px;
+            border-bottom: var(--border-section);
+            transition: all 0.4s ease;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        [data-theme="simple"] .section {
+            padding: 0;
+            padding-bottom: 60px;
+            margin-bottom: 60px;
+        }
+
+        [data-theme="dark"] .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--card-radius);
+            padding: 35px;
+            margin-bottom: 25px;
+        }
+
+        [data-theme="dark"] .section:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--card-shadow);
+        }
+
+        .section h2 {
+            color: var(--accent-primary);
+            margin-bottom: 25px;
+            font-size: 2em;
+            padding-bottom: 15px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .section h2 {
+            border-bottom: 3px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .section h2 {
+            font-size: 1.8em;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        [data-theme="dark"] .section h2 {
+            color: var(--text-primary);
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .section h3 {
+            color: var(--accent-secondary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        [data-theme="dark"] .section h3 {
+            color: var(--accent-primary);
+        }
+
+        .section h4 {
+            color: var(--text-muted);
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+
+        [data-theme="dark"] .section h4 {
+            color: var(--text-secondary);
+        }
+
+        .section p {
+            margin: 15px 0;
+            font-size: 1.05em;
+            line-height: 1.9;
+        }
+
+        .section ul, .section ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .section li {
+            margin: 10px 0;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        /* ========================================
+           Image Area
+           ======================================== */
+        .image-area {
+            background: var(--bg-image-area);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .image-area {
+            border: 2px dashed #dee2e6;
+        }
+
+        [data-theme="simple"] .image-area {
+            border-radius: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .image-area {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .image-area img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-placeholder {
+            background: #e9ecef;
+            padding: 60px 20px;
+            border-radius: 8px;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        [data-theme="dark"] .image-placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           Step List
+           ======================================== */
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            background: var(--bg-step);
+            padding: 55px 20px 20px 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .step-list li {
+            border-left: 5px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .step-list li {
+            border-radius: 0;
+            border-left: 3px solid #111;
+        }
+
+        [data-theme="dark"] .step-list li {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .step-list li::before {
+            content: "Step " counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 15px;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .step-list li::before {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        [data-theme="simple"] .step-list li::before {
+            background: #111;
+            color: white;
+        }
+
+        [data-theme="dark"] .step-list li::before {
+            background: linear-gradient(135deg, #00d4ff, #bf00ff);
+            color: #0a0a0f;
+        }
+
+        /* ========================================
+           Note Box
+           ======================================== */
+        .note-box {
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .note-box {
+            background: #fff3cd;
+            border: 2px solid var(--accent-warning);
+        }
+
+        [data-theme="default"] .note-box.warning {
+            background: #f8d7da;
+            border-color: var(--accent-danger);
+        }
+
+        [data-theme="default"] .note-box.info {
+            background: #d1ecf1;
+            border-color: var(--accent-info);
+        }
+
+        [data-theme="default"] .note-box.success {
+            background: #d4edda;
+            border-color: var(--accent-success);
+        }
+
+        [data-theme="simple"] .note-box {
+            border-radius: 0;
+            background: #fffbeb;
+            border-left: 3px solid #f59e0b;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        [data-theme="simple"] .note-box.warning {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+
+        [data-theme="simple"] .note-box.info {
+            background: #eff6ff;
+            border-left-color: #3b82f6;
+        }
+
+        [data-theme="simple"] .note-box.success {
+            background: #f0fdf4;
+            border-left-color: #22c55e;
+        }
+
+        [data-theme="dark"] .note-box {
+            background: rgba(255, 221, 0, 0.1);
+            border: 1px solid #ffdd00;
+            border-radius: 12px;
+        }
+
+        [data-theme="dark"] .note-box.warning {
+            background: rgba(255, 0, 128, 0.1);
+            border-color: #ff0080;
+        }
+
+        [data-theme="dark"] .note-box.info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+        }
+
+        [data-theme="dark"] .note-box.success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+
+        .note-box strong {
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        [data-theme="dark"] .note-box p,
+        [data-theme="dark"] .note-box li {
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           Highlight Box
+           ======================================== */
+        .highlight-box {
+            background: var(--bg-highlight);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] .highlight-box {
+            border-left: 5px solid var(--accent-primary);
+        }
+
+        [data-theme="simple"] .highlight-box {
+            border-radius: 0;
+            border-left: 3px solid #111;
+        }
+
+        [data-theme="dark"] .highlight-box {
+            border: 1px solid var(--accent-secondary);
+            border-radius: 12px;
+        }
+
+        /* ========================================
+           Code
+           ======================================== */
+        code {
+            background: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        [data-theme="dark"] code {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent-primary);
+        }
+
+        /* ========================================
+           Links
+           ======================================== */
+        a {
+            transition: color 0.3s ease;
+        }
+
+        [data-theme="dark"] .section a {
+            color: var(--accent-primary);
+        }
+
+        [data-theme="dark"] .section a:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* ========================================
+           Footer
+           ======================================== */
+        footer {
+            background: var(--bg-footer);
+            padding: 30px;
+            text-align: center;
+            color: var(--text-secondary);
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="default"] footer {
+            border-top: 3px solid #e9ecef;
+        }
+
+        [data-theme="simple"] footer {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9em;
+        }
+
+        [data-theme="dark"] footer {
+            border-top: 1px solid var(--border-color);
+            margin-top: 50px;
+            padding: 50px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        /* ========================================
+           Emoji
+           ======================================== */
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+
+        /* ========================================
+           Responsive
+           ======================================== */
+        @media (max-width: 768px) {
+            .theme-switcher {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+            }
+
+            .theme-btn {
+                padding: 6px 12px;
+                font-size: 0.75em;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .step-list li {
+                padding-left: 20px;
+                padding-top: 50px;
+            }
+
+            .step-list li::before {
+                left: 20px;
+                top: 15px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="default">
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+        <button class="theme-btn active" data-target="default">通常</button>
+        <button class="theme-btn" data-target="simple">シンプル</button>
+        <button class="theme-btn" data-target="dark">ダーク</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>OpenAI APIキー取得ガイド</h1>
+            <p>アカウント開設からAPIキー取得まで</p>
+            <a href="usage-guide.html" class="back-link">← 詳しい操作方法ガイドに戻る</a>
+        </header>
+
+        <div class="content">
+            <!-- 目次 -->
+            <div class="toc">
+                <h2><span class="emoji">📑</span>目次</h2>
+                <ol>
+                    <li><a href="#overview">OpenAI APIとは</a></li>
+                    <li><a href="#login">OpenAIにログイン</a></li>
+                    <li><a href="#add-credit">クレジット（支払い方法）の登録</a></li>
+                    <li><a href="#get-api-key">APIキーの取得</a></li>
+                </ol>
+            </div>
+
+            <!-- 1. OpenAI APIとは -->
+            <section id="overview" class="section">
+                <h2><span class="emoji">🤖</span>1. OpenAI APIとは</h2>
+
+                <p>
+                    OpenAI APIは、ChatGPTなどで使われているAI技術をプログラムから利用できるサービスです。
+                    一括登録シートでは、このAPIを使って商品タイトルや説明文を自動翻訳します。
+                </p>
+
+                <div class="highlight-box">
+                    <strong>APIキーが必要な機能</strong>
+                    <ul>
+                        <li>商品タイトルの自動翻訳</li>
+                        <li>商品説明文の自動翻訳・生成</li>
+                        <li>AIを活用した各種自動化機能</li>
+                    </ul>
+                </div>
+
+                <div class="note-box info">
+                    <strong>💡 料金について</strong>
+                    <p>
+                        OpenAI APIは従量課金制です。使った分だけ料金が発生します。
+                        一括登録シートではGPT-5 nanoを使用しており、<strong>1商品あたり約0.03円（数銭）</strong>程度の非常に低コストで翻訳できます。
+                    </p>
+                    <p style="font-size: 0.9em; margin-top: 10px; color: var(--text-secondary);">
+                        ※ GPT-5 nano料金: 入力 $0.05/100万トークン、出力 $0.40/100万トークン
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. OpenAIにログイン -->
+            <section id="login" class="section">
+                <h2><span class="emoji">🔐</span>2. OpenAIにログイン</h2>
+
+                <p>OpenAI APIを利用するには、OpenAIのプラットフォームにログインします。</p>
+
+                <ol class="step-list">
+                    <li>
+                        <strong>OpenAIのサイトにアクセス</strong>
+                        <p>
+                            <a href="https://platform.openai.com/" target="_blank">https://platform.openai.com/</a> にアクセスします。
+                        </p>
+                    </li>
+                    <li>
+                        <strong>ログイン</strong>
+                        <p>お持ちのOpenAIアカウントでログインしてください。</p>
+                    </li>
+                </ol>
+
+                <div class="image-area">
+                    <div style="padding:64.95% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1142307533?h=0d9fd15301&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="OpenAIログイン"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+                </div>
+            </section>
+
+            <!-- 3. クレジット（支払い方法）の登録 -->
+            <section id="add-credit" class="section">
+                <h2><span class="emoji">💳</span>3. クレジット（支払い方法）の登録</h2>
+
+                <p>APIを使用するには、支払い方法の登録とクレジットの追加が必要です。</p>
+
+                <ol class="step-list">
+                    <li>
+                        <strong>Billingページにアクセス</strong>
+                        <p>
+                            ログイン後、左側メニューの「Settings」→「Billing」をクリックします。
+                            または <a href="https://platform.openai.com/account/billing" target="_blank">こちら</a> から直接アクセスできます。
+                        </p>
+                    </li>
+                    <li>
+                        <strong>「Add payment details」をクリック</strong>
+                        <p>支払い方法の追加画面に進みます。</p>
+                    </li>
+                    <li>
+                        <strong>支払い情報を入力</strong>
+                        <p>
+                            クレジットカードまたはデビットカードの情報を入力します。
+                            請求先住所も入力が必要です。
+                        </p>
+                    </li>
+                    <li>
+                        <strong>クレジットを追加</strong>
+                        <p>
+                            「Add to credit balance」から、使用するクレジット額を追加します。
+                            最初は$5〜$10程度で十分です。
+                        </p>
+                    </li>
+                </ol>
+
+                <div class="note-box info">
+                    <strong>💡 オートチャージの設定をおすすめ</strong>
+                    <p>
+                        Auto recharge（自動チャージ）機能を設定しておくと、残高不足で翻訳が止まることを防げます。
+                        最小チャージ金額は$5、オートチャージのデフォルトは$10です。
+                        月額上限も設定できるので、安心して利用できます。
+                    </p>
+                </div>
+
+                <div class="image-area">
+                    <div style="padding:64.95% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1142308403?h=2f4c4ab372&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="クレジットの登録"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+                </div>
+            </section>
+
+            <!-- 4. APIキーの取得 -->
+            <section id="get-api-key" class="section">
+                <h2><span class="emoji">🔑</span>4. APIキーの取得</h2>
+
+                <p>最後に、一括登録シートで使用するAPIキーを取得します。</p>
+
+                <ol class="step-list">
+                    <li>
+                        <strong>API keysページにアクセス</strong>
+                        <p>
+                            左側メニューの「API keys」をクリックします。
+                            または <a href="https://platform.openai.com/api-keys" target="_blank">こちら</a> から直接アクセスできます。
+                        </p>
+                    </li>
+                    <li>
+                        <strong>「Create new secret key」をクリック</strong>
+                        <p>新しいAPIキーを作成します。</p>
+                    </li>
+                    <li>
+                        <strong>キーの名前を入力（任意）</strong>
+                        <p>
+                            「一括登録シート用」など、分かりやすい名前を付けておくと管理しやすくなります。
+                        </p>
+                    </li>
+                    <li>
+                        <strong>APIキーをコピーして保存</strong>
+                        <p>
+                            表示されたAPIキー（<code>sk-...</code>で始まる文字列）をコピーして、安全な場所に保存してください。
+                        </p>
+                    </li>
+                </ol>
+
+                <div class="note-box warning">
+                    <strong>⚠️ 重要：APIキーの取り扱い</strong>
+                    <ul>
+                        <li>APIキーは<strong>一度しか表示されません</strong>。必ずコピーして保存してください。</li>
+                        <li>APIキーは他人に教えないでください。悪用されると課金が発生します。</li>
+                        <li>紛失した場合は、古いキーを削除して新しいキーを作成してください。</li>
+                    </ul>
+                </div>
+
+                <div class="image-area">
+                    <div style="padding:64.95% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1142309021?h=471882bb62&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="APIキーの取得"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+                </div>
+
+                <div class="note-box success">
+                    <strong>✅ 設定完了！</strong>
+                    <p>
+                        取得したAPIキーを一括登録シートの初期設定画面で入力すれば、AI翻訳機能が使えるようになります。
+                        <a href="usage-guide.html#initial-setup">初期設定の手順はこちら</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- お問い合わせ -->
+            <section class="section">
+                <div class="note-box info" style="text-align: center;">
+                    <p style="font-size: 1.1em;">
+                        <strong>💬 ご不明な点がございましたら、お気軽にスクールにお問い合わせください。</strong>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p><strong>OpenAI APIキー取得ガイド</strong></p>
+            <p>最終更新: 2025年11月30日</p>
+        </footer>
+    </div>
+
+    <!-- Theme Switcher JavaScript -->
+    <script>
+        // テーマ切り替え機能
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const themeBtns = document.querySelectorAll('.theme-btn');
+
+            // LocalStorageから保存されたテーマを取得
+            const savedTheme = localStorage.getItem('bulk-guide-theme') || 'default';
+            setTheme(savedTheme);
+
+            // ボタンクリックイベント
+            themeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-target');
+                    setTheme(theme);
+                    localStorage.setItem('bulk-guide-theme', theme);
+                });
+            });
+
+            function setTheme(theme) {
+                body.setAttribute('data-theme', theme);
+
+                // アクティブボタンの更新
+                themeBtns.forEach(btn => {
+                    if (btn.getAttribute('data-target') === theme) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
