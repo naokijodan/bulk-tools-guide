@@ -1089,29 +1089,32 @@
                 </div>
 
                 <!-- Ver.42からのアップグレード案内 -->
-                <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 8px 32px rgba(79, 172, 254, 0.3);">
-                    <h3 style="margin: 0 0 15px 0; font-size: 1.2em; display: flex; align-items: center; gap: 10px;">
+                <div style="background: #e3f2fd; color: #1a1a1a; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border: 2px solid #2196f3;">
+                    <h3 style="margin: 0 0 15px 0; font-size: 1.3em; display: flex; align-items: center; gap: 10px; color: #1565c0;">
                         <span style="font-size: 1.3em;">🔄</span>
                         Ver.42をお使いの方へ - アップグレード方法
                     </h3>
-                    <p style="margin: 0 0 15px 0; font-size: 1em; line-height: 1.7;">
+                    <p style="margin: 0 0 15px 0; font-size: 1.05em; line-height: 1.7; color: #333;">
                         以下の2つの方法があります。お好みの方法をお選びください。
                     </p>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 15px;">
-                            <h4 style="margin: 0 0 10px 0; font-size: 1em;">方法1: 新しいシートを使う（推奨）</h4>
-                            <p style="margin: 0; font-size: 0.9em; line-height: 1.6;">
+                        <div style="background: #fff; border-radius: 10px; padding: 15px; border: 1px solid #90caf9;">
+                            <h4 style="margin: 0 0 10px 0; font-size: 1.1em; color: #1565c0;">方法1: 新しいシートを使う（推奨）</h4>
+                            <p style="margin: 0; font-size: 1em; line-height: 1.7; color: #333;">
                                 下のボタンからVer.43を開き、コピーして使用してください。<br>
                                 設定は初期設定ダイアログで再設定します。
                             </p>
                         </div>
-                        <div style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 15px;">
-                            <h4 style="margin: 0 0 10px 0; font-size: 1em;">方法2: スクリプトを貼り替える</h4>
-                            <p style="margin: 0; font-size: 0.9em; line-height: 1.6;">
-                                既存のシートのスクリプトを更新する場合は、<br>
-                                <a href="https://github.com/naokijodan/bulk-sheet-apps-v2" target="_blank" style="color: #fff; text-decoration: underline;">GitHubリポジトリ</a>から最新のコードをコピーし、<br>
-                                「拡張機能」→「Apps Script」で貼り替えてください。
+                        <div style="background: #fff; border-radius: 10px; padding: 15px; border: 1px solid #90caf9;">
+                            <h4 style="margin: 0 0 10px 0; font-size: 1.1em; color: #1565c0;">方法2: スクリプトを貼り替える</h4>
+                            <p style="margin: 0; font-size: 1em; line-height: 1.7; color: #333;">
+                                既存シートの「拡張機能」→「Apps Script」を開き、<br>
+                                以下の2ファイルを<a href="https://github.com/naokijodan/bulk-sheet-apps-v2" target="_blank" style="color: #1565c0; font-weight: bold;">GitHub</a>からコピーして貼り替え：
                             </p>
+                            <ul style="margin: 10px 0 0 20px; font-size: 1em; line-height: 1.8; color: #333;">
+                                <li><strong>コード_Part1_価格計算・バッチ処理.gs</strong></li>
+                                <li><strong>コード_Part3_メニュー・設定関連.gs</strong></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
