@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>緊急価格調整計算ツール - Ver.42以前の出品価格修正</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #8892b0;
+            font-size: 0.95em;
+        }
+
+        .alert-box {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .alert-box h2 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-box p {
+            font-size: 0.9em;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #64ffda;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #ccd6f6;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1.1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .input-row input:focus {
+            outline: none;
+            border-color: #64ffda;
+        }
+
+        .input-row span {
+            font-size: 1.1em;
+            color: #8892b0;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 6px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #8892b0;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(100, 255, 218, 0.1);
+            border-color: #64ffda;
+            color: #64ffda;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #0f3460, #16213e);
+            border: 2px solid #64ffda;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            color: #8892b0;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: #64ffda;
+            margin-bottom: 5px;
+        }
+
+        .result-sub {
+            font-size: 0.85em;
+            color: #8892b0;
+        }
+
+        .example-section {
+            margin-top: 30px;
+        }
+
+        .example-section h3 {
+            color: #feca57;
+        }
+
+        .example-calc {
+            background: rgba(254, 202, 87, 0.1);
+            border: 1px solid rgba(254, 202, 87, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .example-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .example-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: #64ffda;
+        }
+
+        .formula-section {
+            margin-top: 30px;
+        }
+
+        .formula-section h3 {
+            color: #a29bfe;
+        }
+
+        .formula-box {
+            background: rgba(162, 155, 254, 0.1);
+            border: 1px solid rgba(162, 155, 254, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            color: #ddd;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .note {
+            font-size: 0.85em;
+            color: #8892b0;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #64ffda, #00d9a5);
+            color: #0a192f;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8892b0;
+            font-size: 0.85em;
+        }
+
+        footer a {
+            color: #64ffda;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.4em;
+            }
+            .result-value {
+                font-size: 2.5em;
+            }
+            .input-row input {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>緊急価格調整計算ツール</h1>
+            <p class="subtitle">Ver.42以前の出品価格を修正するための調整率を計算</p>
+        </header>
+
+        <div class="alert-box">
+            <h2><span>⚠️</span>なぜ価格調整が必要なのか</h2>
+            <p>
+                Ver.42以前では、eBay手数料・広告費が販売価格（DDU）ベースで計算されていました。
+                実際にはこれらの手数料は関税込み価格（DDP）に対して課されるため、
+                <strong>関税分に対する手数料が未計算</strong>となり、利益が過大に表示されていました。<br><br>
+                このツールで算出した調整率を現在の販売価格に掛けることで、本来得るべきだった利益を確保できます。
+            </p>
+        </div>
+
+        <div class="card">
+            <h3><span>⚙️</span>設定値を入力</h3>
+
+            <div class="input-group">
+                <label>関税率（%）</label>
+                <div class="input-row">
+                    <input type="number" id="tariffRate" value="15" step="0.1" min="0" max="100">
+                    <span>%</span>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setTariff(0)">0%</button>
+                    <button class="preset-btn" onclick="setTariff(10)">10%</button>
+                    <button class="preset-btn" onclick="setTariff(15)">15%</button>
+                    <button class="preset-btn" onclick="setTariff(25)">25%</button>
+                    <button class="preset-btn" onclick="setTariff(39)">39%</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>関税処理手数料率（%）</label>
+                <div class="input-row">
+                    <input type="number" id="tariffFeeRate" value="2.1" step="0.1" min="0" max="10">
+                    <span>%</span>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setTariffFee(2.1)">2.1%（標準）</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>eBay手数料率（%）</label>
+                <div class="input-row">
+                    <input type="number" id="ebayFeeRate" value="15" step="0.1" min="0" max="30">
+                    <span>%</span>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setEbayFee(13)">13%</button>
+                    <button class="preset-btn" onclick="setEbayFee(15)">15%</button>
+                    <button class="preset-btn" onclick="setEbayFee(18)">18%</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>広告率（%）</label>
+                <div class="input-row">
+                    <input type="number" id="adRate" value="2" step="0.1" min="0" max="20">
+                    <span>%</span>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setAdRate(0)">0%</button>
+                    <button class="preset-btn" onclick="setAdRate(2)">2%</button>
+                    <button class="preset-btn" onclick="setAdRate(3)">3%</button>
+                    <button class="preset-btn" onclick="setAdRate(5)">5%</button>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-label">価格調整率（販売価格に掛ける係数）</div>
+                <div class="result-value" id="adjustmentRate">+3.9%</div>
+                <div class="result-sub">現在の販売価格 × <span id="multiplier">1.039</span> = 調整後価格</div>
+            </div>
+        </div>
+
+        <div class="card example-section">
+            <h3><span>📊</span>具体例</h3>
+            <p class="note">現在の設定値での計算例</p>
+            <div class="example-calc">
+                <div class="example-row">
+                    <span>現在の販売価格</span>
+                    <span>$50.00</span>
+                </div>
+                <div class="example-row">
+                    <span>調整率</span>
+                    <span id="exampleRate">+3.9%</span>
+                </div>
+                <div class="example-row">
+                    <span>調整後販売価格</span>
+                    <span id="exampleNewPrice">$51.95</span>
+                </div>
+            </div>
+            <p class="note" style="margin-top: 15px;">
+                ※ eBayでは端数を調整して$51.99や$52.00にするのが一般的です。
+            </p>
+        </div>
+
+        <div class="card formula-section">
+            <h3><span>📐</span>計算式</h3>
+            <div class="formula-box">
+                <p style="margin-bottom: 10px;">調整率は以下の式で計算されます：</p>
+                <div class="formula">
+調整率 = f × (T - 1) / (1 - f)
+
+f = 手数料率 + 広告率
+T = 1 + 関税率 × (1 + 関税処理手数料率)
+                </div>
+                <p class="note">
+                    <strong>なぜこの式になるのか：</strong><br>
+                    ・旧式で未計算だった金額 = DDU × f × (T - 1)<br>
+                    ・価格を上げると手数料も増えるため、(1 - f) で割って調整<br>
+                    ・これにより、希望通りの利益を確保できる価格になります
+                </p>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="https://naokijodan.github.io/bulk-tools-guide/" class="action-btn btn-secondary">
+                📚 ガイドに戻る
+            </a>
+            <a href="https://naokijodan.github.io/ebay-fee-analysis/" class="action-btn btn-secondary">
+                📄 詳しい分析資料
+            </a>
+        </div>
+
+        <footer>
+            <p>一括登録シート（関税ベース）Ver.43 緊急対応ツール</p>
+            <p style="margin-top: 5px;">
+                <a href="https://naokijodan.github.io/bulk-tools-guide/">総合ガイドに戻る</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        function calculate() {
+            const tariffRate = parseFloat(document.getElementById('tariffRate').value) / 100 || 0;
+            const tariffFeeRate = parseFloat(document.getElementById('tariffFeeRate').value) / 100 || 0;
+            const ebayFeeRate = parseFloat(document.getElementById('ebayFeeRate').value) / 100 || 0;
+            const adRate = parseFloat(document.getElementById('adRate').value) / 100 || 0;
+
+            // 関税乗数 T = 1 + 関税率 × (1 + 関税処理手数料率)
+            const T = 1 + tariffRate * (1 + tariffFeeRate);
+
+            // 手数料合計 f = eBay手数料 + 広告率
+            const f = ebayFeeRate + adRate;
+
+            // 調整率 = f × (T - 1) / (1 - f)
+            let adjustmentRate = 0;
+            if (f < 1) {
+                adjustmentRate = f * (T - 1) / (1 - f);
+            }
+
+            // 表示更新
+            const ratePercent = (adjustmentRate * 100).toFixed(1);
+            const multiplier = (1 + adjustmentRate).toFixed(4);
+
+            document.getElementById('adjustmentRate').textContent = '+' + ratePercent + '%';
+            document.getElementById('multiplier').textContent = multiplier;
+            document.getElementById('exampleRate').textContent = '+' + ratePercent + '%';
+
+            // 具体例（$50の場合）
+            const newPrice = 50 * (1 + adjustmentRate);
+            document.getElementById('exampleNewPrice').textContent = '$' + newPrice.toFixed(2);
+        }
+
+        function setTariff(value) {
+            document.getElementById('tariffRate').value = value;
+            calculate();
+        }
+
+        function setTariffFee(value) {
+            document.getElementById('tariffFeeRate').value = value;
+            calculate();
+        }
+
+        function setEbayFee(value) {
+            document.getElementById('ebayFeeRate').value = value;
+            calculate();
+        }
+
+        function setAdRate(value) {
+            document.getElementById('adRate').value = value;
+            calculate();
+        }
+
+        // 入力値変更時に自動計算
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // 初期計算
+        calculate();
+    </script>
+</body>
+</html>
