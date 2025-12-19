@@ -311,7 +311,8 @@
                 Ver.42以前では、eBay手数料・広告費が販売価格（DDU）ベースで計算されていました。
                 実際にはこれらの手数料は関税込み価格（DDP）に対して課されるため、
                 <strong>関税分に対する手数料が未計算</strong>となり、利益が過大に表示されていました。<br><br>
-                このツールで算出した調整率を現在の販売価格に掛けることで、本来得るべきだった利益を確保できます。
+                このツールで算出した調整率を現在の販売価格に掛けることで、本来得るべきだった利益を確保できます。<br><br>
+                <strong style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">※ 価格上昇に伴う関税額の増加分も加味して計算しています。</strong>
             </p>
         </div>
 
@@ -405,16 +406,19 @@
             <div class="formula-box">
                 <p style="margin-bottom: 10px;">調整率は以下の式で計算されます：</p>
                 <div class="formula">
-調整率 = f × (T - 1) / (1 - f)
+調整率 = f × (T - 1) / (1 - f - t × (1 + g))
 
 f = 手数料率 + 広告率
-T = 1 + 関税率 × (1 + 関税処理手数料率)
+t = 関税率
+g = 関税処理手数料率
+T = 1 + t × (1 + g)
                 </div>
                 <p class="note">
                     <strong>なぜこの式になるのか：</strong><br>
-                    ・旧式で未計算だった金額 = DDU × f × (T - 1)<br>
+                    ・旧式で未計算だった手数料 = DDU × f × (T - 1)<br>
                     ・価格を上げると手数料も増えるため、(1 - f) で割って調整<br>
-                    ・これにより、希望通りの利益を確保できる価格になります
+                    ・さらに、価格上昇に伴い関税額も増加するため、t × (1 + g) も分母から引く<br>
+                    ・これにより、手数料不足分と関税増加分の両方を考慮した価格になります
                 </p>
             </div>
         </div>
@@ -462,10 +466,15 @@ T = 1 + 関税率 × (1 + 関税処理手数料率)
             // 手数料合計 f = eBay手数料 + 広告率
             const f = ebayFeeRate + adRate;
 
-            // 調整率 = f × (T - 1) / (1 - f)
+            // 関税増加係数 = t × (1 + g)
+            const tariffMultiplier = tariffRate * (1 + tariffFeeRate);
+
+            // 調整率 = f × (T - 1) / (1 - f - t × (1 + g))
+            // 価格上昇に伴う関税額増加も考慮
             let adjustmentRate = 0;
-            if (f < 1) {
-                adjustmentRate = f * (T - 1) / (1 - f);
+            const denominator = 1 - f - tariffMultiplier;
+            if (denominator > 0) {
+                adjustmentRate = f * (T - 1) / denominator;
             }
 
             // 表示更新
