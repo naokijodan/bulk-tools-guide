@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver.44 更新内容 - 関税率調整方式 | 一括シートApps</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header .version {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        h3 {
+            color: #495057;
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            line-height: 1.8;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .summary-box h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box h3 {
+            color: #e65100;
+            margin-top: 0;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .formula-box code {
+            color: #e83e8c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table th {
+            background: #495057;
+        }
+
+        .highlight-new {
+            background: #e8f5e9 !important;
+        }
+
+        .highlight-old {
+            background: #ffebee !important;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            line-height: 1.8;
+            color: #495057;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .nav-links a {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #5a6fd6;
+        }
+
+        .cell-table td:first-child {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .calc-example {
+            background: #f1f3f4;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .calc-example h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .result-highlight {
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="version">Ver.44</div>
+            <h1>関税率調整方式</h1>
+            <p>DDP手数料問題への新しいアプローチ</p>
+        </div>
+
+        <div class="content">
+            <div class="summary-box">
+                <h3>Ver.44の主な変更点</h3>
+                <ul>
+                    <li><strong>販売価格計算を旧式（DDU基準）に戻しました</strong> → 競争力維持</li>
+                    <li><strong>調整関税率</strong>を導入し、関税額でDDP手数料分を補填</li>
+                    <li><strong>3%の安全係数</strong>で端数誤差をカバー</li>
+                    <li><strong>実際の関税額</strong>を表示する列を追加（利益確認用）</li>
+                </ul>
+            </div>
+
+            <h2>背景：eBayのDDP手数料問題</h2>
+            <p>eBayでは、DDP価格（販売価格＋関税）に対して手数料が課されるようになりました。つまり、関税額にも手数料がかかるため、従来の計算式では利益が目減りする問題が発生していました。</p>
+
+            <h2>バージョン比較</h2>
+
+            <h3>Ver.42以前（旧式）</h3>
+            <div class="formula-box">
+                <strong>販売価格</strong> = (仕入れ + 送料 + 利益) / (1 - 手数料 - 広告 - Payoneer) / 為替<br><br>
+                <strong>想定関税</strong> = 販売価格 × <code>実際の関税率</code> × (1 + 処理手数料率) + ...
+            </div>
+            <p><strong>問題点：</strong>DDP手数料が考慮されておらず、高額商品ほど利益が目減り</p>
+
+            <h3>Ver.43（DDP手数料対応版）</h3>
+            <div class="formula-box">
+                <strong>販売価格</strong> = (仕入れ + 送料 + 利益) / ((1 - Payoneer) - (1 + 関税率×(1+処理手数料率)) × (手数料 + 広告)) / 為替
+            </div>
+            <p><strong>問題点：</strong>販売価格が上昇し競争力が低下、既存出品の価格修正が必要</p>
+
+            <h3>Ver.44（関税率調整方式）★今回</h3>
+            <div class="formula-box">
+                <strong>販売価格</strong> = (仕入れ + 送料 + 利益) / (1 - 手数料 - 広告 - Payoneer) / 為替<br><br>
+                <strong>調整関税率</strong> = 実際の関税率 / (1 - 手数料率 - 広告費率) × <code>1.03</code><br><br>
+                <strong>想定関税</strong> = 販売価格 × <code>調整関税率</code> × (1 + 処理手数料率) + ...
+            </div>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>項目</th>
+                    <th>Ver.43</th>
+                    <th>Ver.44</th>
+                </tr>
+                <tr>
+                    <td>販売価格</td>
+                    <td class="highlight-old">上昇（競争力低下）</td>
+                    <td class="highlight-new">旧式と同じ（競争力維持）</td>
+                </tr>
+                <tr>
+                    <td>計算式</td>
+                    <td class="highlight-old">複雑</td>
+                    <td class="highlight-new">シンプル（旧式）</td>
+                </tr>
+                <tr>
+                    <td>利益確保の方法</td>
+                    <td>販売価格で調整</td>
+                    <td>関税額で調整</td>
+                </tr>
+                <tr>
+                    <td>端数誤差対策</td>
+                    <td class="highlight-old">なし</td>
+                    <td class="highlight-new">3%安全係数</td>
+                </tr>
+            </table>
+
+            <h2>調整関税率の仕組み</h2>
+
+            <p>eBayはDDP価格に対して手数料を課すため、関税額にも手数料がかかります。そこで、その手数料分を関税額に上乗せしてバイヤーから徴収します。</p>
+
+            <div class="calc-example">
+                <h4>計算例</h4>
+                <p>
+                    <strong>条件：</strong>実際の関税率 15%、手数料率 18%、広告費率 5%
+                </p>
+                <div class="formula-box">
+                    調整関税率 = 15% / (1 - 0.18 - 0.05) × 1.03<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 15% / 0.77 × 1.03<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 19.48% × 1.03<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="result-highlight">20.07%</span>
+                </div>
+                <p>この調整関税率（20.07%）で計算した関税額をバイヤーから徴収することで、DDP手数料分を補填します。</p>
+            </div>
+
+            <h2>セル配置の変更</h2>
+
+            <h3>新規追加セル</h3>
+            <table class="cell-table">
+                <tr>
+                    <th>セル</th>
+                    <th>内容</th>
+                    <th>説明</th>
+                </tr>
+                <tr>
+                    <td>AA2</td>
+                    <td>実際の関税率</td>
+                    <td>ユーザーが入力（例: 0.15 = 15%）</td>
+                </tr>
+                <tr>
+                    <td>AF2</td>
+                    <td>調整関税率</td>
+                    <td>自動計算（式: =$AA$2/(1-$F$1-$F$2)*1.03）</td>
+                </tr>
+                <tr>
+                    <td>AH列</td>
+                    <td>実際の関税額</td>
+                    <td>参考表示用。AA2（実際の関税率）で計算</td>
+                </tr>
+            </table>
+
+            <h3>既存セルの変更</h3>
+            <table class="cell-table">
+                <tr>
+                    <th>セル</th>
+                    <th>変更内容</th>
+                </tr>
+                <tr>
+                    <td>AD列</td>
+                    <td>想定関税の計算にAF2（調整関税率）を使用</td>
+                </tr>
+            </table>
+
+            <h2>利益計算の確認方法</h2>
+
+            <p><strong>AD列（想定関税）</strong>と<strong>AH列（実際の関税額）</strong>の差額が、DDP手数料を補填するための上乗せ分です。</p>
+
+            <div class="calc-example">
+                <h4>確認例（販売価格 $152.69 の場合）</h4>
+                <table>
+                    <tr>
+                        <th>項目</th>
+                        <th>金額</th>
+                    </tr>
+                    <tr>
+                        <td>想定関税（AD列）</td>
+                        <td>$31.28（調整関税率20.07%）</td>
+                    </tr>
+                    <tr>
+                        <td>実際の関税額（AH列）</td>
+                        <td>$23.39（実際の関税率15%）</td>
+                    </tr>
+                    <tr style="background: #e8f5e9;">
+                        <td><strong>差額（上乗せ分）</strong></td>
+                        <td><strong>$7.89（約1,223円）</strong></td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2>既存出品への対応</h2>
+
+            <div class="warning-box">
+                <h3>重要：レガシー再計算が必要</h3>
+                <ul>
+                    <li><strong>販売価格の修正は不要</strong> - Ver.42以前と同じ計算式のため</li>
+                    <li><strong>シッピングポリシーの再適用が必要</strong> - 想定関税額が変わるため、シッピングポリシーの判定結果が変わる可能性があります</li>
+                    <li>一括シートから<strong>「レガシー再計算」</strong>を実行してください</li>
+                </ul>
+            </div>
+
+            <h2>適用手順</h2>
+
+            <ol>
+                <li><span class="step-number">1</span><strong>スクリプトを更新</strong> - Ver.44のコードをコピー</li>
+                <li><span class="step-number">2</span><strong>初期設定を再実行</strong> - または「計算式を再出力」を実行</li>
+                <li><span class="step-number">3</span><strong>AA2に関税率を設定</strong> - デフォルトは15%（0.15）</li>
+                <li><span class="step-number">4</span><strong>レガシー再計算を実行</strong> - 既存出品のシッピングポリシーを再適用</li>
+            </ol>
+
+            <h2>注意事項</h2>
+
+            <ul>
+                <li><strong>AA2（実際の関税率）の設定を忘れずに</strong> - 商品カテゴリーに応じて変更してください</li>
+                <li><strong>3%の安全係数</strong> - 端数処理や為替変動による誤差を吸収するため、調整関税率に3%の安全係数を掛けています</li>
+                <li><strong>AH列（実際の関税額）</strong> - 利益確認用の参考値です。実際の利益計算に使用してください</li>
+            </ul>
+
+            <div class="nav-links">
+                <a href="index.html">← トップに戻る</a>
+                <a href="usage-guide.html">使い方ガイド</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
