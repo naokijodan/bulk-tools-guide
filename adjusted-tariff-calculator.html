@@ -675,10 +675,17 @@
         const recommendedPolicyEl = document.getElementById('recommendedPolicy');
         const shippingBadgeEl = document.getElementById('shippingBadge');
 
-        // 関税額からポリシーを検索（関税額が一致するポリシーを探す）
+        // 関税額からポリシーを検索（関税額が範囲内のポリシーを探す）
+        // GASと同様のロジック：ソート済みポリシーから前のポリシーの上限+0.01が下限
         function findPolicyByTariff(policies, estimatedTariff) {
-            for (const policy of policies) {
-                if (policy.tariff === estimatedTariff) {
+            // ポリシーはtariff順にソート済みと仮定
+            for (let i = 0; i < policies.length; i++) {
+                const policy = policies[i];
+                const actualMin = (i === 0) ? 0 : policies[i - 1].tariff + 1;
+                const actualMax = policy.tariff;
+
+                // 想定関税が範囲内かチェック
+                if (estimatedTariff >= actualMin && estimatedTariff <= actualMax) {
                     return policy;
                 }
             }
