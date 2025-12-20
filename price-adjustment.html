@@ -285,6 +285,76 @@
             text-decoration: none;
         }
 
+        .actual-calc {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.8;
+            color: #64ffda;
+        }
+
+        .actual-calc .calc-line {
+            margin-bottom: 5px;
+        }
+
+        .actual-calc .calc-result {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            color: #feca57;
+        }
+
+        .tariff-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .tariff-row {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .tariff-row.difference {
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .tariff-label {
+            font-weight: 600;
+            color: #ccd6f6;
+        }
+
+        .tariff-formula {
+            font-size: 0.85em;
+            color: #8892b0;
+        }
+
+        .tariff-value {
+            font-weight: 700;
+            font-size: 1.2em;
+            text-align: right;
+            min-width: 80px;
+        }
+
+        .tariff-value.highlight {
+            color: #64ffda;
+        }
+
+        .tariff-row.difference .tariff-value {
+            color: #feca57;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.4em;
@@ -294,6 +364,13 @@
             }
             .input-row input {
                 padding: 10px 12px;
+            }
+            .tariff-row {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .tariff-value {
+                text-align: center;
             }
         }
     </style>
@@ -372,7 +449,7 @@
             <div class="input-group">
                 <label>広告率（%）</label>
                 <div class="input-row">
-                    <input type="number" id="adRate" value="2" step="0.1" min="0" max="20">
+                    <input type="number" id="adRate" value="5" step="0.1" min="0" max="20">
                     <span>%</span>
                 </div>
                 <div class="preset-buttons">
@@ -381,6 +458,20 @@
                     <button class="preset-btn" onclick="setAdRate(3)">3%</button>
                     <button class="preset-btn" onclick="setAdRate(5)">5%</button>
                 </div>
+            </div>
+
+            <div class="input-group">
+                <label>安全係数（%）</label>
+                <div class="input-row">
+                    <input type="number" id="safetyMargin" value="3" step="0.1" min="0" max="20">
+                    <span>%</span>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setSafetyMargin(0)">0%</button>
+                    <button class="preset-btn" onclick="setSafetyMargin(3)">3%（推奨）</button>
+                    <button class="preset-btn" onclick="setSafetyMargin(5)">5%</button>
+                </div>
+                <p class="note" style="margin-top: 8px;">端数・為替変動対策</p>
             </div>
 
             <div class="result-box">
@@ -413,7 +504,46 @@
         </div>
 
         <div class="card formula-section">
-            <h3><span>📐</span>計算式</h3>
+            <h3><span>📐</span>調整関税率の計算</h3>
+            <div class="formula-box">
+                <p style="margin-bottom: 10px;">関税額に対しても手数料がかかるため、関税率を調整します：</p>
+                <div class="formula">
+調整関税率 = 実際の関税率 ÷ (1 - 手数料率 - 広告率) × (1 + 安全係数)
+                </div>
+                <div class="actual-calc" id="adjustedTariffCalc">
+                    <!-- JSで動的に表示 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="card formula-section">
+            <h3 style="color: #ff6b6b;"><span>💰</span>関税額の比較</h3>
+            <div class="formula-box" style="background: rgba(255, 107, 107, 0.1); border-color: rgba(255, 107, 107, 0.3);">
+                <div class="tariff-comparison">
+                    <div class="tariff-row">
+                        <span class="tariff-label">実際の関税額</span>
+                        <span class="tariff-formula">DDU価格 × 実際の関税率</span>
+                        <span class="tariff-value" id="actualTariffValue">-</span>
+                    </div>
+                    <div class="tariff-row">
+                        <span class="tariff-label">調整後の関税額</span>
+                        <span class="tariff-formula">DDU価格 × 調整関税率</span>
+                        <span class="tariff-value highlight" id="adjustedTariffValue">-</span>
+                    </div>
+                    <div class="tariff-row difference">
+                        <span class="tariff-label">差額（手数料補填分）</span>
+                        <span class="tariff-formula">調整後 - 実際</span>
+                        <span class="tariff-value" id="tariffDifference">-</span>
+                    </div>
+                </div>
+                <div class="actual-calc" id="tariffComparisonCalc">
+                    <!-- JSで動的に表示 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="card formula-section">
+            <h3><span>📐</span>価格調整率の計算</h3>
             <div class="formula-box">
                 <p style="margin-bottom: 10px;">調整率は以下の式で計算されます：</p>
                 <div class="formula">
@@ -423,6 +553,9 @@ f = 手数料率 + 広告率
 t = 関税率
 g = 関税処理手数料率
 T = 1 + t × (1 + g)
+                </div>
+                <div class="actual-calc" id="priceAdjustmentCalc">
+                    <!-- JSで動的に表示 -->
                 </div>
                 <p class="note">
                     <strong>なぜこの式になるのか：</strong><br>
@@ -470,7 +603,53 @@ T = 1 + t × (1 + g)
             const tariffFeeRate = parseFloat(document.getElementById('tariffFeeRate').value) / 100 || 0;
             const ebayFeeRate = parseFloat(document.getElementById('ebayFeeRate').value) / 100 || 0;
             const adRate = parseFloat(document.getElementById('adRate').value) / 100 || 0;
+            const safetyMargin = parseFloat(document.getElementById('safetyMargin').value) / 100 || 0;
 
+            // 表示用の値（%表記）
+            const tariffRatePercent = (tariffRate * 100).toFixed(1);
+            const ebayFeePercent = (ebayFeeRate * 100).toFixed(1);
+            const adRatePercent = (adRate * 100).toFixed(1);
+            const safetyMarginPercent = (safetyMargin * 100).toFixed(1);
+            const tariffFeePercent = (tariffFeeRate * 100).toFixed(1);
+
+            // === 調整関税率の計算 ===
+            const denominator1 = 1 - ebayFeeRate - adRate;
+            let adjustedTariffRate = 0;
+            if (denominator1 > 0) {
+                adjustedTariffRate = (tariffRate / denominator1) * (1 + safetyMargin);
+            }
+            const adjustedTariffRatePercent = (adjustedTariffRate * 100).toFixed(2);
+
+            // 調整関税率の計算過程を表示
+            const adjustedTariffCalcEl = document.getElementById('adjustedTariffCalc');
+            adjustedTariffCalcEl.innerHTML = `
+                <div class="calc-line">【現在の設定での計算】</div>
+                <div class="calc-line">調整関税率 = ${tariffRatePercent}% ÷ (1 - ${ebayFeePercent}% - ${adRatePercent}%) × (1 + ${safetyMarginPercent}%)</div>
+                <div class="calc-line">         = ${tariffRate.toFixed(4)} ÷ ${denominator1.toFixed(4)} × ${(1 + safetyMargin).toFixed(4)}</div>
+                <div class="calc-line">         = ${(tariffRate / denominator1).toFixed(4)} × ${(1 + safetyMargin).toFixed(4)}</div>
+                <div class="calc-result">調整関税率 = ${adjustedTariffRatePercent}%</div>
+            `;
+
+            // === 関税額の比較（$50の例で計算） ===
+            const exampleDDU = 50;
+            const actualTariff = exampleDDU * tariffRate;
+            const adjustedTariff = exampleDDU * adjustedTariffRate;
+            const tariffDiff = adjustedTariff - actualTariff;
+
+            document.getElementById('actualTariffValue').textContent = '$' + actualTariff.toFixed(2);
+            document.getElementById('adjustedTariffValue').textContent = '$' + adjustedTariff.toFixed(2);
+            document.getElementById('tariffDifference').textContent = '+$' + tariffDiff.toFixed(2);
+
+            // 関税額比較の計算過程を表示
+            const tariffComparisonCalcEl = document.getElementById('tariffComparisonCalc');
+            tariffComparisonCalcEl.innerHTML = `
+                <div class="calc-line">【$${exampleDDU}の場合の計算】</div>
+                <div class="calc-line">実際の関税額   = $${exampleDDU} × ${tariffRatePercent}% = $${actualTariff.toFixed(2)}</div>
+                <div class="calc-line">調整後の関税額 = $${exampleDDU} × ${adjustedTariffRatePercent}% = $${adjustedTariff.toFixed(2)}</div>
+                <div class="calc-result">差額（手数料補填分） = $${adjustedTariff.toFixed(2)} - $${actualTariff.toFixed(2)} = +$${tariffDiff.toFixed(2)}</div>
+            `;
+
+            // === 価格調整率の計算（旧式からの調整） ===
             // 関税乗数 T = 1 + 関税率 × (1 + 関税処理手数料率)
             const T = 1 + tariffRate * (1 + tariffFeeRate);
 
@@ -481,12 +660,24 @@ T = 1 + t × (1 + g)
             const tariffMultiplier = tariffRate * (1 + tariffFeeRate);
 
             // 調整率 = f × (T - 1) / (1 - f - t × (1 + g))
-            // 価格上昇に伴う関税額増加も考慮
             let adjustmentRate = 0;
-            const denominator = 1 - f - tariffMultiplier;
-            if (denominator > 0) {
-                adjustmentRate = f * (T - 1) / denominator;
+            const denominator2 = 1 - f - tariffMultiplier;
+            if (denominator2 > 0) {
+                adjustmentRate = f * (T - 1) / denominator2;
             }
+
+            // 価格調整率の計算過程を表示
+            const priceAdjustmentCalcEl = document.getElementById('priceAdjustmentCalc');
+            const fPercent = (f * 100).toFixed(1);
+            priceAdjustmentCalcEl.innerHTML = `
+                <div class="calc-line">【現在の設定での計算】</div>
+                <div class="calc-line">f = ${ebayFeePercent}% + ${adRatePercent}% = ${fPercent}%</div>
+                <div class="calc-line">T = 1 + ${tariffRatePercent}% × (1 + ${tariffFeePercent}%) = ${T.toFixed(4)}</div>
+                <div class="calc-line">分母 = 1 - ${fPercent}% - ${tariffRatePercent}% × (1 + ${tariffFeePercent}%) = ${denominator2.toFixed(4)}</div>
+                <div class="calc-line">調整率 = ${fPercent}% × (${T.toFixed(4)} - 1) ÷ ${denominator2.toFixed(4)}</div>
+                <div class="calc-line">      = ${f.toFixed(4)} × ${(T - 1).toFixed(4)} ÷ ${denominator2.toFixed(4)}</div>
+                <div class="calc-result">調整率 = +${(adjustmentRate * 100).toFixed(2)}%（×${(1 + adjustmentRate).toFixed(4)}）</div>
+            `;
 
             // 表示更新
             const ratePercent = (adjustmentRate * 100).toFixed(1);
@@ -497,7 +688,7 @@ T = 1 + t × (1 + g)
             document.getElementById('exampleRate').textContent = '+' + ratePercent + '%';
 
             // 具体例（$50の場合）
-            const newPrice = 50 * (1 + adjustmentRate);
+            const newPrice = exampleDDU * (1 + adjustmentRate);
             document.getElementById('exampleNewPrice').textContent = '$' + newPrice.toFixed(2);
         }
 
@@ -518,6 +709,11 @@ T = 1 + t × (1 + g)
 
         function setAdRate(value) {
             document.getElementById('adRate').value = value;
+            calculate();
+        }
+
+        function setSafetyMargin(value) {
+            document.getElementById('safetyMargin').value = value;
             calculate();
         }
 
