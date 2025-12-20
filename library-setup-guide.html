@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ライブラリ版セットアップガイド | 一括シートApps</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            font-size: 1.4em;
+        }
+
+        h2 .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        h3 {
+            color: #495057;
+            margin: 20px 0 10px 0;
+        }
+
+        p, li {
+            line-height: 1.8;
+            color: #495057;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .intro-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid #2196f3;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .intro-box h3 {
+            color: #1565c0;
+            margin-top: 0;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .benefit-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .benefit-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .benefit-item .icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .benefit-item .text {
+            font-size: 0.95em;
+            color: #495057;
+        }
+
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .step-card.highlight {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-color: #ffc107;
+        }
+
+        .step-card h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .screenshot-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+            margin: 15px 0;
+        }
+
+        .code-box {
+            background: #263238;
+            color: #aed581;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .code-box .label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #37474f;
+            color: #90a4ae;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        .copy-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .copy-btn:hover {
+            background: #43a047;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-left: 4px solid #3f51b5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .tip-box h4 {
+            color: #283593;
+            margin-bottom: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-btn.secondary {
+            background: #f1f3f4;
+            color: #495057;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .library-id-box {
+            background: #1a1a2e;
+            color: #00ff88;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 1.1em;
+            text-align: center;
+            margin: 15px 0;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .library-id-box .copy-hint {
+            position: absolute;
+            bottom: -25px;
+            right: 0;
+            font-size: 0.75em;
+            color: #6c757d;
+        }
+
+        .checklist {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 12px;
+            margin-top: 3px;
+            transform: scale(1.3);
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+        }
+
+        .version-note {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .version-note .icon {
+            font-size: 2em;
+        }
+
+        .version-note .text {
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .benefit-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">一括シートV3</div>
+            <h1>ライブラリ版 セットアップガイド</h1>
+            <p>簡単3ステップで自動アップデートに対応！</p>
+        </header>
+
+        <div class="content">
+            <!-- イントロダクション -->
+            <div class="intro-box">
+                <h3>ライブラリ版とは？</h3>
+                <p>
+                    従来は更新のたびにスクリプトを手動でコピーする必要がありましたが、
+                    <strong>ライブラリ版</strong>なら、開発者がライブラリを更新するだけで
+                    あなたのシートも自動的に最新版になります！
+                </p>
+
+                <div class="benefit-list">
+                    <div class="benefit-item">
+                        <div class="icon">🔄</div>
+                        <div class="text">自動アップデート</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="icon">⚡</div>
+                        <div class="text">セットアップ簡単</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="icon">🛡️</div>
+                        <div class="text">設定は保持される</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ1 -->
+            <h2><span class="step-number">1</span>テンプレートをコピーする</h2>
+
+            <div class="step-card">
+                <h3>📋 コピーを作成</h3>
+                <p>共有されたテンプレートシートを開いて、「ファイル」→「コピーを作成」をクリックするだけ！</p>
+
+                <div class="screenshot-placeholder">
+                    📸 「ファイル」→「コピーを作成」<br>
+                    <small>自分のGoogleドライブに保存されます</small>
+                </div>
+            </div>
+
+            <!-- ステップ2 -->
+            <h2><span class="step-number">2</span>Apps Scriptを開く</h2>
+
+            <div class="step-card">
+                <h3>📝 スクリプトエディタにアクセス</h3>
+
+                <ol>
+                    <li>コピーしたスプレッドシートを開く</li>
+                    <li>メニューから「拡張機能」→「Apps Script」をクリック</li>
+                </ol>
+
+<img src="images/extensions-menu.png" alt="拡張機能メニューの場所" style="width: 100%; max-width: 700px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0;">
+
+                <p>新しいタブでApps Scriptエディタが開きます。</p>
+            </div>
+
+            <!-- ステップ3 -->
+            <h2><span class="step-number">3</span>ライブラリを追加する</h2>
+
+            <div class="step-card highlight">
+                <h3>📚 ライブラリの追加手順</h3>
+
+                <ol>
+                    <li>
+                        左側のメニューで「ライブラリ」の横にある <strong>＋</strong> ボタンをクリック
+                        <img src="images/library-add-button.png" alt="ライブラリの＋ボタン" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0; display: block;">
+                    </li>
+                    <li>
+                        「スクリプトID」の欄に、以下のIDを貼り付け：
+                        <div class="library-id-box" onclick="copyLibraryId()">
+                            1GjyV4kQPkdXbAriCCa7VvA969s3WhKuovNp8u2wixcFWT1hndh2tLQOP
+                            <span class="copy-hint">クリックでコピー</span>
+                        </div>
+                        <img src="images/library-id-input.png" alt="スクリプトIDを入力" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0; display: block;">
+                    </li>
+                    <li>「検索」ボタンをクリック</li>
+                    <li>
+                        ライブラリが見つかったら：
+                        <ul>
+                            <li><strong>バージョン</strong>: 最新版を選択（一番大きい数字）</li>
+                            <li><strong>ID</strong>: <code>BulkToolsLib</code> のまま（変更しない）</li>
+                        </ul>
+                        <img src="images/library-version-select.png" alt="バージョン選択と追加" style="width: 100%; max-width: 550px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0; display: block;">
+                    </li>
+                    <li>「追加」ボタンをクリック</li>
+                </ol>
+
+                <div class="warning-box">
+                    <h4>⚠️ よくある間違い</h4>
+                    <ul>
+                        <li><strong>「デプロイID」を入力してしまう</strong> → 正しくは「スクリプトID」です</li>
+                        <li><strong>IDをBulkToolsLib以外に変更</strong> → そのままにしてください</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 拡張機能連携 -->
+            <h2>🔗 Chrome拡張機能との連携</h2>
+
+            <div class="step-card">
+                <p>Chrome拡張機能を使ってメルカリ等からデータをエクスポートする場合は、追加の設定が必要です。</p>
+
+                <a href="sharing-guide.html" class="nav-btn primary" style="display: inline-block; margin-top: 10px;">拡張機能の設定ガイドを見る →</a>
+            </div>
+
+            <div class="success-box">
+                <h4>🎉 セットアップ完了！</h4>
+                <p>
+                    ライブラリを追加したら、スプレッドシートを<strong>再読み込み</strong>してください。
+                    メニューが表示されれば成功です！
+                </p>
+            </div>
+
+            <!-- 次のステップ -->
+            <h2>📝 次のステップ</h2>
+
+            <div class="step-card">
+                <p>セットアップが完了したら、<strong>初期設定</strong>と<strong>EAGLE連携</strong>を行います。<br>
+                詳しい手順は使い方ガイドをご覧ください。</p>
+
+                <a href="usage-guide.html" class="nav-btn primary" style="display: inline-block; margin-top: 15px;">使い方ガイドを見る →</a>
+            </div>
+
+            <!-- アップデートについて -->
+            <div style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; padding: 40px; border-radius: 16px; margin: 40px 0; text-align: center; box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4);">
+                <div style="font-size: 3em; margin-bottom: 15px;">🎉</div>
+                <h2 style="color: white; border: none; margin: 0 0 15px 0; font-size: 1.8em;">今後は自動アップデート！</h2>
+                <p style="font-size: 1.2em; color: rgba(255,255,255,0.95); margin: 0;">
+                    ライブラリ版では、<strong>シートのアップデートは基本的に自動</strong>で行われます。<br>
+                    新しいシートへの移行作業は不要になりました。
+                </p>
+                <p style="font-size: 0.9em; color: rgba(255,255,255,0.7); margin-top: 15px;">※大きな改修の際は移行が必要になることもあります</p>
+            </div>
+
+            <!-- トラブルシューティング -->
+            <h2>❓ うまくいかない場合</h2>
+
+            <div class="step-card">
+                <h3>メニューが表示されない</h3>
+                <ul>
+                    <li>スプレッドシートを再読み込み（Ctrl+R / Cmd+R）</li>
+                    <li>ライブラリのIDが「BulkToolsLib」になっているか確認</li>
+                </ul>
+            </div>
+
+            <div class="step-card">
+                <h3>「ライブラリを検索できませんでした」と表示される</h3>
+                <ul>
+                    <li>入力したのが「スクリプトID」であることを確認（デプロイIDではない）</li>
+                    <li>IDをコピペした際に余分なスペースが入っていないか確認</li>
+                </ul>
+            </div>
+
+            <!-- ナビゲーション -->
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn secondary">← トップページ</a>
+                <a href="usage-guide.html" class="nav-btn primary">使い方ガイド →</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>一括シートV3 | ライブラリ版セットアップガイド</p>
+            <p style="margin-top: 10px;">
+                <a href="index.html">トップページ</a> ｜
+                <a href="usage-guide.html">使い方ガイド</a> ｜
+                <a href="ver44-update.html">更新履歴</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        function copyLibraryId() {
+            const libraryId = '1GjyV4kQPkdXbAriCCa7VvA969s3WhKuovNp8u2wixcFWT1hndh2tLQOP';
+            navigator.clipboard.writeText(libraryId).then(() => {
+                alert('ライブラリIDをコピーしました！');
+            });
+        }
+
+    </script>
+</body>
+</html>
