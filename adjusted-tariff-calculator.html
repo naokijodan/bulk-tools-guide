@@ -526,150 +526,151 @@
     </div>
 
     <script>
-        // ECOポリシーデータ（DDP下限-上限、関税額）
+        // ECOポリシーデータ（DDU価格下限-上限、関税額）
+        // 判定は関税額で行う。DDU範囲は表示用
         const ecoPolicies = [
-            { min: 0, max: 7, tariff: 3 },
-            { min: 7, max: 13, tariff: 4 },
-            { min: 13, max: 20, tariff: 5 },
-            { min: 20, max: 26, tariff: 6 },
-            { min: 26, max: 33, tariff: 7 },
-            { min: 33, max: 40, tariff: 8 },
-            { min: 40, max: 46, tariff: 9 },
-            { min: 46, max: 52, tariff: 10 },
-            { min: 52, max: 59, tariff: 11 },
-            { min: 59, max: 65, tariff: 12 },
-            { min: 65, max: 72, tariff: 13 },
-            { min: 72, max: 78, tariff: 14 },
-            { min: 78, max: 85, tariff: 15 },
-            { min: 85, max: 91, tariff: 16 },
-            { min: 91, max: 97, tariff: 17 },
-            { min: 97, max: 104, tariff: 18 },
-            { min: 104, max: 110, tariff: 19 },
-            { min: 110, max: 117, tariff: 20 },
-            { min: 117, max: 130, tariff: 22 },
-            { min: 130, max: 143, tariff: 24 },
-            { min: 143, max: 150, tariff: 25 },
-            { min: 150, max: 156, tariff: 26 },
-            { min: 156, max: 169, tariff: 28 },
-            { min: 169, max: 181, tariff: 30 },
-            { min: 181, max: 194, tariff: 32 },
-            { min: 194, max: 207, tariff: 34 },
-            { min: 207, max: 214, tariff: 35 },
-            { min: 214, max: 227, tariff: 37 },
-            { min: 227, max: 246, tariff: 40 },
-            { min: 246, max: 259, tariff: 42 },
-            { min: 259, max: 278, tariff: 45 },
-            { min: 278, max: 291, tariff: 47 },
-            { min: 291, max: 311, tariff: 50 },
-            { min: 311, max: 324, tariff: 52 },
-            { min: 324, max: 343, tariff: 55 },
-            { min: 343, max: 356, tariff: 57 },
-            { min: 356, max: 375, tariff: 60 },
-            { min: 375, max: 407, tariff: 65 },
-            { min: 407, max: 440, tariff: 70 }
+            { minDDU: 0, maxDDU: 7, tariff: 3 },
+            { minDDU: 7, maxDDU: 13, tariff: 4 },
+            { minDDU: 13, maxDDU: 20, tariff: 5 },
+            { minDDU: 20, maxDDU: 26, tariff: 6 },
+            { minDDU: 26, maxDDU: 33, tariff: 7 },
+            { minDDU: 33, maxDDU: 40, tariff: 8 },
+            { minDDU: 40, maxDDU: 46, tariff: 9 },
+            { minDDU: 46, maxDDU: 52, tariff: 10 },
+            { minDDU: 52, maxDDU: 59, tariff: 11 },
+            { minDDU: 59, maxDDU: 65, tariff: 12 },
+            { minDDU: 65, maxDDU: 72, tariff: 13 },
+            { minDDU: 72, maxDDU: 78, tariff: 14 },
+            { minDDU: 78, maxDDU: 85, tariff: 15 },
+            { minDDU: 85, maxDDU: 91, tariff: 16 },
+            { minDDU: 91, maxDDU: 97, tariff: 17 },
+            { minDDU: 97, maxDDU: 104, tariff: 18 },
+            { minDDU: 104, maxDDU: 110, tariff: 19 },
+            { minDDU: 110, maxDDU: 117, tariff: 20 },
+            { minDDU: 117, maxDDU: 130, tariff: 22 },
+            { minDDU: 130, maxDDU: 143, tariff: 24 },
+            { minDDU: 143, maxDDU: 150, tariff: 25 },
+            { minDDU: 150, maxDDU: 156, tariff: 26 },
+            { minDDU: 156, maxDDU: 169, tariff: 28 },
+            { minDDU: 169, maxDDU: 181, tariff: 30 },
+            { minDDU: 181, maxDDU: 194, tariff: 32 },
+            { minDDU: 194, maxDDU: 207, tariff: 34 },
+            { minDDU: 207, maxDDU: 214, tariff: 35 },
+            { minDDU: 214, maxDDU: 227, tariff: 37 },
+            { minDDU: 227, maxDDU: 246, tariff: 40 },
+            { minDDU: 246, maxDDU: 259, tariff: 42 },
+            { minDDU: 259, maxDDU: 278, tariff: 45 },
+            { minDDU: 278, maxDDU: 291, tariff: 47 },
+            { minDDU: 291, maxDDU: 311, tariff: 50 },
+            { minDDU: 311, maxDDU: 324, tariff: 52 },
+            { minDDU: 324, maxDDU: 343, tariff: 55 },
+            { minDDU: 343, maxDDU: 356, tariff: 57 },
+            { minDDU: 356, maxDDU: 375, tariff: 60 },
+            { minDDU: 375, maxDDU: 407, tariff: 65 },
+            { minDDU: 407, maxDDU: 440, tariff: 70 }
         ];
 
-        // XPポリシーデータ（DDP下限-上限、関税額）
+        // XPポリシーデータ（DDU価格下限-上限、関税額）
         const xpPolicies = [
-            { min: 0, max: 45, tariff: 7 },
-            { min: 45, max: 52, tariff: 8 },
-            { min: 52, max: 58, tariff: 9 },
-            { min: 58, max: 65, tariff: 10 },
-            { min: 65, max: 71, tariff: 11 },
-            { min: 71, max: 78, tariff: 12 },
-            { min: 78, max: 84, tariff: 13 },
-            { min: 84, max: 90, tariff: 14 },
-            { min: 90, max: 97, tariff: 15 },
-            { min: 97, max: 103, tariff: 16 },
-            { min: 103, max: 110, tariff: 17 },
-            { min: 110, max: 116, tariff: 18 },
-            { min: 116, max: 123, tariff: 19 },
-            { min: 123, max: 129, tariff: 20 },
-            { min: 129, max: 142, tariff: 22 },
-            { min: 142, max: 155, tariff: 24 },
-            { min: 155, max: 161, tariff: 25 },
-            { min: 161, max: 168, tariff: 26 },
-            { min: 168, max: 181, tariff: 28 },
-            { min: 181, max: 194, tariff: 30 },
-            { min: 194, max: 207, tariff: 32 },
-            { min: 207, max: 220, tariff: 34 },
-            { min: 220, max: 226, tariff: 35 },
-            { min: 226, max: 239, tariff: 37 },
-            { min: 239, max: 258, tariff: 40 },
-            { min: 258, max: 271, tariff: 42 },
-            { min: 271, max: 291, tariff: 45 },
-            { min: 291, max: 304, tariff: 47 },
-            { min: 304, max: 323, tariff: 50 },
-            { min: 323, max: 336, tariff: 52 },
-            { min: 336, max: 355, tariff: 55 },
-            { min: 355, max: 368, tariff: 57 },
-            { min: 368, max: 388, tariff: 60 },
-            { min: 388, max: 420, tariff: 65 },
-            { min: 420, max: 452, tariff: 70 },
-            { min: 452, max: 484, tariff: 75 },
-            { min: 484, max: 517, tariff: 80 },
-            { min: 517, max: 549, tariff: 85 },
-            { min: 549, max: 581, tariff: 90 },
-            { min: 581, max: 614, tariff: 95 },
-            { min: 614, max: 646, tariff: 100 },
-            { min: 646, max: 678, tariff: 105 },
-            { min: 678, max: 710, tariff: 110 },
-            { min: 710, max: 743, tariff: 115 },
-            { min: 743, max: 775, tariff: 120 },
-            { min: 775, max: 807, tariff: 125 },
-            { min: 807, max: 840, tariff: 130 },
-            { min: 840, max: 872, tariff: 135 },
-            { min: 872, max: 904, tariff: 140 },
-            { min: 904, max: 937, tariff: 145 },
-            { min: 937, max: 969, tariff: 150 },
-            { min: 969, max: 1001, tariff: 155 },
-            { min: 1001, max: 1033, tariff: 160 },
-            { min: 1033, max: 1066, tariff: 165 },
-            { min: 1066, max: 1098, tariff: 170 },
-            { min: 1098, max: 1130, tariff: 175 },
-            { min: 1130, max: 1163, tariff: 180 },
-            { min: 1163, max: 1195, tariff: 185 },
-            { min: 1195, max: 1227, tariff: 190 },
-            { min: 1227, max: 1259, tariff: 195 },
-            { min: 1259, max: 1292, tariff: 200 },
-            { min: 1292, max: 1324, tariff: 205 },
-            { min: 1324, max: 1356, tariff: 210 },
-            { min: 1356, max: 1389, tariff: 215 },
-            { min: 1389, max: 1421, tariff: 220 },
-            { min: 1421, max: 1453, tariff: 225 },
-            { min: 1453, max: 1486, tariff: 230 },
-            { min: 1486, max: 1518, tariff: 235 },
-            { min: 1518, max: 1550, tariff: 240 },
-            { min: 1550, max: 1582, tariff: 245 },
-            { min: 1582, max: 1615, tariff: 250 },
-            { min: 1615, max: 1647, tariff: 255 },
-            { min: 1647, max: 1679, tariff: 260 },
-            { min: 1679, max: 1712, tariff: 265 },
-            { min: 1712, max: 1744, tariff: 270 },
-            { min: 1744, max: 1776, tariff: 275 },
-            { min: 1776, max: 1808, tariff: 280 },
-            { min: 1808, max: 1841, tariff: 285 },
-            { min: 1841, max: 1873, tariff: 290 },
-            { min: 1873, max: 1905, tariff: 295 },
-            { min: 1905, max: 1938, tariff: 300 },
-            { min: 1938, max: 1970, tariff: 305 },
-            { min: 1970, max: 2002, tariff: 310 },
-            { min: 2002, max: 2034, tariff: 315 },
-            { min: 2034, max: 2067, tariff: 320 },
-            { min: 2067, max: 2099, tariff: 325 },
-            { min: 2099, max: 2131, tariff: 330 },
-            { min: 2131, max: 2164, tariff: 335 },
-            { min: 2164, max: 2196, tariff: 340 },
-            { min: 2196, max: 2228, tariff: 345 },
-            { min: 2228, max: 2261, tariff: 350 },
-            { min: 2261, max: 2293, tariff: 355 },
-            { min: 2293, max: 2325, tariff: 360 },
-            { min: 2325, max: 2357, tariff: 365 },
-            { min: 2357, max: 2390, tariff: 370 },
-            { min: 2390, max: 2422, tariff: 375 },
-            { min: 2422, max: 2454, tariff: 380 },
-            { min: 2454, max: 2487, tariff: 385 },
-            { min: 2487, max: 2519, tariff: 390 }
+            { minDDU: 0, maxDDU: 45, tariff: 7 },
+            { minDDU: 45, maxDDU: 52, tariff: 8 },
+            { minDDU: 52, maxDDU: 58, tariff: 9 },
+            { minDDU: 58, maxDDU: 65, tariff: 10 },
+            { minDDU: 65, maxDDU: 71, tariff: 11 },
+            { minDDU: 71, maxDDU: 78, tariff: 12 },
+            { minDDU: 78, maxDDU: 84, tariff: 13 },
+            { minDDU: 84, maxDDU: 90, tariff: 14 },
+            { minDDU: 90, maxDDU: 97, tariff: 15 },
+            { minDDU: 97, maxDDU: 103, tariff: 16 },
+            { minDDU: 103, maxDDU: 110, tariff: 17 },
+            { minDDU: 110, maxDDU: 116, tariff: 18 },
+            { minDDU: 116, maxDDU: 123, tariff: 19 },
+            { minDDU: 123, maxDDU: 129, tariff: 20 },
+            { minDDU: 129, maxDDU: 142, tariff: 22 },
+            { minDDU: 142, maxDDU: 155, tariff: 24 },
+            { minDDU: 155, maxDDU: 161, tariff: 25 },
+            { minDDU: 161, maxDDU: 168, tariff: 26 },
+            { minDDU: 168, maxDDU: 181, tariff: 28 },
+            { minDDU: 181, maxDDU: 194, tariff: 30 },
+            { minDDU: 194, maxDDU: 207, tariff: 32 },
+            { minDDU: 207, maxDDU: 220, tariff: 34 },
+            { minDDU: 220, maxDDU: 226, tariff: 35 },
+            { minDDU: 226, maxDDU: 239, tariff: 37 },
+            { minDDU: 239, maxDDU: 258, tariff: 40 },
+            { minDDU: 258, maxDDU: 271, tariff: 42 },
+            { minDDU: 271, maxDDU: 291, tariff: 45 },
+            { minDDU: 291, maxDDU: 304, tariff: 47 },
+            { minDDU: 304, maxDDU: 323, tariff: 50 },
+            { minDDU: 323, maxDDU: 336, tariff: 52 },
+            { minDDU: 336, maxDDU: 355, tariff: 55 },
+            { minDDU: 355, maxDDU: 368, tariff: 57 },
+            { minDDU: 368, maxDDU: 388, tariff: 60 },
+            { minDDU: 388, maxDDU: 420, tariff: 65 },
+            { minDDU: 420, maxDDU: 452, tariff: 70 },
+            { minDDU: 452, maxDDU: 484, tariff: 75 },
+            { minDDU: 484, maxDDU: 517, tariff: 80 },
+            { minDDU: 517, maxDDU: 549, tariff: 85 },
+            { minDDU: 549, maxDDU: 581, tariff: 90 },
+            { minDDU: 581, maxDDU: 614, tariff: 95 },
+            { minDDU: 614, maxDDU: 646, tariff: 100 },
+            { minDDU: 646, maxDDU: 678, tariff: 105 },
+            { minDDU: 678, maxDDU: 710, tariff: 110 },
+            { minDDU: 710, maxDDU: 743, tariff: 115 },
+            { minDDU: 743, maxDDU: 775, tariff: 120 },
+            { minDDU: 775, maxDDU: 807, tariff: 125 },
+            { minDDU: 807, maxDDU: 840, tariff: 130 },
+            { minDDU: 840, maxDDU: 872, tariff: 135 },
+            { minDDU: 872, maxDDU: 904, tariff: 140 },
+            { minDDU: 904, maxDDU: 937, tariff: 145 },
+            { minDDU: 937, maxDDU: 969, tariff: 150 },
+            { minDDU: 969, maxDDU: 1001, tariff: 155 },
+            { minDDU: 1001, maxDDU: 1033, tariff: 160 },
+            { minDDU: 1033, maxDDU: 1066, tariff: 165 },
+            { minDDU: 1066, maxDDU: 1098, tariff: 170 },
+            { minDDU: 1098, maxDDU: 1130, tariff: 175 },
+            { minDDU: 1130, maxDDU: 1163, tariff: 180 },
+            { minDDU: 1163, maxDDU: 1195, tariff: 185 },
+            { minDDU: 1195, maxDDU: 1227, tariff: 190 },
+            { minDDU: 1227, maxDDU: 1259, tariff: 195 },
+            { minDDU: 1259, maxDDU: 1292, tariff: 200 },
+            { minDDU: 1292, maxDDU: 1324, tariff: 205 },
+            { minDDU: 1324, maxDDU: 1356, tariff: 210 },
+            { minDDU: 1356, maxDDU: 1389, tariff: 215 },
+            { minDDU: 1389, maxDDU: 1421, tariff: 220 },
+            { minDDU: 1421, maxDDU: 1453, tariff: 225 },
+            { minDDU: 1453, maxDDU: 1486, tariff: 230 },
+            { minDDU: 1486, maxDDU: 1518, tariff: 235 },
+            { minDDU: 1518, maxDDU: 1550, tariff: 240 },
+            { minDDU: 1550, maxDDU: 1582, tariff: 245 },
+            { minDDU: 1582, maxDDU: 1615, tariff: 250 },
+            { minDDU: 1615, maxDDU: 1647, tariff: 255 },
+            { minDDU: 1647, maxDDU: 1679, tariff: 260 },
+            { minDDU: 1679, maxDDU: 1712, tariff: 265 },
+            { minDDU: 1712, maxDDU: 1744, tariff: 270 },
+            { minDDU: 1744, maxDDU: 1776, tariff: 275 },
+            { minDDU: 1776, maxDDU: 1808, tariff: 280 },
+            { minDDU: 1808, maxDDU: 1841, tariff: 285 },
+            { minDDU: 1841, maxDDU: 1873, tariff: 290 },
+            { minDDU: 1873, maxDDU: 1905, tariff: 295 },
+            { minDDU: 1905, maxDDU: 1938, tariff: 300 },
+            { minDDU: 1938, maxDDU: 1970, tariff: 305 },
+            { minDDU: 1970, maxDDU: 2002, tariff: 310 },
+            { minDDU: 2002, maxDDU: 2034, tariff: 315 },
+            { minDDU: 2034, maxDDU: 2067, tariff: 320 },
+            { minDDU: 2067, maxDDU: 2099, tariff: 325 },
+            { minDDU: 2099, maxDDU: 2131, tariff: 330 },
+            { minDDU: 2131, maxDDU: 2164, tariff: 335 },
+            { minDDU: 2164, maxDDU: 2196, tariff: 340 },
+            { minDDU: 2196, maxDDU: 2228, tariff: 345 },
+            { minDDU: 2228, maxDDU: 2261, tariff: 350 },
+            { minDDU: 2261, maxDDU: 2293, tariff: 355 },
+            { minDDU: 2293, maxDDU: 2325, tariff: 360 },
+            { minDDU: 2325, maxDDU: 2357, tariff: 365 },
+            { minDDU: 2357, maxDDU: 2390, tariff: 370 },
+            { minDDU: 2390, maxDDU: 2422, tariff: 375 },
+            { minDDU: 2422, maxDDU: 2454, tariff: 380 },
+            { minDDU: 2454, maxDDU: 2487, tariff: 385 },
+            { minDDU: 2487, maxDDU: 2519, tariff: 390 }
         ];
 
         // 入力要素
@@ -690,10 +691,20 @@
         const estimatedTariffEl = document.getElementById('estimatedTariff');
         const shippingBadgeEl = document.getElementById('shippingBadge');
 
+        // 関税額からポリシーを検索（関税額が一致するポリシーを探す）
+        function findPolicyByTariff(policies, estimatedTariff) {
+            for (const policy of policies) {
+                if (policy.tariff === estimatedTariff) {
+                    return policy;
+                }
+            }
+            return null;
+        }
+
         // ポリシー名を生成
         function generatePolicyName(policy, shippingMethod, condition) {
-            const minStr = String(policy.min).padStart(4, '0');
-            const maxStr = String(policy.max).padStart(4, '0');
+            const minStr = String(policy.minDDU).padStart(4, '0');
+            const maxStr = String(policy.maxDDU).padStart(4, '0');
             const tariffStr = String(policy.tariff).padStart(4, '0');
             return `Egl_2511-${minStr}-${maxStr}_${shippingMethod}_${condition}_${tariffStr}`;
         }
@@ -735,25 +746,22 @@
             // DDP価格を計算（整数）
             const ddpPrice = Math.round(sellingPrice + estimatedTariff);
 
-            // ポリシーを判定
+            // ポリシーを判定（関税額で検索）
             const policies = shippingMethod === 'eco' ? ecoPolicies : xpPolicies;
-            const maxDDP = shippingMethod === 'eco' ? 440 : 2519;
-            let recommendedPolicy = '-';
-            let foundPolicy = null;
+            const maxTariff = shippingMethod === 'eco' ? 70 : 390;
+            const minTariff = shippingMethod === 'eco' ? 3 : 7;
 
-            if (ddpPrice <= maxDDP) {
-                for (const policy of policies) {
-                    if (ddpPrice >= policy.min && ddpPrice < policy.max) {
-                        foundPolicy = policy;
-                        break;
-                    }
-                }
-            }
+            let recommendedPolicy = '-';
+            let foundPolicy = findPolicyByTariff(policies, estimatedTariff);
 
             if (foundPolicy) {
                 recommendedPolicy = generatePolicyName(foundPolicy, shippingMethod, condition);
-            } else if (ddpPrice > maxDDP) {
-                recommendedPolicy = `範囲外（DDP $${ddpPrice} > $${maxDDP}）`;
+            } else if (estimatedTariff > maxTariff) {
+                recommendedPolicy = `範囲外（関税額 $${estimatedTariff} > $${maxTariff}）`;
+            } else if (estimatedTariff < minTariff) {
+                recommendedPolicy = `範囲外（関税額 $${estimatedTariff} < $${minTariff}）`;
+            } else {
+                recommendedPolicy = `該当ポリシーなし（関税額 $${estimatedTariff}）`;
             }
 
             // 表示更新
@@ -766,10 +774,8 @@
                 shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-eco">ECO（Economy）</span>';
             } else if (foundPolicy && shippingMethod === 'xp') {
                 shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-xp">XP（Express）</span>';
-            } else if (ddpPrice > maxDDP) {
-                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-over">範囲外</span>';
             } else {
-                shippingBadgeEl.innerHTML = '';
+                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-over">範囲外</span>';
             }
         }
 
