@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>調整関税率計算ツール | V3対応</title>
+    <title>シッピングポリシー計算ツール | V3対応</title>
     <style>
         :root {
             --primary: #1a73e8;
@@ -116,172 +116,16 @@
             min-width: 30px;
         }
 
-        .result-box {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border: 3px solid var(--success);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-        }
-
-        .result-label {
-            font-size: 1em;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .result-value {
-            font-size: 3em;
-            font-weight: 700;
-            color: var(--success);
-        }
-
-        .result-unit {
-            font-size: 1.5em;
-            color: var(--text-secondary);
-        }
-
-        .formula-box {
-            background: #fff3e0;
-            border-left: 4px solid var(--warning);
-            padding: 16px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 20px;
-        }
-
-        .formula-box h3 {
-            color: var(--warning);
-            margin-bottom: 8px;
-        }
-
-        .formula {
-            font-family: 'Consolas', 'Monaco', monospace;
-            background: #fafafa;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.95em;
-            overflow-x: auto;
-        }
-
-        .comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .comparison-item {
-            padding: 16px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .comparison-item.before {
-            background: #fce4ec;
-            border: 2px solid #e91e63;
-        }
-
-        .comparison-item.after {
-            background: #e3f2fd;
-            border: 2px solid #2196f3;
-        }
-
-        .comparison-label {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .comparison-value {
-            font-size: 1.8em;
-            font-weight: 700;
-        }
-
-        .before .comparison-value {
-            color: #c2185b;
-        }
-
-        .after .comparison-value {
-            color: #1565c0;
-        }
-
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid var(--primary);
-            padding: 16px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 20px;
-        }
-
-        .info-box h3 {
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .info-box ul {
-            margin-left: 20px;
-        }
-
-        .info-box li {
-            margin-bottom: 6px;
-        }
-
-        .copy-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.95em;
-            margin-top: 12px;
-            transition: background 0.2s;
-        }
-
-        .copy-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .copy-btn.copied {
-            background: var(--success);
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.9em;
-        }
-
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            .comparison {
-                grid-template-columns: 1fr;
-            }
-
-            .result-value {
-                font-size: 2.5em;
-            }
-
-            .input-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .input-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         .radio-group {
@@ -302,19 +146,124 @@
             width: auto;
         }
 
-        .policy-result-box {
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* 計算結果セクション */
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-item {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-item-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .result-item-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .result-item.highlight {
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border: 3px solid #1565c0;
+            border: 2px solid #1565c0;
+        }
+
+        .result-item.highlight .result-item-value {
+            color: #1565c0;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .comparison-item {
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .comparison-item.before {
+            background: #fce4ec;
+            border: 2px solid #e91e63;
+        }
+
+        .comparison-item.after {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+
+        .comparison-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .comparison-value {
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .before .comparison-value {
+            color: #c2185b;
+        }
+
+        .after .comparison-value {
+            color: #2e7d32;
+        }
+
+        .policy-result-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px solid var(--success);
             border-radius: 12px;
             padding: 24px;
             text-align: center;
             margin-top: 20px;
         }
 
-        .policy-result-value {
+        .policy-result-label {
             font-size: 1em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .policy-result-value {
+            font-size: 1.1em;
             font-weight: 700;
-            color: #1565c0;
+            color: var(--success);
             margin-bottom: 8px;
             word-break: break-all;
             font-family: 'Courier New', monospace;
@@ -344,35 +293,79 @@
             color: #c62828;
         }
 
-        select {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            transition: border-color 0.2s;
-            background: white;
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            margin-top: 12px;
+            transition: background 0.2s;
         }
 
-        select:focus {
-            outline: none;
-            border-color: var(--primary);
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 6px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>調整関税率計算ツール</h1>
+            <h1>シッピングポリシー計算ツール</h1>
             <p class="subtitle">V3 DDP手数料対応版</p>
         </header>
 
         <div class="card">
-            <h2>入力パラメータ</h2>
+            <h2>入力</h2>
 
             <div class="input-row">
                 <div class="form-group">
-                    <label for="sellingPrice">販売価格</label>
+                    <label for="sellingPrice">販売価格（DDU価格）</label>
                     <div class="input-with-unit">
                         <input type="number" id="sellingPrice" value="50" min="0" step="0.01">
                         <span class="unit">$</span>
@@ -386,7 +379,7 @@
                         <input type="number" id="tariffRate" value="15" min="0" max="100" step="0.1">
                         <span class="unit">%</span>
                     </div>
-                    <p class="hint">例: 15% → 15 と入力</p>
+                    <p class="hint">商品カテゴリーの関税率</p>
                 </div>
             </div>
 
@@ -394,7 +387,7 @@
                 <div class="form-group">
                     <label for="feeRate">eBay手数料率</label>
                     <div class="input-with-unit">
-                        <input type="number" id="feeRate" value="15" min="0" max="100" step="0.1">
+                        <input type="number" id="feeRate" value="18" min="0" max="100" step="0.1">
                         <span class="unit">%</span>
                     </div>
                     <p class="hint">FVF（最終価値手数料）</p>
@@ -423,8 +416,8 @@
                 <div class="form-group">
                     <label for="shippingMethod">配送方法</label>
                     <select id="shippingMethod">
-                        <option value="eco">ECO（Economy）- DDP $0〜$440</option>
-                        <option value="xp">XP（Express）- DDP $0〜$2519</option>
+                        <option value="eco">Cpassエコノミー（関税額 $3〜$70）</option>
+                        <option value="xp">CpassFedEx（関税額 $7〜$390）</option>
                     </select>
                 </div>
 
@@ -447,41 +440,32 @@
         <div class="card">
             <h2>計算結果</h2>
 
-            <div class="result-box">
-                <div class="result-label">調整後の関税率</div>
-                <div>
-                    <span class="result-value" id="adjustedRate">20.1</span>
-                    <span class="result-unit">%</span>
+            <div class="result-grid">
+                <div class="result-item">
+                    <div class="result-item-label">DDU価格（販売価格）</div>
+                    <div class="result-item-value" id="dduPrice">$50</div>
                 </div>
-                <button class="copy-btn" id="copyBtn" onclick="copyResult()">コピー</button>
+                <div class="result-item highlight">
+                    <div class="result-item-label">DDP価格（関税込み）</div>
+                    <div class="result-item-value" id="ddpPrice">$60</div>
+                </div>
             </div>
 
             <div class="comparison">
                 <div class="comparison-item before">
-                    <div class="comparison-label">実際の関税率</div>
-                    <div class="comparison-value" id="originalRate">15.0%</div>
+                    <div class="comparison-label">実際の関税額</div>
+                    <div class="comparison-value" id="actualTariff">$7.50</div>
                 </div>
                 <div class="comparison-item after">
-                    <div class="comparison-label">調整後の関税率</div>
-                    <div class="comparison-value" id="adjustedRateCompare">20.1%</div>
-                </div>
-            </div>
-
-            <div class="formula-box">
-                <h3>計算式</h3>
-                <div class="formula" id="formulaDisplay">
-                    調整関税率 = 15% ÷ (1 - 0.15 - 0.05) × 1.03 = 19.3%
+                    <div class="comparison-label">調整後の関税額</div>
+                    <div class="comparison-value" id="adjustedTariff">$10</div>
                 </div>
             </div>
 
             <div class="policy-result-box">
-                <div class="result-label">推奨シッピングポリシー</div>
+                <div class="policy-result-label">推奨シッピングポリシー</div>
                 <div class="policy-result-value" id="recommendedPolicy">-</div>
                 <div id="shippingBadge"></div>
-                <div style="font-size: 0.9em; color: #5f6368; margin-top: 12px;">
-                    DDP価格: <strong id="ddpPrice">-</strong> ｜
-                    関税額: <strong id="estimatedTariff">-</strong>
-                </div>
                 <button class="copy-btn" id="copyPolicyBtn" onclick="copyPolicy()">ポリシー名をコピー</button>
             </div>
         </div>
@@ -490,28 +474,31 @@
             <h2>使い方</h2>
 
             <div class="info-box">
-                <h3>調整関税率とは？</h3>
-                <p>eBayがDDP価格（関税込み価格）に対して手数料を課すようになったため、
-                関税額にも手数料がかかります。この手数料分を補填するために、
-                実際の関税率より高い「調整関税率」を使用して関税額を計算します。</p>
+                <h3>このツールについて</h3>
+                <p>販売価格と関税率から、適切なシッピングポリシーを判定するツールです。</p>
+                <ul>
+                    <li><strong>DDU価格</strong>: 販売価格（関税抜き）</li>
+                    <li><strong>DDP価格</strong>: 関税込み価格（DDU + 調整後関税額）</li>
+                    <li><strong>実際の関税額</strong>: 販売価格 × 実際の関税率</li>
+                    <li><strong>調整後の関税額</strong>: 販売価格 × 調整関税率（手数料補填込み）</li>
+                </ul>
             </div>
 
             <div class="info-box" style="margin-top: 16px;">
                 <h3>配送方法について</h3>
                 <ul>
-                    <li><strong>ECO（Economy）</strong>: DDP価格 $0〜$440 に対応</li>
-                    <li><strong>XP（Express）</strong>: DDP価格 $0〜$2519 に対応</li>
-                    <li>DDP価格が選択した配送方法の範囲を超える場合はエラーが表示されます</li>
+                    <li><strong>Cpassエコノミー</strong>: 関税額 $3〜$70 に対応</li>
+                    <li><strong>CpassFedEx</strong>: 関税額 $7〜$390 に対応</li>
+                    <li>調整後の関税額がポリシーの関税額と一致するものが選択されます</li>
                 </ul>
             </div>
 
             <div class="info-box" style="margin-top: 16px;">
-                <h3>一括シートでの設定</h3>
-                <ul>
-                    <li><strong>AA2セル</strong>: 実際の関税率（例: 0.15 = 15%）</li>
-                    <li><strong>AF2セル</strong>: 調整関税率（自動計算）</li>
-                    <li>初期設定を実行すると、AF2に計算式が自動設定されます</li>
-                </ul>
+                <h3>調整関税率とは？</h3>
+                <p>eBayがDDP価格に対して手数料を課すため、関税額にも手数料がかかります。この手数料分を補填するために、実際の関税率より高い「調整関税率」を使用します。</p>
+                <p style="margin-top: 8px; font-family: monospace; background: #f5f5f5; padding: 8px; border-radius: 4px;">
+                    調整関税率 = 実際の関税率 ÷ (1 - 手数料率 - 広告費率) × 安全係数
+                </p>
             </div>
         </div>
 
@@ -520,14 +507,13 @@
                 <a href="ver44-update.html">&larr; V3 更新内容に戻る</a>
             </p>
             <p style="margin-top: 10px;">
-                一括シートV3 | DDP手数料対応版
+                一括シートV3 | シッピングポリシー計算ツール
             </p>
         </footer>
     </div>
 
     <script>
         // ECOポリシーデータ（DDU価格下限-上限、関税額）
-        // 判定は関税額で行う。DDU範囲は表示用
         const ecoPolicies = [
             { minDDU: 0, maxDDU: 7, tariff: 3 },
             { minDDU: 7, maxDDU: 13, tariff: 4 },
@@ -682,13 +668,11 @@
         const shippingMethodSelect = document.getElementById('shippingMethod');
 
         // 結果表示要素
-        const adjustedRateEl = document.getElementById('adjustedRate');
-        const originalRateEl = document.getElementById('originalRate');
-        const adjustedRateCompareEl = document.getElementById('adjustedRateCompare');
-        const formulaDisplayEl = document.getElementById('formulaDisplay');
-        const recommendedPolicyEl = document.getElementById('recommendedPolicy');
+        const dduPriceEl = document.getElementById('dduPrice');
         const ddpPriceEl = document.getElementById('ddpPrice');
-        const estimatedTariffEl = document.getElementById('estimatedTariff');
+        const actualTariffEl = document.getElementById('actualTariff');
+        const adjustedTariffEl = document.getElementById('adjustedTariff');
+        const recommendedPolicyEl = document.getElementById('recommendedPolicy');
         const shippingBadgeEl = document.getElementById('shippingBadge');
 
         // 関税額からポリシーを検索（関税額が一致するポリシーを探す）
@@ -719,86 +703,64 @@
             const shippingMethod = shippingMethodSelect.value;
             const condition = document.querySelector('input[name="condition"]:checked').value;
 
-            // 調整関税率 = 実際の関税率 / (1 - 手数料率 - 広告費率) × (1 + 安全係数)
+            // 調整関税率を計算
             const denominator = 1 - feeRate - adRate;
             let adjustedRate = 0;
-
             if (denominator > 0) {
                 adjustedRate = (tariffRate / denominator) * (1 + safetyMargin);
             }
 
-            // 表示更新
-            const adjustedPercent = (adjustedRate * 100).toFixed(1);
-            const originalPercent = (tariffRate * 100).toFixed(1);
+            // 実際の関税額
+            const actualTariff = sellingPrice * tariffRate;
 
-            adjustedRateEl.textContent = adjustedPercent;
-            originalRateEl.textContent = originalPercent + '%';
-            adjustedRateCompareEl.textContent = adjustedPercent + '%';
+            // 調整後の関税額（四捨五入して整数に）
+            const adjustedTariff = Math.round(sellingPrice * adjustedRate);
 
-            // 計算式の表示
-            const safetyFactor = (1 + safetyMargin).toFixed(2);
-            formulaDisplayEl.textContent =
-                `調整関税率 = ${originalPercent}% ÷ (1 - ${(feeRate * 100).toFixed(0)/100} - ${(adRate * 100).toFixed(0)/100}) × ${safetyFactor} = ${adjustedPercent}%`;
+            // DDU価格 = 販売価格
+            const dduPrice = sellingPrice;
 
-            // 関税額を計算（四捨五入して整数に）
-            const estimatedTariff = Math.round(sellingPrice * adjustedRate);
+            // DDP価格 = DDU + 調整後関税額
+            const ddpPrice = Math.round(dduPrice + adjustedTariff);
 
-            // DDP価格を計算（整数）
-            const ddpPrice = Math.round(sellingPrice + estimatedTariff);
-
-            // ポリシーを判定（関税額で検索）
+            // ポリシーを判定（調整後の関税額で検索）
             const policies = shippingMethod === 'eco' ? ecoPolicies : xpPolicies;
             const maxTariff = shippingMethod === 'eco' ? 70 : 390;
             const minTariff = shippingMethod === 'eco' ? 3 : 7;
 
             let recommendedPolicy = '-';
-            let foundPolicy = findPolicyByTariff(policies, estimatedTariff);
+            let foundPolicy = findPolicyByTariff(policies, adjustedTariff);
 
             if (foundPolicy) {
                 recommendedPolicy = generatePolicyName(foundPolicy, shippingMethod, condition);
-            } else if (estimatedTariff > maxTariff) {
-                recommendedPolicy = `範囲外（関税額 $${estimatedTariff} > $${maxTariff}）`;
-            } else if (estimatedTariff < minTariff) {
-                recommendedPolicy = `範囲外（関税額 $${estimatedTariff} < $${minTariff}）`;
+            } else if (adjustedTariff > maxTariff) {
+                recommendedPolicy = `範囲外（関税額 $${adjustedTariff} > $${maxTariff}）`;
+            } else if (adjustedTariff < minTariff) {
+                recommendedPolicy = `範囲外（関税額 $${adjustedTariff} < $${minTariff}）`;
             } else {
-                recommendedPolicy = `該当ポリシーなし（関税額 $${estimatedTariff}）`;
+                recommendedPolicy = `該当ポリシーなし（関税額 $${adjustedTariff}）`;
             }
 
             // 表示更新
-            recommendedPolicyEl.textContent = recommendedPolicy;
+            dduPriceEl.textContent = '$' + dduPrice.toFixed(2);
             ddpPriceEl.textContent = '$' + ddpPrice;
-            estimatedTariffEl.textContent = '$' + estimatedTariff;
+            actualTariffEl.textContent = '$' + actualTariff.toFixed(2);
+            adjustedTariffEl.textContent = '$' + adjustedTariff;
+            recommendedPolicyEl.textContent = recommendedPolicy;
 
             // バッジ表示
             if (foundPolicy && shippingMethod === 'eco') {
-                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-eco">ECO（Economy）</span>';
+                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-eco">Cpassエコノミー</span>';
             } else if (foundPolicy && shippingMethod === 'xp') {
-                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-xp">XP（Express）</span>';
+                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-xp">CpassFedEx</span>';
             } else {
                 shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-over">範囲外</span>';
             }
         }
 
-        // コピー機能
-        function copyResult() {
-            const value = adjustedRateEl.textContent;
-            const decimalValue = (parseFloat(value) / 100).toFixed(4);
-
-            navigator.clipboard.writeText(decimalValue).then(() => {
-                const btn = document.getElementById('copyBtn');
-                btn.textContent = 'コピーしました！';
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.textContent = 'コピー';
-                    btn.classList.remove('copied');
-                }, 2000);
-            });
-        }
-
         // ポリシー名コピー機能
         function copyPolicy() {
             const policyName = recommendedPolicyEl.textContent;
-            if (policyName === '-' || policyName.includes('範囲外')) return;
+            if (policyName === '-' || policyName.includes('範囲外') || policyName.includes('該当ポリシーなし')) return;
 
             navigator.clipboard.writeText(policyName).then(() => {
                 const btn = document.getElementById('copyPolicyBtn');
