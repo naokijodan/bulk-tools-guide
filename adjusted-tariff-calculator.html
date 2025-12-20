@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>調整関税率計算ツール | Ver.44対応</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --success: #34a853;
+            --warning: #ea8600;
+            --danger: #d93025;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --border: #dadce0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1em;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: var(--primary);
+            font-size: 1.2em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .hint {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .input-with-unit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-with-unit input {
+            flex: 1;
+        }
+
+        .unit {
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 30px;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px solid var(--success);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 1em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .result-unit {
+            font-size: 1.5em;
+            color: var(--text-secondary);
+        }
+
+        .formula-box {
+            background: #fff3e0;
+            border-left: 4px solid var(--warning);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        .formula-box h3 {
+            color: var(--warning);
+            margin-bottom: 8px;
+        }
+
+        .formula {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #fafafa;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            overflow-x: auto;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .comparison-item {
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .comparison-item.before {
+            background: #fce4ec;
+            border: 2px solid #e91e63;
+        }
+
+        .comparison-item.after {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+        }
+
+        .comparison-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .comparison-value {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        .before .comparison-value {
+            color: #c2185b;
+        }
+
+        .after .comparison-value {
+            color: #1565c0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 6px;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            margin-top: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .result-value {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 調整関税率計算ツール</h1>
+            <p class="subtitle">Ver.44 DDP手数料対応版</p>
+        </header>
+
+        <div class="card">
+            <h2>📊 入力パラメータ</h2>
+
+            <div class="form-group">
+                <label for="tariffRate">実際の関税率</label>
+                <div class="input-with-unit">
+                    <input type="number" id="tariffRate" value="15" min="0" max="100" step="0.1">
+                    <span class="unit">%</span>
+                </div>
+                <p class="hint">例: 15% → 15 と入力</p>
+            </div>
+
+            <div class="form-group">
+                <label for="feeRate">eBay手数料率</label>
+                <div class="input-with-unit">
+                    <input type="number" id="feeRate" value="18" min="0" max="100" step="0.1">
+                    <span class="unit">%</span>
+                </div>
+                <p class="hint">FVF（最終価値手数料）</p>
+            </div>
+
+            <div class="form-group">
+                <label for="adRate">広告費率</label>
+                <div class="input-with-unit">
+                    <input type="number" id="adRate" value="5" min="0" max="100" step="0.1">
+                    <span class="unit">%</span>
+                </div>
+                <p class="hint">Promoted Listings広告費</p>
+            </div>
+
+            <div class="form-group">
+                <label for="safetyMargin">安全係数</label>
+                <div class="input-with-unit">
+                    <input type="number" id="safetyMargin" value="3" min="0" max="20" step="0.1">
+                    <span class="unit">%</span>
+                </div>
+                <p class="hint">端数・為替変動対策（推奨: 3%）</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📈 計算結果</h2>
+
+            <div class="result-box">
+                <div class="result-label">調整後の関税率</div>
+                <div>
+                    <span class="result-value" id="adjustedRate">20.1</span>
+                    <span class="result-unit">%</span>
+                </div>
+                <button class="copy-btn" id="copyBtn" onclick="copyResult()">📋 コピー</button>
+            </div>
+
+            <div class="comparison">
+                <div class="comparison-item before">
+                    <div class="comparison-label">実際の関税率</div>
+                    <div class="comparison-value" id="originalRate">15.0%</div>
+                </div>
+                <div class="comparison-item after">
+                    <div class="comparison-label">調整後の関税率</div>
+                    <div class="comparison-value" id="adjustedRateCompare">20.1%</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h3>📐 計算式</h3>
+                <div class="formula" id="formulaDisplay">
+                    調整関税率 = 15% ÷ (1 - 0.18 - 0.05) × 1.03 = 20.1%
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💡 使い方</h2>
+
+            <div class="info-box">
+                <h3>調整関税率とは？</h3>
+                <p>eBayがDDP価格（関税込み価格）に対して手数料を課すようになったため、
+                関税額にも手数料がかかります。この手数料分を補填するために、
+                実際の関税率より高い「調整関税率」を使用して関税額を計算します。</p>
+            </div>
+
+            <div class="info-box" style="margin-top: 16px;">
+                <h3>一括シートでの設定</h3>
+                <ul>
+                    <li><strong>AA2セル</strong>: 実際の関税率（例: 0.15 = 15%）</li>
+                    <li><strong>AF2セル</strong>: 調整関税率（自動計算）</li>
+                    <li>初期設定を実行すると、AF2に計算式が自動設定されます</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                <a href="ver44-update.html">← Ver.44 更新内容に戻る</a>
+            </p>
+            <p style="margin-top: 10px;">
+                一括シート Ver.44 | DDP手数料対応版
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // 入力要素
+        const tariffRateInput = document.getElementById('tariffRate');
+        const feeRateInput = document.getElementById('feeRate');
+        const adRateInput = document.getElementById('adRate');
+        const safetyMarginInput = document.getElementById('safetyMargin');
+
+        // 結果表示要素
+        const adjustedRateEl = document.getElementById('adjustedRate');
+        const originalRateEl = document.getElementById('originalRate');
+        const adjustedRateCompareEl = document.getElementById('adjustedRateCompare');
+        const formulaDisplayEl = document.getElementById('formulaDisplay');
+
+        // 計算関数
+        function calculate() {
+            const tariffRate = parseFloat(tariffRateInput.value) / 100 || 0;
+            const feeRate = parseFloat(feeRateInput.value) / 100 || 0;
+            const adRate = parseFloat(adRateInput.value) / 100 || 0;
+            const safetyMargin = parseFloat(safetyMarginInput.value) / 100 || 0;
+
+            // 調整関税率 = 実際の関税率 / (1 - 手数料率 - 広告費率) × (1 + 安全係数)
+            const denominator = 1 - feeRate - adRate;
+            let adjustedRate = 0;
+
+            if (denominator > 0) {
+                adjustedRate = (tariffRate / denominator) * (1 + safetyMargin);
+            }
+
+            // 表示更新
+            const adjustedPercent = (adjustedRate * 100).toFixed(1);
+            const originalPercent = (tariffRate * 100).toFixed(1);
+
+            adjustedRateEl.textContent = adjustedPercent;
+            originalRateEl.textContent = originalPercent + '%';
+            adjustedRateCompareEl.textContent = adjustedPercent + '%';
+
+            // 計算式の表示
+            const safetyFactor = (1 + safetyMargin).toFixed(2);
+            formulaDisplayEl.textContent =
+                `調整関税率 = ${originalPercent}% ÷ (1 - ${(feeRate * 100).toFixed(0)/100} - ${(adRate * 100).toFixed(0)/100}) × ${safetyFactor} = ${adjustedPercent}%`;
+        }
+
+        // コピー機能
+        function copyResult() {
+            const value = adjustedRateEl.textContent;
+            const decimalValue = (parseFloat(value) / 100).toFixed(4);
+
+            navigator.clipboard.writeText(decimalValue).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.textContent = '✅ コピーしました！';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 コピー';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // イベントリスナー
+        [tariffRateInput, feeRateInput, adRateInput, safetyMarginInput].forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // 初期計算
+        calculate();
+    </script>
+</body>
+</html>

@@ -354,6 +354,12 @@
                 <p>この調整関税率（20.07%）で計算した関税額をバイヤーから徴収することで、DDP手数料分を補填します。</p>
             </div>
 
+            <div class="tool-link-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #2196f3; border-radius: 12px; padding: 20px; margin: 20px 0; text-align: center;">
+                <h3 style="color: #1565c0; margin-bottom: 10px;">🧮 調整関税率計算ツール</h3>
+                <p style="margin-bottom: 15px;">自分の手数料率・広告費率で調整関税率を計算できます</p>
+                <a href="adjusted-tariff-calculator.html" style="display: inline-block; background: #2196f3; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1em;">計算ツールを開く →</a>
+            </div>
+
             <h2>セル配置の変更</h2>
 
             <h3>新規追加セル</h3>
@@ -425,17 +431,35 @@
                 <ul>
                     <li><strong>販売価格の修正は不要</strong> - Ver.42以前と同じ計算式のため</li>
                     <li><strong>シッピングポリシーの再適用が必要</strong> - 想定関税額が変わるため、シッピングポリシーの判定結果が変わる可能性があります</li>
-                    <li>一括シートから<strong>「レガシー再計算」</strong>を実行してください</li>
                 </ul>
+            </div>
+
+            <div class="summary-box" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left-color: #ff9800;">
+                <h3 style="color: #e65100;">レガシー再計算とは？</h3>
+                <p>既存の出品データに対して、<strong>シッピングポリシーを再判定・再計算する機能</strong>です。</p>
+                <p>Ver.44では調整関税率を使うため、想定関税額（AD列）の計算結果が変わります。シッピングポリシーはDDP価格（販売価格＋想定関税）に基づいて判定されるため、ポリシーが変わる可能性があります。</p>
+                <p style="margin-top: 10px;"><strong>→ 一括シートのメニューから「レガシー再計算」を実行してください</strong></p>
+            </div>
+
+            <h2>Ver.44への移行方法</h2>
+
+            <div class="important-notice" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-color: #4caf50;">
+                <span class="headline" style="color: #2e7d32;">新しいシートを使用してください</span>
+                <p style="color: #1b5e20;">
+                    Ver.44では計算式やセル配置が変更されています。<br>
+                    <strong>スクリプトの手動更新は複雑なため、新しいシートをコピーして使用することを強く推奨します。</strong><br><br>
+                    既存のデータは、新シートにコピー＆ペーストで移行できます。
+                </p>
             </div>
 
             <h2>適用手順</h2>
 
             <ol>
-                <li><span class="step-number">1</span><strong>スクリプトを更新</strong> - Ver.44のコードをコピー</li>
-                <li><span class="step-number">2</span><strong>初期設定を再実行</strong> - または「計算式を再出力」を実行</li>
+                <li><span class="step-number">1</span><strong>新しいシートをコピー</strong> - Ver.44対応の一括シートを入手</li>
+                <li><span class="step-number">2</span><strong>初期設定を実行</strong> - APIキーや各種設定を入力</li>
                 <li><span class="step-number">3</span><strong>AA2に関税率を設定</strong> - デフォルトは15%（0.15）</li>
-                <li><span class="step-number">4</span><strong>レガシー再計算を実行</strong> - 既存出品のシッピングポリシーを再適用</li>
+                <li><span class="step-number">4</span><strong>既存データを移行</strong> - 旧シートからデータをコピー</li>
+                <li><span class="step-number">5</span><strong>レガシー再計算を実行</strong> - シッピングポリシーを再適用</li>
             </ol>
 
             <h2>注意事項</h2>
