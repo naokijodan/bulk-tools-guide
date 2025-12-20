@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>調整関税率計算ツール | Ver.44対応</title>
+    <title>調整関税率計算ツール | V3対応</title>
     <style>
         :root {
             --primary: #1a73e8;
@@ -272,44 +272,142 @@
             .result-value {
                 font-size: 2.5em;
             }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+        }
+
+        .policy-result-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 3px solid #1565c0;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .policy-result-value {
+            font-size: 1em;
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 8px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+
+        .shipping-method-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .badge-eco {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-xp {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-over {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🧮 調整関税率計算ツール</h1>
-            <p class="subtitle">Ver.44 DDP手数料対応版</p>
+            <h1>調整関税率計算ツール</h1>
+            <p class="subtitle">V3 DDP手数料対応版</p>
         </header>
 
         <div class="card">
-            <h2>📊 入力パラメータ</h2>
+            <h2>入力パラメータ</h2>
 
-            <div class="form-group">
-                <label for="tariffRate">実際の関税率</label>
-                <div class="input-with-unit">
-                    <input type="number" id="tariffRate" value="15" min="0" max="100" step="0.1">
-                    <span class="unit">%</span>
+            <div class="input-row">
+                <div class="form-group">
+                    <label for="sellingPrice">販売価格</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="sellingPrice" value="50" min="0" step="0.01">
+                        <span class="unit">$</span>
+                    </div>
+                    <p class="hint">eBayでの販売価格（関税抜き）</p>
                 </div>
-                <p class="hint">例: 15% → 15 と入力</p>
+
+                <div class="form-group">
+                    <label for="tariffRate">実際の関税率</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="tariffRate" value="15" min="0" max="100" step="0.1">
+                        <span class="unit">%</span>
+                    </div>
+                    <p class="hint">例: 15% → 15 と入力</p>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="feeRate">eBay手数料率</label>
-                <div class="input-with-unit">
-                    <input type="number" id="feeRate" value="18" min="0" max="100" step="0.1">
-                    <span class="unit">%</span>
+            <div class="input-row">
+                <div class="form-group">
+                    <label for="feeRate">eBay手数料率</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="feeRate" value="15" min="0" max="100" step="0.1">
+                        <span class="unit">%</span>
+                    </div>
+                    <p class="hint">FVF（最終価値手数料）</p>
                 </div>
-                <p class="hint">FVF（最終価値手数料）</p>
-            </div>
 
-            <div class="form-group">
-                <label for="adRate">広告費率</label>
-                <div class="input-with-unit">
-                    <input type="number" id="adRate" value="5" min="0" max="100" step="0.1">
-                    <span class="unit">%</span>
+                <div class="form-group">
+                    <label for="adRate">広告費率</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="adRate" value="5" min="0" max="100" step="0.1">
+                        <span class="unit">%</span>
+                    </div>
+                    <p class="hint">Promoted Listings広告費</p>
                 </div>
-                <p class="hint">Promoted Listings広告費</p>
             </div>
 
             <div class="form-group">
@@ -320,10 +418,34 @@
                 </div>
                 <p class="hint">端数・為替変動対策（推奨: 3%）</p>
             </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label for="shippingMethod">配送方法</label>
+                    <select id="shippingMethod">
+                        <option value="eco">ECO（Economy）- DDP $0〜$440</option>
+                        <option value="xp">XP（Express）- DDP $0〜$2519</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>商品状態</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="condition" value="new" checked>
+                            新品 (new)
+                        </label>
+                        <label>
+                            <input type="radio" name="condition" value="used">
+                            中古 (used)
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card">
-            <h2>📈 計算結果</h2>
+            <h2>計算結果</h2>
 
             <div class="result-box">
                 <div class="result-label">調整後の関税率</div>
@@ -331,7 +453,7 @@
                     <span class="result-value" id="adjustedRate">20.1</span>
                     <span class="result-unit">%</span>
                 </div>
-                <button class="copy-btn" id="copyBtn" onclick="copyResult()">📋 コピー</button>
+                <button class="copy-btn" id="copyBtn" onclick="copyResult()">コピー</button>
             </div>
 
             <div class="comparison">
@@ -346,21 +468,41 @@
             </div>
 
             <div class="formula-box">
-                <h3>📐 計算式</h3>
+                <h3>計算式</h3>
                 <div class="formula" id="formulaDisplay">
-                    調整関税率 = 15% ÷ (1 - 0.18 - 0.05) × 1.03 = 20.1%
+                    調整関税率 = 15% ÷ (1 - 0.15 - 0.05) × 1.03 = 19.3%
                 </div>
+            </div>
+
+            <div class="policy-result-box">
+                <div class="result-label">推奨シッピングポリシー</div>
+                <div class="policy-result-value" id="recommendedPolicy">-</div>
+                <div id="shippingBadge"></div>
+                <div style="font-size: 0.9em; color: #5f6368; margin-top: 12px;">
+                    DDP価格: <strong id="ddpPrice">-</strong> ｜
+                    関税額: <strong id="estimatedTariff">-</strong>
+                </div>
+                <button class="copy-btn" id="copyPolicyBtn" onclick="copyPolicy()">ポリシー名をコピー</button>
             </div>
         </div>
 
         <div class="card">
-            <h2>💡 使い方</h2>
+            <h2>使い方</h2>
 
             <div class="info-box">
                 <h3>調整関税率とは？</h3>
                 <p>eBayがDDP価格（関税込み価格）に対して手数料を課すようになったため、
                 関税額にも手数料がかかります。この手数料分を補填するために、
                 実際の関税率より高い「調整関税率」を使用して関税額を計算します。</p>
+            </div>
+
+            <div class="info-box" style="margin-top: 16px;">
+                <h3>配送方法について</h3>
+                <ul>
+                    <li><strong>ECO（Economy）</strong>: DDP価格 $0〜$440 に対応</li>
+                    <li><strong>XP（Express）</strong>: DDP価格 $0〜$2519 に対応</li>
+                    <li>DDP価格が選択した配送方法の範囲を超える場合はエラーが表示されます</li>
+                </ul>
             </div>
 
             <div class="info-box" style="margin-top: 16px;">
@@ -375,33 +517,196 @@
 
         <footer>
             <p>
-                <a href="ver44-update.html">← Ver.44 更新内容に戻る</a>
+                <a href="ver44-update.html">&larr; V3 更新内容に戻る</a>
             </p>
             <p style="margin-top: 10px;">
-                一括シート Ver.44 | DDP手数料対応版
+                一括シートV3 | DDP手数料対応版
             </p>
         </footer>
     </div>
 
     <script>
+        // ECOポリシーデータ（DDP下限-上限、関税額）
+        const ecoPolicies = [
+            { min: 0, max: 7, tariff: 3 },
+            { min: 7, max: 13, tariff: 4 },
+            { min: 13, max: 20, tariff: 5 },
+            { min: 20, max: 26, tariff: 6 },
+            { min: 26, max: 33, tariff: 7 },
+            { min: 33, max: 40, tariff: 8 },
+            { min: 40, max: 46, tariff: 9 },
+            { min: 46, max: 52, tariff: 10 },
+            { min: 52, max: 59, tariff: 11 },
+            { min: 59, max: 65, tariff: 12 },
+            { min: 65, max: 72, tariff: 13 },
+            { min: 72, max: 78, tariff: 14 },
+            { min: 78, max: 85, tariff: 15 },
+            { min: 85, max: 91, tariff: 16 },
+            { min: 91, max: 97, tariff: 17 },
+            { min: 97, max: 104, tariff: 18 },
+            { min: 104, max: 110, tariff: 19 },
+            { min: 110, max: 117, tariff: 20 },
+            { min: 117, max: 130, tariff: 22 },
+            { min: 130, max: 143, tariff: 24 },
+            { min: 143, max: 150, tariff: 25 },
+            { min: 150, max: 156, tariff: 26 },
+            { min: 156, max: 169, tariff: 28 },
+            { min: 169, max: 181, tariff: 30 },
+            { min: 181, max: 194, tariff: 32 },
+            { min: 194, max: 207, tariff: 34 },
+            { min: 207, max: 214, tariff: 35 },
+            { min: 214, max: 227, tariff: 37 },
+            { min: 227, max: 246, tariff: 40 },
+            { min: 246, max: 259, tariff: 42 },
+            { min: 259, max: 278, tariff: 45 },
+            { min: 278, max: 291, tariff: 47 },
+            { min: 291, max: 311, tariff: 50 },
+            { min: 311, max: 324, tariff: 52 },
+            { min: 324, max: 343, tariff: 55 },
+            { min: 343, max: 356, tariff: 57 },
+            { min: 356, max: 375, tariff: 60 },
+            { min: 375, max: 407, tariff: 65 },
+            { min: 407, max: 440, tariff: 70 }
+        ];
+
+        // XPポリシーデータ（DDP下限-上限、関税額）
+        const xpPolicies = [
+            { min: 0, max: 45, tariff: 7 },
+            { min: 45, max: 52, tariff: 8 },
+            { min: 52, max: 58, tariff: 9 },
+            { min: 58, max: 65, tariff: 10 },
+            { min: 65, max: 71, tariff: 11 },
+            { min: 71, max: 78, tariff: 12 },
+            { min: 78, max: 84, tariff: 13 },
+            { min: 84, max: 90, tariff: 14 },
+            { min: 90, max: 97, tariff: 15 },
+            { min: 97, max: 103, tariff: 16 },
+            { min: 103, max: 110, tariff: 17 },
+            { min: 110, max: 116, tariff: 18 },
+            { min: 116, max: 123, tariff: 19 },
+            { min: 123, max: 129, tariff: 20 },
+            { min: 129, max: 142, tariff: 22 },
+            { min: 142, max: 155, tariff: 24 },
+            { min: 155, max: 161, tariff: 25 },
+            { min: 161, max: 168, tariff: 26 },
+            { min: 168, max: 181, tariff: 28 },
+            { min: 181, max: 194, tariff: 30 },
+            { min: 194, max: 207, tariff: 32 },
+            { min: 207, max: 220, tariff: 34 },
+            { min: 220, max: 226, tariff: 35 },
+            { min: 226, max: 239, tariff: 37 },
+            { min: 239, max: 258, tariff: 40 },
+            { min: 258, max: 271, tariff: 42 },
+            { min: 271, max: 291, tariff: 45 },
+            { min: 291, max: 304, tariff: 47 },
+            { min: 304, max: 323, tariff: 50 },
+            { min: 323, max: 336, tariff: 52 },
+            { min: 336, max: 355, tariff: 55 },
+            { min: 355, max: 368, tariff: 57 },
+            { min: 368, max: 388, tariff: 60 },
+            { min: 388, max: 420, tariff: 65 },
+            { min: 420, max: 452, tariff: 70 },
+            { min: 452, max: 484, tariff: 75 },
+            { min: 484, max: 517, tariff: 80 },
+            { min: 517, max: 549, tariff: 85 },
+            { min: 549, max: 581, tariff: 90 },
+            { min: 581, max: 614, tariff: 95 },
+            { min: 614, max: 646, tariff: 100 },
+            { min: 646, max: 678, tariff: 105 },
+            { min: 678, max: 710, tariff: 110 },
+            { min: 710, max: 743, tariff: 115 },
+            { min: 743, max: 775, tariff: 120 },
+            { min: 775, max: 807, tariff: 125 },
+            { min: 807, max: 840, tariff: 130 },
+            { min: 840, max: 872, tariff: 135 },
+            { min: 872, max: 904, tariff: 140 },
+            { min: 904, max: 937, tariff: 145 },
+            { min: 937, max: 969, tariff: 150 },
+            { min: 969, max: 1001, tariff: 155 },
+            { min: 1001, max: 1033, tariff: 160 },
+            { min: 1033, max: 1066, tariff: 165 },
+            { min: 1066, max: 1098, tariff: 170 },
+            { min: 1098, max: 1130, tariff: 175 },
+            { min: 1130, max: 1163, tariff: 180 },
+            { min: 1163, max: 1195, tariff: 185 },
+            { min: 1195, max: 1227, tariff: 190 },
+            { min: 1227, max: 1259, tariff: 195 },
+            { min: 1259, max: 1292, tariff: 200 },
+            { min: 1292, max: 1324, tariff: 205 },
+            { min: 1324, max: 1356, tariff: 210 },
+            { min: 1356, max: 1389, tariff: 215 },
+            { min: 1389, max: 1421, tariff: 220 },
+            { min: 1421, max: 1453, tariff: 225 },
+            { min: 1453, max: 1486, tariff: 230 },
+            { min: 1486, max: 1518, tariff: 235 },
+            { min: 1518, max: 1550, tariff: 240 },
+            { min: 1550, max: 1582, tariff: 245 },
+            { min: 1582, max: 1615, tariff: 250 },
+            { min: 1615, max: 1647, tariff: 255 },
+            { min: 1647, max: 1679, tariff: 260 },
+            { min: 1679, max: 1712, tariff: 265 },
+            { min: 1712, max: 1744, tariff: 270 },
+            { min: 1744, max: 1776, tariff: 275 },
+            { min: 1776, max: 1808, tariff: 280 },
+            { min: 1808, max: 1841, tariff: 285 },
+            { min: 1841, max: 1873, tariff: 290 },
+            { min: 1873, max: 1905, tariff: 295 },
+            { min: 1905, max: 1938, tariff: 300 },
+            { min: 1938, max: 1970, tariff: 305 },
+            { min: 1970, max: 2002, tariff: 310 },
+            { min: 2002, max: 2034, tariff: 315 },
+            { min: 2034, max: 2067, tariff: 320 },
+            { min: 2067, max: 2099, tariff: 325 },
+            { min: 2099, max: 2131, tariff: 330 },
+            { min: 2131, max: 2164, tariff: 335 },
+            { min: 2164, max: 2196, tariff: 340 },
+            { min: 2196, max: 2228, tariff: 345 },
+            { min: 2228, max: 2261, tariff: 350 },
+            { min: 2261, max: 2293, tariff: 355 },
+            { min: 2293, max: 2325, tariff: 360 },
+            { min: 2325, max: 2357, tariff: 365 },
+            { min: 2357, max: 2390, tariff: 370 },
+            { min: 2390, max: 2422, tariff: 375 },
+            { min: 2422, max: 2454, tariff: 380 },
+            { min: 2454, max: 2487, tariff: 385 },
+            { min: 2487, max: 2519, tariff: 390 }
+        ];
+
         // 入力要素
+        const sellingPriceInput = document.getElementById('sellingPrice');
         const tariffRateInput = document.getElementById('tariffRate');
         const feeRateInput = document.getElementById('feeRate');
         const adRateInput = document.getElementById('adRate');
         const safetyMarginInput = document.getElementById('safetyMargin');
+        const shippingMethodSelect = document.getElementById('shippingMethod');
 
         // 結果表示要素
         const adjustedRateEl = document.getElementById('adjustedRate');
         const originalRateEl = document.getElementById('originalRate');
         const adjustedRateCompareEl = document.getElementById('adjustedRateCompare');
         const formulaDisplayEl = document.getElementById('formulaDisplay');
+        const recommendedPolicyEl = document.getElementById('recommendedPolicy');
+        const ddpPriceEl = document.getElementById('ddpPrice');
+        const estimatedTariffEl = document.getElementById('estimatedTariff');
+        const shippingBadgeEl = document.getElementById('shippingBadge');
+
+        // ポリシー名を生成
+        function generatePolicyName(policy, shippingMethod, condition) {
+            const minStr = String(policy.min).padStart(4, '0');
+            const maxStr = String(policy.max).padStart(4, '0');
+            const tariffStr = String(policy.tariff).padStart(4, '0');
+            return `Egl_2511-${minStr}-${maxStr}_${shippingMethod}_${condition}_${tariffStr}`;
+        }
 
         // 計算関数
         function calculate() {
+            const sellingPrice = parseFloat(sellingPriceInput.value) || 0;
             const tariffRate = parseFloat(tariffRateInput.value) / 100 || 0;
             const feeRate = parseFloat(feeRateInput.value) / 100 || 0;
             const adRate = parseFloat(adRateInput.value) / 100 || 0;
             const safetyMargin = parseFloat(safetyMarginInput.value) / 100 || 0;
+            const shippingMethod = shippingMethodSelect.value;
+            const condition = document.querySelector('input[name="condition"]:checked').value;
 
             // 調整関税率 = 実際の関税率 / (1 - 手数料率 - 広告費率) × (1 + 安全係数)
             const denominator = 1 - feeRate - adRate;
@@ -423,6 +728,49 @@
             const safetyFactor = (1 + safetyMargin).toFixed(2);
             formulaDisplayEl.textContent =
                 `調整関税率 = ${originalPercent}% ÷ (1 - ${(feeRate * 100).toFixed(0)/100} - ${(adRate * 100).toFixed(0)/100}) × ${safetyFactor} = ${adjustedPercent}%`;
+
+            // 関税額を計算（四捨五入して整数に）
+            const estimatedTariff = Math.round(sellingPrice * adjustedRate);
+
+            // DDP価格を計算（整数）
+            const ddpPrice = Math.round(sellingPrice + estimatedTariff);
+
+            // ポリシーを判定
+            const policies = shippingMethod === 'eco' ? ecoPolicies : xpPolicies;
+            const maxDDP = shippingMethod === 'eco' ? 440 : 2519;
+            let recommendedPolicy = '-';
+            let foundPolicy = null;
+
+            if (ddpPrice <= maxDDP) {
+                for (const policy of policies) {
+                    if (ddpPrice >= policy.min && ddpPrice < policy.max) {
+                        foundPolicy = policy;
+                        break;
+                    }
+                }
+            }
+
+            if (foundPolicy) {
+                recommendedPolicy = generatePolicyName(foundPolicy, shippingMethod, condition);
+            } else if (ddpPrice > maxDDP) {
+                recommendedPolicy = `範囲外（DDP $${ddpPrice} > $${maxDDP}）`;
+            }
+
+            // 表示更新
+            recommendedPolicyEl.textContent = recommendedPolicy;
+            ddpPriceEl.textContent = '$' + ddpPrice;
+            estimatedTariffEl.textContent = '$' + estimatedTariff;
+
+            // バッジ表示
+            if (foundPolicy && shippingMethod === 'eco') {
+                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-eco">ECO（Economy）</span>';
+            } else if (foundPolicy && shippingMethod === 'xp') {
+                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-xp">XP（Express）</span>';
+            } else if (ddpPrice > maxDDP) {
+                shippingBadgeEl.innerHTML = '<span class="shipping-method-badge badge-over">範囲外</span>';
+            } else {
+                shippingBadgeEl.innerHTML = '';
+            }
         }
 
         // コピー機能
@@ -432,18 +780,39 @@
 
             navigator.clipboard.writeText(decimalValue).then(() => {
                 const btn = document.getElementById('copyBtn');
-                btn.textContent = '✅ コピーしました！';
+                btn.textContent = 'コピーしました！';
                 btn.classList.add('copied');
                 setTimeout(() => {
-                    btn.textContent = '📋 コピー';
+                    btn.textContent = 'コピー';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // ポリシー名コピー機能
+        function copyPolicy() {
+            const policyName = recommendedPolicyEl.textContent;
+            if (policyName === '-' || policyName.includes('範囲外')) return;
+
+            navigator.clipboard.writeText(policyName).then(() => {
+                const btn = document.getElementById('copyPolicyBtn');
+                btn.textContent = 'コピーしました！';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'ポリシー名をコピー';
                     btn.classList.remove('copied');
                 }, 2000);
             });
         }
 
         // イベントリスナー
-        [tariffRateInput, feeRateInput, adRateInput, safetyMarginInput].forEach(input => {
+        [sellingPriceInput, tariffRateInput, feeRateInput, adRateInput, safetyMarginInput, shippingMethodSelect].forEach(input => {
             input.addEventListener('input', calculate);
+            input.addEventListener('change', calculate);
+        });
+
+        document.querySelectorAll('input[name="condition"]').forEach(radio => {
+            radio.addEventListener('change', calculate);
         });
 
         // 初期計算
