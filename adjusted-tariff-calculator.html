@@ -313,6 +313,32 @@
             background: var(--success);
         }
 
+        .save-settings {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border);
+            text-align: center;
+        }
+
+        .save-btn {
+            background: #5f6368;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background 0.2s;
+        }
+
+        .save-btn:hover {
+            background: #3c4043;
+        }
+
+        .save-btn.saved {
+            background: var(--success);
+        }
+
         .info-box {
             background: #e3f2fd;
             border-left: 4px solid var(--primary);
@@ -434,6 +460,11 @@
                         </label>
                     </div>
                 </div>
+            </div>
+
+            <div class="save-settings">
+                <button class="save-btn" id="saveSettingsBtn">現在の設定を保存</button>
+                <p class="hint">次回アクセス時に自動で復元されます</p>
             </div>
         </div>
 
@@ -780,6 +811,56 @@
             });
         }
 
+        // LocalStorage キー
+        const STORAGE_KEY = 'shippingPolicyCalculatorSettings';
+
+        // 設定を保存
+        function saveSettings() {
+            const settings = {
+                sellingPrice: sellingPriceInput.value,
+                tariffRate: tariffRateInput.value,
+                feeRate: feeRateInput.value,
+                adRate: adRateInput.value,
+                safetyMargin: safetyMarginInput.value,
+                shippingMethod: shippingMethodSelect.value,
+                condition: document.querySelector('input[name="condition"]:checked').value
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+
+            // 保存完了を表示
+            const btn = document.getElementById('saveSettingsBtn');
+            btn.textContent = '保存しました！';
+            btn.classList.add('saved');
+            setTimeout(() => {
+                btn.textContent = '現在の設定を保存';
+                btn.classList.remove('saved');
+            }, 2000);
+        }
+
+        // 設定を読み込み
+        function loadSettings() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const settings = JSON.parse(saved);
+                    if (settings.sellingPrice !== undefined) sellingPriceInput.value = settings.sellingPrice;
+                    if (settings.tariffRate !== undefined) tariffRateInput.value = settings.tariffRate;
+                    if (settings.feeRate !== undefined) feeRateInput.value = settings.feeRate;
+                    if (settings.adRate !== undefined) adRateInput.value = settings.adRate;
+                    if (settings.safetyMargin !== undefined) safetyMarginInput.value = settings.safetyMargin;
+                    if (settings.shippingMethod !== undefined) shippingMethodSelect.value = settings.shippingMethod;
+                    if (settings.condition !== undefined) {
+                        const radio = document.querySelector(`input[name="condition"][value="${settings.condition}"]`);
+                        if (radio) radio.checked = true;
+                    }
+                    return true;
+                } catch (e) {
+                    console.error('設定の読み込みエラー:', e);
+                }
+            }
+            return false;
+        }
+
         // イベントリスナー
         [sellingPriceInput, tariffRateInput, feeRateInput, adRateInput, safetyMarginInput].forEach(input => {
             input.addEventListener('input', calculate);
@@ -793,7 +874,11 @@
             radio.addEventListener('change', calculate);
         });
 
-        // 初期計算
+        // 保存ボタン
+        document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+
+        // 初期化：保存された設定を読み込んでから計算
+        loadSettings();
         calculate();
     </script>
 </body>
