@@ -774,10 +774,13 @@
         }
 
         // イベントリスナー
-        [sellingPriceInput, tariffRateInput, feeRateInput, adRateInput, safetyMarginInput, shippingMethodSelect].forEach(input => {
+        [sellingPriceInput, tariffRateInput, feeRateInput, adRateInput, safetyMarginInput].forEach(input => {
             input.addEventListener('input', calculate);
             input.addEventListener('change', calculate);
         });
+
+        // selectとradioは changeイベントのみ
+        shippingMethodSelect.addEventListener('change', calculate);
 
         document.querySelectorAll('input[name="condition"]').forEach(radio => {
             radio.addEventListener('change', calculate);
