@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シッピングポリシー再計算ツール | 一括シートV3</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --success: #34a853;
+            --warning: #ea8600;
+            --danger: #d93025;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --border: #dadce0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1em;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: var(--primary);
+            font-size: 1.2em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .hint {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .input-with-unit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-with-unit input {
+            flex: 1;
+        }
+
+        .unit {
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 30px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px solid var(--success);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 1em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 8px;
+        }
+
+        .result-detail {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            margin-top: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .info-box p, .info-box li {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid var(--warning);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        .warning-box h3 {
+            color: var(--warning);
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .calc-steps {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 0.9em;
+        }
+
+        .calc-steps h4 {
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .calc-step {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .calc-step:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .calc-step .label {
+            color: var(--text-secondary);
+        }
+
+        .calc-step .value {
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📦 シッピングポリシー再計算ツール</h1>
+            <p class="subtitle">既存出品のポリシーを確認・更新</p>
+        </header>
+
+        <div class="card">
+            <h2>📊 入力</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label for="sellingPrice">販売価格</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="sellingPrice" value="50" step="0.01">
+                        <span class="unit">$</span>
+                    </div>
+                    <p class="hint">eBayでの販売価格（関税抜き）</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="tariffRate">関税率</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="tariffRate" value="15" step="0.1">
+                        <span class="unit">%</span>
+                    </div>
+                    <p class="hint">商品カテゴリーの関税率</p>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label for="feeRate">eBay手数料率</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="feeRate" value="18" step="0.1">
+                        <span class="unit">%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adRate">広告費率</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="adRate" value="5" step="0.1">
+                        <span class="unit">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="category">送料カテゴリー</label>
+                <select id="category">
+                    <option value="general">汎用（上限なし）</option>
+                    <option value="videogames">Video Games（上限$20）</option>
+                    <option value="books">Books（上限$20）</option>
+                    <option value="movies">Movies & TV（上限$20）</option>
+                    <option value="music">Music（上限$25）</option>
+                    <option value="console">Video Game Consoles（上限$50）</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📈 計算結果</h2>
+
+            <div class="result-box">
+                <div class="result-label">推奨シッピングポリシー</div>
+                <div class="result-value" id="recommendedPolicy">-</div>
+                <div class="result-detail">
+                    DDP価格: <strong id="ddpPrice">-</strong> ｜
+                    想定関税: <strong id="estimatedTariff">-</strong>
+                </div>
+                <button class="copy-btn" id="copyBtn" onclick="copyResult()">📋 ポリシー名をコピー</button>
+            </div>
+
+            <div class="calc-steps">
+                <h4>計算内訳</h4>
+                <div class="calc-step">
+                    <span class="label">販売価格</span>
+                    <span class="value" id="stepSellingPrice">$50.00</span>
+                </div>
+                <div class="calc-step">
+                    <span class="label">調整関税率</span>
+                    <span class="value" id="stepAdjustedRate">19.5%</span>
+                </div>
+                <div class="calc-step">
+                    <span class="label">想定関税額</span>
+                    <span class="value" id="stepTariff">$9.75</span>
+                </div>
+                <div class="calc-step">
+                    <span class="label">DDP価格（販売価格＋関税）</span>
+                    <span class="value" id="stepDDP">$59.75</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💡 使い方</h2>
+
+            <div class="info-box">
+                <h3>このツールについて</h3>
+                <p>V3の調整関税率方式で、既存出品のシッピングポリシーを確認するツールです。</p>
+                <ul>
+                    <li>販売価格と関税率を入力すると、適切なポリシーを表示</li>
+                    <li>DDP価格に基づいてポリシーを判定</li>
+                    <li>送料カテゴリーの上限も考慮</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>注意事項</h3>
+                <p>このツールは参考値です。実際のポリシー適用は一括シートV3の機能をご利用ください。</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                <a href="ver44-update.html">← V3 更新内容に戻る</a>
+            </p>
+            <p style="margin-top: 10px;">
+                一括シートV3 | シッピングポリシー再計算ツール
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // ポリシー定義（DDP価格範囲）
+        const policies = {
+            general: [
+                { min: 0, max: 30, name: 'Profit-Amounts-30' },
+                { min: 30, max: 50, name: 'Profit-Amounts-50' },
+                { min: 50, max: 80, name: 'Profit-Amounts-80' },
+                { min: 80, max: 120, name: 'Profit-Amounts-120' },
+                { min: 120, max: 180, name: 'Profit-Amounts-180' },
+                { min: 180, max: 250, name: 'Profit-Amounts-250' },
+                { min: 250, max: 350, name: 'Profit-Amounts-350' },
+                { min: 350, max: 500, name: 'Profit-Amounts-500' },
+                { min: 500, max: Infinity, name: 'Profit-Amounts-500+' }
+            ],
+            videogames: [
+                { min: 0, max: 30, name: 'VG-30-Limit20' },
+                { min: 30, max: 50, name: 'VG-50-Limit20' },
+                { min: 50, max: 80, name: 'VG-80-Limit20' },
+                { min: 80, max: Infinity, name: 'VG-80+-Limit20' }
+            ],
+            books: [
+                { min: 0, max: 30, name: 'Books-30-Limit20' },
+                { min: 30, max: 50, name: 'Books-50-Limit20' },
+                { min: 50, max: Infinity, name: 'Books-50+-Limit20' }
+            ],
+            movies: [
+                { min: 0, max: 30, name: 'Movies-30-Limit20' },
+                { min: 30, max: 50, name: 'Movies-50-Limit20' },
+                { min: 50, max: Infinity, name: 'Movies-50+-Limit20' }
+            ],
+            music: [
+                { min: 0, max: 30, name: 'Music-30-Limit25' },
+                { min: 30, max: 50, name: 'Music-50-Limit25' },
+                { min: 50, max: Infinity, name: 'Music-50+-Limit25' }
+            ],
+            console: [
+                { min: 0, max: 80, name: 'Console-80-Limit50' },
+                { min: 80, max: 150, name: 'Console-150-Limit50' },
+                { min: 150, max: Infinity, name: 'Console-150+-Limit50' }
+            ]
+        };
+
+        // 入力要素
+        const sellingPriceInput = document.getElementById('sellingPrice');
+        const tariffRateInput = document.getElementById('tariffRate');
+        const feeRateInput = document.getElementById('feeRate');
+        const adRateInput = document.getElementById('adRate');
+        const categorySelect = document.getElementById('category');
+
+        // 結果表示要素
+        const recommendedPolicyEl = document.getElementById('recommendedPolicy');
+        const ddpPriceEl = document.getElementById('ddpPrice');
+        const estimatedTariffEl = document.getElementById('estimatedTariff');
+        const stepSellingPriceEl = document.getElementById('stepSellingPrice');
+        const stepAdjustedRateEl = document.getElementById('stepAdjustedRate');
+        const stepTariffEl = document.getElementById('stepTariff');
+        const stepDDPEl = document.getElementById('stepDDP');
+
+        // 計算関数
+        function calculate() {
+            const sellingPrice = parseFloat(sellingPriceInput.value) || 0;
+            const tariffRate = parseFloat(tariffRateInput.value) / 100 || 0;
+            const feeRate = parseFloat(feeRateInput.value) / 100 || 0;
+            const adRate = parseFloat(adRateInput.value) / 100 || 0;
+            const category = categorySelect.value;
+
+            // 調整関税率を計算
+            const denominator = 1 - feeRate - adRate;
+            let adjustedRate = 0;
+            if (denominator > 0) {
+                adjustedRate = (tariffRate / denominator) * 1.03; // 3%の安全係数
+            }
+
+            // 想定関税額を計算
+            const estimatedTariff = sellingPrice * adjustedRate;
+
+            // DDP価格を計算
+            const ddpPrice = sellingPrice + estimatedTariff;
+
+            // ポリシーを判定
+            const categoryPolicies = policies[category] || policies.general;
+            let recommendedPolicy = '-';
+            for (const policy of categoryPolicies) {
+                if (ddpPrice >= policy.min && ddpPrice < policy.max) {
+                    recommendedPolicy = policy.name;
+                    break;
+                }
+            }
+
+            // 表示更新
+            recommendedPolicyEl.textContent = recommendedPolicy;
+            ddpPriceEl.textContent = '$' + ddpPrice.toFixed(2);
+            estimatedTariffEl.textContent = '$' + estimatedTariff.toFixed(2);
+
+            stepSellingPriceEl.textContent = '$' + sellingPrice.toFixed(2);
+            stepAdjustedRateEl.textContent = (adjustedRate * 100).toFixed(1) + '%';
+            stepTariffEl.textContent = '$' + estimatedTariff.toFixed(2);
+            stepDDPEl.textContent = '$' + ddpPrice.toFixed(2);
+        }
+
+        // コピー機能
+        function copyResult() {
+            const policyName = recommendedPolicyEl.textContent;
+            if (policyName === '-') return;
+
+            navigator.clipboard.writeText(policyName).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.textContent = '✅ コピーしました！';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 ポリシー名をコピー';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // イベントリスナー
+        [sellingPriceInput, tariffRateInput, feeRateInput, adRateInput, categorySelect].forEach(input => {
+            input.addEventListener('input', calculate);
+            input.addEventListener('change', calculate);
+        });
+
+        // 初期計算
+        calculate();
+    </script>
+</body>
+</html>

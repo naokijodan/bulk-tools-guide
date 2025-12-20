@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver.44 更新内容 - 関税率調整方式 | 一括シートApps</title>
+    <title>V3 更新内容 - 関税率調整方式 | 一括シートApps</title>
     <style>
         * {
             margin: 0;
@@ -255,7 +255,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="version">Ver.44</div>
+            <div class="version">V3</div>
             <h1>関税率調整方式</h1>
             <p>DDP手数料問題への新しいアプローチ</p>
         </div>
@@ -266,7 +266,7 @@
                 <p>
                     Ver.43では販売価格を変更して利益を確保しようとしましたが、<br>
                     これでは価格競争力が弱まると判断しました。<br><br>
-                    Ver.44では<strong>関税額を調整</strong>し、利益を確保する方法に変更します。<br><br>
+                    V3では<strong>関税額を調整</strong>し、利益を確保する方法に変更します。<br><br>
                     これにより、<strong>販売価格は競争力のあるまま</strong>で、eBayの手数料に対応し、利益を守ります。<br>
                     また、関税額に手数料分を載せることで、<strong>トータルの販売価格（DDP）を下げ</strong>、<br>
                     <strong>コスト（関税額、手数料）も下げています</strong>。
@@ -274,7 +274,7 @@
             </div>
 
             <div class="summary-box">
-                <h3>Ver.44の主な変更点</h3>
+                <h3>V3の主な変更点</h3>
                 <ul>
                     <li><strong>販売価格計算を旧式（DDU基準）に戻しました</strong> → 競争力維持</li>
                     <li><strong>調整関税率</strong>を導入し、関税額でDDP手数料分を補填</li>
@@ -301,7 +301,7 @@
             </div>
             <p><strong>問題点：</strong>販売価格が上昇し競争力が低下、既存出品の価格修正が必要</p>
 
-            <h3>Ver.44（関税率調整方式）★今回</h3>
+            <h3>V3（関税率調整方式）★今回</h3>
             <div class="formula-box">
                 <strong>販売価格</strong> = (仕入れ + 送料 + 利益) / (1 - 手数料 - 広告 - Payoneer) / 為替<br><br>
                 <strong>調整関税率</strong> = 実際の関税率 / (1 - 手数料率 - 広告費率) × <code>1.03</code><br><br>
@@ -312,7 +312,7 @@
                 <tr>
                     <th>項目</th>
                     <th>Ver.43</th>
-                    <th>Ver.44</th>
+                    <th>V3</th>
                 </tr>
                 <tr>
                     <td>販売価格</td>
@@ -426,27 +426,24 @@
 
             <h2>既存出品への対応</h2>
 
-            <div class="warning-box">
-                <h3>重要：レガシー再計算が必要</h3>
-                <ul>
-                    <li><strong>販売価格の修正は不要</strong> - Ver.42以前と同じ計算式のため</li>
-                    <li><strong>シッピングポリシーの再適用が必要</strong> - 想定関税額が変わるため、シッピングポリシーの判定結果が変わる可能性があります</li>
-                </ul>
+            <div class="summary-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left-color: #2196f3;">
+                <h3 style="color: #1565c0;">再出品・更新用シートV3をご利用ください</h3>
+                <p>既存の出品データを更新する場合は、専用のシートをご用意しています。</p>
+                <p style="margin-top: 10px;"><a href="#" id="relistSheetLink" style="color: #1565c0; font-weight: bold;">再出品・更新用シートV3はこちら →</a></p>
             </div>
 
             <div class="summary-box" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left-color: #ff9800;">
-                <h3 style="color: #e65100;">レガシー再計算とは？</h3>
-                <p>既存の出品データに対して、<strong>シッピングポリシーを再判定・再計算する機能</strong>です。</p>
-                <p>Ver.44では調整関税率を使うため、想定関税額（AD列）の計算結果が変わります。シッピングポリシーはDDP価格（販売価格＋想定関税）に基づいて判定されるため、ポリシーが変わる可能性があります。</p>
-                <p style="margin-top: 10px;"><strong>→ 一括シートのメニューから「レガシー再計算」を実行してください</strong></p>
+                <h3 style="color: #e65100;">シッピングポリシーだけ変更したい場合</h3>
+                <p>価格は変更せず、シッピングポリシーの再計算だけを行いたい場合は、計算ツールをご利用ください。</p>
+                <p style="margin-top: 10px;"><a href="shipping-policy-calculator.html" style="color: #e65100; font-weight: bold;">シッピングポリシー計算ツールはこちら →</a></p>
             </div>
 
-            <h2>Ver.44への移行方法</h2>
+            <h2>V3への移行方法</h2>
 
             <div class="important-notice" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-color: #4caf50;">
                 <span class="headline" style="color: #2e7d32;">新しいシートを使用してください</span>
                 <p style="color: #1b5e20;">
-                    Ver.44では計算式やセル配置が変更されています。<br>
+                    V3では計算式やセル配置が変更されています。<br>
                     <strong>スクリプトの手動更新は複雑なため、新しいシートをコピーして使用することを強く推奨します。</strong><br><br>
                     既存のデータは、新シートにコピー＆ペーストで移行できます。
                 </p>
@@ -455,7 +452,7 @@
             <h2>適用手順</h2>
 
             <ol>
-                <li><span class="step-number">1</span><strong>新しいシートをコピー</strong> - Ver.44対応の一括シートを入手</li>
+                <li><span class="step-number">1</span><strong>新しいシートをコピー</strong> - V3対応の一括シートを入手</li>
                 <li><span class="step-number">2</span><strong>初期設定を実行</strong> - APIキーや各種設定を入力</li>
                 <li><span class="step-number">3</span><strong>AA2に関税率を設定</strong> - デフォルトは15%（0.15）</li>
                 <li><span class="step-number">4</span><strong>既存データを移行</strong> - 旧シートからデータをコピー</li>
