@@ -382,7 +382,7 @@
         <header class="header">
             <div class="badge">一括シートV3</div>
             <h1>ライブラリ版 セットアップガイド</h1>
-            <p>コピーするだけで自動アップデートに対応！</p>
+            <p>簡単3ステップで自動アップデートに対応！</p>
         </header>
 
         <div class="content">
@@ -416,28 +416,51 @@
 
             <div class="step-card">
                 <h3>📋 コピーを作成</h3>
-                <p>共有されたテンプレートシートを開いて、「ファイル」→「コピーを作成」をクリックするだけ！</p>
+                <p>共有されたテンプレートシートを開いて、「ファイル」→「コピーを作成」をクリック！</p>
 
                 <div class="screenshot-placeholder">
                     📸 「ファイル」→「コピーを作成」<br>
                     <small>自分のGoogleドライブに保存されます</small>
                 </div>
 
-                <div class="success-box">
-                    <h4>🎉 ライブラリ設定は自動で引き継がれます！</h4>
+                <div class="tip-box">
+                    <h4>💡 ライブラリ設定について</h4>
                     <p>
                         テンプレートシートをコピーすると、<strong>ライブラリの設定も一緒にコピーされます</strong>。<br>
-                        手動でライブラリIDを入力する必要はありません！
+                        ライブラリIDを手動で入力する必要はありません。
                     </p>
                 </div>
             </div>
 
             <!-- ステップ2 -->
-            <h2><span class="step-number">2</span>スプレッドシートを再読み込み</h2>
+            <h2><span class="step-number">2</span>ライブラリを最新バージョンに更新</h2>
+
+            <div class="step-card highlight">
+                <h3>📚 最新バージョンを選択</h3>
+                <p>コピー時点のバージョンが設定されているため、<strong>最新バージョンを選択</strong>してください。</p>
+
+                <ol>
+                    <li>コピーしたスプレッドシートを開く</li>
+                    <li>メニューから「拡張機能」→「Apps Script」をクリック</li>
+                    <li>左側メニューの「ライブラリ」にある <strong>BulkToolsLib</strong> をクリック</li>
+                    <li>「バージョン」のプルダウンで<strong>最新の番号</strong>を選択</li>
+                    <li>「保存」ボタンをクリック</li>
+                </ol>
+
+                <img src="images/library-version-select.png" alt="バージョン選択" style="width: 100%; max-width: 550px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0; display: block;">
+
+                <div class="warning-box">
+                    <h4>⚠️ 重要</h4>
+                    <p>コピー時点のバージョンが古い場合があります。必ず最新のバージョン番号を選択してください。</p>
+                </div>
+            </div>
+
+            <!-- ステップ3 -->
+            <h2><span class="step-number">3</span>スプレッドシートを再読み込み</h2>
 
             <div class="step-card">
                 <h3>🔄 メニューを表示させる</h3>
-                <p>コピーが完了したら、スプレッドシートを<strong>再読み込み</strong>（Ctrl+R / Cmd+R）してください。</p>
+                <p>バージョンを更新したら、スプレッドシートを<strong>再読み込み</strong>（Ctrl+R / Cmd+R）してください。</p>
                 <p>「一括シートメニュー」が表示されれば成功です！</p>
             </div>
 
