@@ -382,7 +382,7 @@
         <header class="header">
             <div class="badge">一括シートV3</div>
             <h1>ライブラリ版 セットアップガイド</h1>
-            <p>簡単3ステップで自動アップデートに対応！</p>
+            <p>コピーするだけで自動アップデートに対応！</p>
         </header>
 
         <div class="content">
@@ -422,62 +422,23 @@
                     📸 「ファイル」→「コピーを作成」<br>
                     <small>自分のGoogleドライブに保存されます</small>
                 </div>
+
+                <div class="success-box">
+                    <h4>🎉 ライブラリ設定は自動で引き継がれます！</h4>
+                    <p>
+                        テンプレートシートをコピーすると、<strong>ライブラリの設定も一緒にコピーされます</strong>。<br>
+                        手動でライブラリIDを入力する必要はありません！
+                    </p>
+                </div>
             </div>
 
             <!-- ステップ2 -->
-            <h2><span class="step-number">2</span>Apps Scriptを開く</h2>
+            <h2><span class="step-number">2</span>スプレッドシートを再読み込み</h2>
 
             <div class="step-card">
-                <h3>📝 スクリプトエディタにアクセス</h3>
-
-                <ol>
-                    <li>コピーしたスプレッドシートを開く</li>
-                    <li>メニューから「拡張機能」→「Apps Script」をクリック</li>
-                </ol>
-
-<img src="images/extensions-menu.png" alt="拡張機能メニューの場所" style="width: 100%; max-width: 700px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0;">
-
-                <p>新しいタブでApps Scriptエディタが開きます。</p>
-            </div>
-
-            <!-- ステップ3 -->
-            <h2><span class="step-number">3</span>ライブラリを追加する</h2>
-
-            <div class="step-card highlight">
-                <h3>📚 ライブラリの追加手順</h3>
-
-                <ol>
-                    <li>
-                        左側のメニューで「ライブラリ」の横にある <strong>＋</strong> ボタンをクリック
-                        <img src="images/library-add-button.png" alt="ライブラリの＋ボタン" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0; display: block;">
-                    </li>
-                    <li>
-                        「スクリプトID」の欄に、以下のIDを貼り付け：
-                        <div class="library-id-box" onclick="copyLibraryId()">
-                            1GjyV4kQPkdXbAriCCa7VvA969s3WhKuovNp8u2wixcFWT1hndh2tLQOP
-                            <span class="copy-hint">クリックでコピー</span>
-                        </div>
-                        <img src="images/library-id-input.png" alt="スクリプトIDを入力" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0; display: block;">
-                    </li>
-                    <li>「検索」ボタンをクリック</li>
-                    <li>
-                        ライブラリが見つかったら：
-                        <ul>
-                            <li><strong>バージョン</strong>: 最新版を選択（一番大きい数字）</li>
-                            <li><strong>ID</strong>: <code>BulkToolsLib</code> のまま（変更しない）</li>
-                        </ul>
-                        <img src="images/library-version-select.png" alt="バージョン選択と追加" style="width: 100%; max-width: 550px; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0; display: block;">
-                    </li>
-                    <li>「追加」ボタンをクリック</li>
-                </ol>
-
-                <div class="warning-box">
-                    <h4>⚠️ よくある間違い</h4>
-                    <ul>
-                        <li><strong>「デプロイID」を入力してしまう</strong> → 正しくは「スクリプトID」です</li>
-                        <li><strong>IDをBulkToolsLib以外に変更</strong> → そのままにしてください</li>
-                    </ul>
-                </div>
+                <h3>🔄 メニューを表示させる</h3>
+                <p>コピーが完了したら、スプレッドシートを<strong>再読み込み</strong>（Ctrl+R / Cmd+R）してください。</p>
+                <p>「一括シートメニュー」が表示されれば成功です！</p>
             </div>
 
             <!-- 拡張機能連携 -->
@@ -492,8 +453,7 @@
             <div class="success-box">
                 <h4>🎉 セットアップ完了！</h4>
                 <p>
-                    ライブラリを追加したら、スプレッドシートを<strong>再読み込み</strong>してください。
-                    メニューが表示されれば成功です！
+                    これでセットアップは完了です。次は初期設定を行いましょう。
                 </p>
             </div>
 
@@ -533,17 +493,25 @@
             <div class="step-card">
                 <h3>メニューが表示されない</h3>
                 <ul>
-                    <li>スプレッドシートを再読み込み（Ctrl+R / Cmd+R）</li>
-                    <li>ライブラリのIDが「BulkToolsLib」になっているか確認</li>
+                    <li>スプレッドシートを再読み込み（Ctrl+R / Cmd+R）してください</li>
+                    <li>少し待ってから再度確認してください（初回は時間がかかる場合があります）</li>
                 </ul>
             </div>
 
             <div class="step-card">
-                <h3>「ライブラリを検索できませんでした」と表示される</h3>
-                <ul>
-                    <li>入力したのが「スクリプトID」であることを確認（デプロイIDではない）</li>
-                    <li>IDをコピペした際に余分なスペースが入っていないか確認</li>
-                </ul>
+                <h3>ライブラリが見つからないエラーが出る</h3>
+                <p>通常はコピー時にライブラリ設定も引き継がれますが、万が一エラーが出た場合は以下の手順で手動追加してください：</p>
+                <ol>
+                    <li>「拡張機能」→「Apps Script」を開く</li>
+                    <li>左側メニューの「ライブラリ」横の <strong>＋</strong> をクリック</li>
+                    <li>スクリプトID欄に以下を入力：
+                        <div class="library-id-box" onclick="copyLibraryId()">
+                            1GjyV4kQPkdXbAriCCa7VvA969s3WhKuovNp8u2wixcFWT1hndh2tLQOP
+                            <span class="copy-hint">クリックでコピー</span>
+                        </div>
+                    </li>
+                    <li>「検索」→ 最新バージョンを選択 → 「追加」</li>
+                </ol>
             </div>
 
             <!-- ナビゲーション -->
