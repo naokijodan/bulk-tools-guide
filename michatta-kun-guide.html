@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>みちゃった君 - 使い方ガイド</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+        .section h2 {
+            color: #11998e;
+            font-size: 1.5em;
+            border-left: 5px solid #11998e;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            color: #333;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #e8fff5 0%, #fff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #c8f7e8;
+        }
+        .feature-card h4 {
+            color: #11998e;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .feature-card ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        .feature-card li {
+            margin: 8px 0;
+        }
+        .step-list {
+            counter-reset: step;
+            padding-left: 0;
+            list-style: none;
+        }
+        .step-list li {
+            counter-increment: step;
+            padding: 15px 20px 15px 60px;
+            background: #e8fff5;
+            border-radius: 10px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 0 15px 15px 0;
+            margin: 20px 0;
+        }
+        .highlight-box.info {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d1ecf1 100%);
+            border-left-color: #17a2b8;
+        }
+        .highlight-box.success {
+            background: linear-gradient(135deg, #e8fff5 0%, #c8f7e8 100%);
+            border-left-color: #11998e;
+        }
+        .site-badge {
+            display: inline-block;
+            background: #11998e;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 3px;
+        }
+        .badge-example {
+            display: inline-block;
+            background: #38ef7d;
+            color: #006644;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .link-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        .link-btn:hover {
+            transform: translateY(-2px);
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+        }
+        .back-link a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>みちゃった君</h1>
+            <p>フリマサイトの閲覧済み商品を自動検出するChrome拡張機能</p>
+        </header>
+
+        <div class="section">
+            <h2>みちゃった君とは？</h2>
+            <p>
+                「みちゃった君」は、メルカリやラクマなどのフリマサイトで一度閲覧した商品を自動的に記録し、再度検索したときに「閲覧済み」として表示するChrome拡張機能です。
+            </p>
+            <p style="margin-top: 15px;">
+                同じ商品を何度もチェックする無駄を省き、リサーチ効率を大幅にアップします！
+            </p>
+
+            <h3>対応サイト</h3>
+            <div style="margin: 15px 0;">
+                <span class="site-badge">メルカリ</span>
+                <span class="site-badge">メルカリShops</span>
+                <span class="site-badge">楽天ラクマ</span>
+                <span class="site-badge">楽天市場</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>主な機能</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>自動記録</h4>
+                    <ul>
+                        <li>商品ページを開くだけで自動保存</li>
+                        <li>URLまたは商品IDで記録</li>
+                        <li>日時も一緒に記録</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>閲覧済みバッジ</h4>
+                    <ul>
+                        <li>検索結果に <span class="badge-example">閲覧済み</span> バッジ表示</li>
+                        <li>一目で確認済み商品がわかる</li>
+                        <li>見逃し防止に効果的</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>大容量対応</h4>
+                    <ul>
+                        <li>最大10,000件の履歴保存</li>
+                        <li>古いデータは自動削除</li>
+                        <li>ブラウザ内に安全に保存</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>手動登録</h4>
+                    <ul>
+                        <li>URLを貼り付けて登録可能</li>
+                        <li>商品IDでも登録OK</li>
+                        <li>一括登録にも対応</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>使い方</h2>
+            <ol class="step-list">
+                <li>Chrome拡張機能をインストール</li>
+                <li>メルカリやラクマで商品ページを開く（自動で記録される）</li>
+                <li>検索結果ページで閲覧済み商品に「閲覧済み」バッジが表示される</li>
+                <li>バッジがついている商品はスキップして効率よくリサーチ！</li>
+            </ol>
+
+            <div class="highlight-box success">
+                <strong>便利な使い方:</strong> 気になる商品を片っ端からチェックして、後日同じキーワードで検索すると、未チェックの商品だけを効率よく確認できます！
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>プライバシーについて</h2>
+            <div class="highlight-box info">
+                <strong>安心のローカル保存:</strong>
+                <p style="margin-top: 10px;">
+                    すべてのデータはブラウザのローカルストレージに保存されます。外部サーバーへの送信は一切ありません。あなたの閲覧履歴は完全にプライベートです。
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>リサーチ効率化のコツ</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>仕入れリサーチに</h4>
+                    <p>メルカリで仕入れ候補を探すとき、一度見た商品をスキップして新着だけをチェック</p>
+                </div>
+                <div class="feature-card">
+                    <h4>相場調査に</h4>
+                    <p>同じ商品の価格調査で、チェック済みの出品をすぐに判別</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="text-align: center;">
+            <h2>ダウンロード・詳細</h2>
+            <p style="margin-bottom: 20px;">GitHubでソースコードを公開しています</p>
+            <a href="https://github.com/naokijodan/mercari-viewed-extension" target="_blank" class="link-btn">GitHubで見る</a>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← 総合ガイドに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

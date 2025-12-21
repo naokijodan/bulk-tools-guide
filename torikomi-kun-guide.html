@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>とりこみ君 - 使い方ガイド</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+        .section h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            color: #333;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e8ebff;
+        }
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .feature-card ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        .feature-card li {
+            margin: 8px 0;
+        }
+        .step-list {
+            counter-reset: step;
+            padding-left: 0;
+            list-style: none;
+        }
+        .step-list li {
+            counter-increment: step;
+            padding: 15px 20px 15px 60px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 0 15px 15px 0;
+            margin: 20px 0;
+        }
+        .highlight-box.info {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d1ecf1 100%);
+            border-left-color: #17a2b8;
+        }
+        .site-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 3px;
+        }
+        .link-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        .link-btn:hover {
+            transform: translateY(-2px);
+        }
+        .link-btn.secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+        }
+        .back-link a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>とりこみ君</h1>
+            <p>複数ECサイトから商品情報を自動抽出するChrome拡張機能</p>
+        </header>
+
+        <div class="section">
+            <h2>とりこみ君とは？</h2>
+            <p>
+                「とりこみ君」は、eBay、楽天市場、Amazon、メルカリなど複数のECサイトから商品情報をワンクリックで抽出し、Googleスプレッドシートに直接エクスポートできるChrome拡張機能です。
+            </p>
+
+            <h3>対応サイト</h3>
+            <div style="margin: 15px 0;">
+                <span class="site-badge">eBay</span>
+                <span class="site-badge">楽天市場</span>
+                <span class="site-badge">Amazon</span>
+                <span class="site-badge">メルカリ</span>
+                <span class="site-badge">ヤフオク</span>
+                <span class="site-badge">PayPayフリマ</span>
+                <span class="site-badge">ラクマ</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>主な機能</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>ワンクリック抽出</h4>
+                    <ul>
+                        <li>商品ページでボタンをクリックするだけ</li>
+                        <li>商品名、価格、画像URLを自動取得</li>
+                        <li>出品者情報も抽出可能</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>複数シート対応</h4>
+                    <ul>
+                        <li>最大10個のシートを登録可能</li>
+                        <li>用途別に使い分け</li>
+                        <li>ワンクリックでシート切替</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>アラート機能</h4>
+                    <ul>
+                        <li>除外キーワードの設定</li>
+                        <li>注目キーワードのハイライト</li>
+                        <li>商品チェック時に自動警告</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>カスタマイズ</h4>
+                    <ul>
+                        <li>ボタンの配置位置を調整</li>
+                        <li>取得する画像枚数の設定</li>
+                        <li>待機時間の調整</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>使い方</h2>
+            <ol class="step-list">
+                <li>Chrome拡張機能をインストール</li>
+                <li>拡張機能の設定画面でGoogleスプレッドシートのURLを登録</li>
+                <li>対応サイトの商品ページを開く</li>
+                <li>ページに表示される「とりこみ」ボタンをクリック</li>
+                <li>商品情報が自動的にスプレッドシートに追加される</li>
+            </ol>
+
+            <div class="highlight-box info">
+                <strong>ヒント:</strong> 複数の商品を連続して取り込む場合は、ページを切り替えながらボタンをクリックするだけでOK！
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>一括シートとの連携</h2>
+            <p>
+                とりこみ君で取得した商品情報は、一括シートにそのままインポートできます。
+                仕入れ先の商品情報を効率的に収集し、出品作業を大幅に効率化できます。
+            </p>
+
+            <div class="highlight-box">
+                <strong>おすすめの使い方:</strong>
+                <ol style="padding-left: 20px; margin-top: 10px;">
+                    <li>リサーチ用のスプレッドシートを用意</li>
+                    <li>とりこみ君で気になる商品を次々と取り込み</li>
+                    <li>集まったデータを一括シートにコピー</li>
+                    <li>一括シートで価格計算・翻訳を実行</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section" style="text-align: center;">
+            <h2>ダウンロード・詳細</h2>
+            <p style="margin-bottom: 20px;">GitHubでソースコードを公開しています</p>
+            <a href="https://github.com/naokijodan/universal-scraper" target="_blank" class="link-btn">GitHubで見る</a>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← 総合ガイドに戻る</a>
+        </div>
+    </div>
+</body>
+</html>
