@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一括登録シート（関税ベース）総合ガイド</title>
+    <title>一括シート V3 総合ガイド</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         /* ========================================
@@ -1004,36 +1004,38 @@
 
     <div class="container">
         <header>
-            <h1>一括登録シート（関税ベース）総合ガイド</h1>
+            <h1>一括シート V3 総合ガイド</h1>
             <p>すべてのツールとリソースを一箇所に</p>
-            <span class="version-badge">VER.43 NEW</span>
+            <span class="version-badge">V3 NEW</span>
         </header>
 
         <div class="content">
-            <!-- 更新のお知らせ -->
-            <div class="alert">
-                <h3>重要なお知らせ（2025年11月27日 15:00 更新）</h3>
+            <!-- V3 お知らせ -->
+            <div class="alert" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-color: #4caf50;">
+                <h3 style="color: #2e7d32;">V3 にアップデートされました（2025年12月）</h3>
                 <p>
-                    一括登録シートと拡張機能を更新しました。<br>
-                    <strong>以前のバージョンではシッピングポリシーの判定にエラーが出ます。</strong><br>
-                    必ずこちらから最新版をダウンロードしてください。
+                    一括シートがV3になりました。<br>
+                    <strong>計算方法が改善</strong>され、利益が正確に表示されるようになりました。<br>
+                    基本的な使い方は今まで通りです。
                 </p>
             </div>
 
-            <!-- Ver.43 改修概要 -->
+            <!-- V3 改修概要 -->
             <div class="intro-box highlight">
-                <h2>Ver.43 主な改修内容：DDP価格ベース手数料計算</h2>
+                <h2>V3 主な変更点：調整関税率方式</h2>
                 <p style="margin-bottom: 15px;">
-                    <strong>手数料・広告費の計算基準をDDP価格（関税込み価格）に修正しました。</strong>
+                    <strong>販売価格は据え置きで、関税額を調整して利益を確保する方式に変更しました。</strong>
                 </p>
                 <p style="margin-bottom: 15px;">
                     eBayの手数料・広告費は、購入者が支払う<strong>関税込み価格（DDP）</strong>に対して課されます。
-                    Ver.42以前では販売価格（DDU）ベースで計算されていたため、関税分に対する手数料が考慮されず、
-                    <strong>利益が過大に計算されていました</strong>。
+                    従来はこの手数料分が考慮されておらず、<strong>利益が過大に計算されていました</strong>。
                 </p>
                 <p>
-                    Ver.43ではこの問題を修正し、<strong>正確な利益計算</strong>ができるようになりました。
-                    関税率15%で約6.5%、関税率39%で約18.9%の販売価格差が正しく反映されます。
+                    V3では<strong>「調整関税率」</strong>を導入し、関税額で手数料分を補填する方式に変更。
+                    販売価格の競争力を維持しつつ、正確な利益計算ができるようになりました。
+                </p>
+                <p style="margin-top: 15px;">
+                    <a href="v3-guide.html" style="color: #667eea; font-weight: bold;">→ V3スタートガイドで詳しく見る</a>
                 </p>
             </div>
 
@@ -1041,107 +1043,54 @@
             <div class="intro-box">
                 <h2>このガイドについて</h2>
                 <p>
-                    一括登録シート（関税ベース）Ver.43と関連ツールの使い方、ダウンロードリンク、詳しいガイドへのリンクを
+                    一括シートV3と関連ツールの使い方、ダウンロードリンク、詳しいガイドへのリンクを
                     すべてまとめた総合ガイドです。このページをブックマークしておけば、必要な情報にすぐアクセスできます。
                 </p>
             </div>
 
-            <!-- 1. 一括登録シート（関税ベース）Ver.42 -->
+            <!-- 1. 一括シート V3 -->
             <div class="section">
                 <p class="section-label">Spreadsheet</p>
-                <h2><span class="emoji">📊</span>一括登録シート（関税ベース）Ver.43<small>最新版スプレッドシート</small></h2>
+                <h2><span class="emoji">📊</span>一括シート V3<small>最新版スプレッドシート</small></h2>
 
-                <!-- Ver.43 重要な更新アラート -->
-                <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a5a); color: white; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 8px 32px rgba(238, 90, 90, 0.3);">
-                    <h3 style="margin: 0 0 15px 0; font-size: 1.4em; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5em;">🚨</span>
-                        Ver.43 重要な更新 - 手数料計算式の修正
+                <!-- V3 簡潔な説明 -->
+                <div style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); color: #1a1a1a; border-radius: 16px; padding: 25px; margin-bottom: 25px; border: 2px solid #4caf50;">
+                    <h3 style="margin: 0 0 15px 0; font-size: 1.3em; display: flex; align-items: center; gap: 10px; color: #2e7d32;">
+                        <span style="font-size: 1.3em;">✅</span>
+                        V3の特徴
                     </h3>
-                    <p style="margin: 0 0 15px 0; font-size: 1.05em; line-height: 1.7;">
-                        <strong>eBayの手数料・広告費はDDP価格（関税込み価格）に対して課されます。</strong><br>
-                        Ver.42以前では販売価格（DDU）ベースで計算されていたため、利益が過大に計算されていました。<br>
-                        Ver.43ではこの問題を修正し、正確な利益計算ができるようになりました。
+                    <ul style="margin: 0; font-size: 1.05em; line-height: 1.8; color: #333;">
+                        <li><strong>調整関税率方式</strong>で利益計算が正確に</li>
+                        <li><strong>販売価格は据え置き</strong>で競争力を維持</li>
+                        <li><strong>基本的な使い方は今まで通り</strong></li>
+                        <li>コピーするだけでライブラリ設定も自動引き継ぎ</li>
+                    </ul>
+                    <p style="margin-top: 15px;">
+                        <a href="v3-guide.html" style="color: #2e7d32; font-weight: bold;">→ V3スタートガイドで詳しく見る</a>
                     </p>
-                    <div style="background: rgba(255,255,255,0.15); border-radius: 10px; padding: 15px; margin-bottom: 15px;">
-                        <p style="margin: 0; font-size: 0.95em;">
-                            <strong>📊 影響の例（関税率15%、手数料+広告20%の場合）:</strong><br>
-                            • 販売価格が約6.5%上昇 → 利益が正確に反映されます<br>
-                            • 関税率39%の場合は約18.9%の差が生じていました
-                        </p>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.15); border-radius: 10px; padding: 15px; margin-bottom: 15px;">
-                        <p style="margin: 0; font-size: 0.95em;">
-                            <strong>📋 更新対象シート:</strong><br>
-                            • 一括登録シート Ver.43（メインシート）<br>
-                            • 更新・再出品専用シート Ver.2（こちらも同様に修正済み）
-                        </p>
-                    </div>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <a href="price-adjustment.html" target="_blank"
-                           style="display: inline-flex; align-items: center; gap: 8px; background: #feca57; color: #333; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: transform 0.2s;">
-                            <span>🔧</span>緊急価格調整ツール
-                        </a>
-                        <a href="https://naokijodan.github.io/ebay-fee-analysis/" target="_blank"
-                           style="display: inline-flex; align-items: center; gap: 8px; background: white; color: #ee5a5a; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: transform 0.2s;">
-                            <span>📄</span>詳しい分析資料を見る
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Ver.42からのアップグレード案内 -->
-                <div style="background: #e3f2fd; color: #1a1a1a; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border: 2px solid #2196f3;">
-                    <h3 style="margin: 0 0 15px 0; font-size: 1.3em; display: flex; align-items: center; gap: 10px; color: #1565c0;">
-                        <span style="font-size: 1.3em;">🔄</span>
-                        Ver.42をお使いの方へ - アップグレード方法
-                    </h3>
-                    <p style="margin: 0 0 15px 0; font-size: 1.05em; line-height: 1.7; color: #333;">
-                        以下の2つの方法があります。お好みの方法をお選びください。
-                    </p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div style="background: #fff; border-radius: 10px; padding: 15px; border: 1px solid #90caf9;">
-                            <h4 style="margin: 0 0 10px 0; font-size: 1.1em; color: #1565c0;">方法1: 新しいシートを使う（推奨）</h4>
-                            <p style="margin: 0; font-size: 1em; line-height: 1.7; color: #333;">
-                                下のボタンからVer.43を開き、コピーして使用してください。<br>
-                                設定は初期設定ダイアログで再設定します。
-                            </p>
-                        </div>
-                        <div style="background: #fff; border-radius: 10px; padding: 15px; border: 1px solid #90caf9;">
-                            <h4 style="margin: 0 0 10px 0; font-size: 1.1em; color: #1565c0;">方法2: スクリプトを貼り替える</h4>
-                            <p style="margin: 0; font-size: 1em; line-height: 1.7; color: #333;">
-                                既存シートの「拡張機能」→「Apps Script」を開き、<br>
-                                以下の2ファイルを<a href="https://github.com/naokijodan/bulk-sheet-apps-v2" target="_blank" style="color: #1565c0; font-weight: bold;">GitHub</a>からコピーして貼り替え：
-                            </p>
-                            <ul style="margin: 10px 0 0 20px; font-size: 1em; line-height: 1.8; color: #333;">
-                                <li><strong>コード_Part1_価格計算・バッチ処理.gs</strong></li>
-                                <li><strong>コード_Part3_メニュー・設定関連.gs</strong></li>
-                                <li><strong>PriceCalc.txt</strong>（価格計算ツール用HTML）</li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="link-box primary">
-                    <h3>主な特徴</h3>
+                    <h3>主な機能</h3>
                     <ul class="feature-list">
-                        <li><strong style="color: #ee5a5a;">【Ver.43】手数料・広告費をDDP価格ベースで計算（利益計算の精度向上）</strong></li>
-                        <li>拡張機能からワンクリックでシートに商品情報をエクスポート（シートを開かなくても商品情報を貼り付け可能）</li>
-                        <li>1日ごとの実効レート取得に変更</li>
-                        <li>初期設定に戻らずシート上で詳細設定の切り替え可能</li>
-                        <li>シッピングポリシーを関税額ベースに変更（異なる関税率に柔軟に対応し、様々な販売戦略が可能に）</li>
-                        <li>送料計算ベースをeパケットに変更（日本郵便小型包装物廃止に対応）</li>
+                        <li><strong style="color: #4caf50;">【V3】調整関税率方式で正確な利益計算</strong></li>
+                        <li>拡張機能からワンクリックでシートに商品情報をエクスポート</li>
+                        <li>1日ごとの実効レート自動取得</li>
+                        <li>シート上で詳細設定の切り替え可能</li>
+                        <li>シッピングポリシーを調整関税額ベースで自動判定</li>
                         <li>AI自動翻訳・計算機能搭載</li>
                         <li>ワンクリックで計算式の再出力が可能</li>
                     </ul>
-                    <a href="https://docs.google.com/spreadsheets/d/1FB2iYk2N2zfPX4H2xuGhdb962T6EpnqcFRzT4hCkn68/edit?gid=511243249#gid=511243249" target="_blank" class="btn btn-warning btn-block">
-                        <span class="emoji">🌟</span>一括登録シート Ver.43 を開く
+                    <a href="https://docs.google.com/spreadsheets/d/1HJT-P01PcmTfVNj6mG_VhI8enWx3Xd8ScZMRBnUU68E/edit?gid=1942843908#gid=1942843908" target="_blank" class="btn btn-warning btn-block">
+                        <span class="emoji">📋</span>一括シート V3 を開く
                     </a>
-                    <a href="https://docs.google.com/spreadsheets/d/1UTfn_inB9_a1vwxynXyXUl3TjBtsYQSXa-aBETKBz1Y/edit?gid=1676378205#gid=1676378205" target="_blank" class="btn btn-info btn-block" style="margin-top: 10px;">
-                        <span class="emoji">🔄</span>更新・再出品専用シート Ver.2 を開く
+                    <a href="https://docs.google.com/spreadsheets/d/1WGeWvLLUeQ93NobcTPm8J44ZuciSd5aZwu5w9m_d5wc/edit?gid=1942843908#gid=1942843908" target="_blank" class="btn btn-info btn-block" style="margin-top: 10px;">
+                        <span class="emoji">🔄</span>更新・再出品専用シート V3 を開く
                     </a>
                 </div>
 
                 <div class="note-box">
-                    <p><strong>💡 ヒント：</strong> スプレッドシートを開いたら、ブラウザのブックマークに保存しておくと便利です。</p>
+                    <p><strong>💡 ヒント：</strong> シートを開いたら「ファイル」→「コピーを作成」で自分専用のシートを作ってください。</p>
                 </div>
             </div>
 
@@ -1245,14 +1194,14 @@
                 </div>
             </div>
 
-            <!-- 6. 一括登録シート 詳しい操作方法 -->
+            <!-- 6. 一括シート 詳しい操作方法 -->
             <div class="section">
                 <p class="section-label">Guide</p>
-                <h2><span class="emoji">📚</span>一括登録シート 詳しい操作方法<small>ステップバイステップガイド</small></h2>
+                <h2><span class="emoji">📚</span>一括シート 詳しい操作方法<small>ステップバイステップガイド</small></h2>
                 <div class="link-box info">
                     <p>
-                        一括登録シートの基本的な使い方から応用的な機能まで、
-                        画像付きで詳しく解説しています。初めての方はこちらをご覧ください。
+                        一括シートの基本的な使い方から応用的な機能まで、
+                        動画付きで詳しく解説しています。初めての方はこちらをご覧ください。
                     </p>
                     <a href="usage-guide.html"
                        target="_blank"
@@ -1279,7 +1228,7 @@
 
                 <h3>Q: どのツールから使い始めればいいですか？</h3>
                 <p>
-                    まず「一括登録シート（関税ベース）Ver.43」を開いて、次に「とりこみ君」をインストールするのがおすすめです。
+                    まず「一括シート V3」を開いて、次に「とりこみ君」をインストールするのがおすすめです。
                     その後、必要に応じて「詳しい操作方法」を参照してください。
                 </p>
 
@@ -1319,7 +1268,7 @@
                         既存のシッピングポリシー設定をそのまま使いたい方、または移行前の環境を維持したい方はこちらをご利用ください。
                     </p>
                     <p style="margin-top: 15px;">
-                        <strong>📝 注意：</strong>新規の方は最新の「関税ベース版 Ver.43」のご利用をおすすめします。
+                        <strong>📝 注意：</strong>新規の方は最新の「一括シート V3」のご利用をおすすめします。
                     </p>
                     <div style="margin-top: 20px;">
                         <a href="https://htmlpreview.github.io/?https://github.com/naokijodan/bulk-sheet-report/blob/main/index.html"
@@ -1334,10 +1283,10 @@
             <!-- 9. 開発者向け -->
             <div class="section developer">
                 <p class="section-label">Developer</p>
-                <h2><span class="emoji">👨‍💻</span>開発者・カスタマイズ向け<small>一括登録シート スクリプト全集（GitHub）</small></h2>
+                <h2><span class="emoji">👨‍💻</span>開発者・カスタマイズ向け<small>一括シート スクリプト全集（GitHub）</small></h2>
                 <div class="link-box">
                     <p>
-                        一括登録シートのGoogle Apps Scriptコード全集のGitHubリポジトリです。
+                        一括シートのGoogle Apps Scriptコード全集のGitHubリポジトリです。
                         ご自身でカスタマイズしたい方、機能を追加したい方、コードを学びたい開発者向けのリソースです。
                     </p>
                     <p style="margin-top: 15px;">
@@ -1358,9 +1307,9 @@
         </div>
 
         <footer>
-            <p><strong>一括登録シート（関税ベース）総合ガイド</strong></p>
-            <p>最終更新: 2025年11月27日</p>
-            <p>とりこみ君 v1.2.0 | 一括登録シート（関税ベース）Ver.43</p>
+            <p><strong>一括シート V3 総合ガイド</strong></p>
+            <p>最終更新: 2025年12月</p>
+            <p><a href="v3-guide.html" style="color: var(--accent-primary);">V3スタートガイド</a></p>
         </footer>
     </div>
 
