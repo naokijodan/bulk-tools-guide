@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eBay手数料計算 問題分析と解決策</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #333;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 2.2em;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 35px;
+      font-size: 1.1em;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .card-title {
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #667eea;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-number {
+      background: #667eea;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+
+    /* 問題カード */
+    .problem-card { border-left: 6px solid #e74c3c; }
+    .problem-card .card-title { color: #e74c3c; border-bottom-color: #e74c3c; }
+
+    /* 比較ボックス */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .comparison-box {
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .comparison-box.wrong {
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      border: 2px solid #e74c3c;
+    }
+    .comparison-box.correct {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 2px solid #27ae60;
+    }
+    .comparison-box h3 { font-size: 1.1em; margin-bottom: 15px; }
+    .comparison-box .label { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+    .comparison-box .value { font-size: 1.8em; font-weight: bold; }
+    .comparison-box.wrong .value { color: #c0392b; }
+    .comparison-box.correct .value { color: #27ae60; }
+
+    /* 数式ボックス */
+    .formula-box {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+      font-size: 0.95em;
+      line-height: 1.8;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .formula-box .comment { color: #6a9955; }
+    .formula-box .keyword { color: #569cd6; }
+    .formula-box .number { color: #b5cea8; }
+    .formula-box .highlight { color: #ffd700; font-weight: bold; }
+    .formula-box .error { color: #f44747; }
+    .formula-box .success { color: #4ec9b0; }
+
+    /* 変数テーブル */
+    .var-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.95em;
+    }
+    .var-table th, .var-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    .var-table th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #555;
+    }
+    .var-table tr:hover { background: #f8f9fa; }
+    .var-table code {
+      background: #e3f2fd;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.9em;
+      color: #1565c0;
+    }
+
+    /* 比較グリッド（15% vs 39%） */
+    .tax-comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin: 20px 0;
+    }
+    .tax-case {
+      border-radius: 16px;
+      padding: 25px;
+    }
+    .tax-case.low {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      border: 2px solid #2196f3;
+    }
+    .tax-case.high {
+      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+      border: 2px solid #e91e63;
+    }
+    .tax-case h3 { text-align: center; margin-bottom: 20px; font-size: 1.2em; }
+    .tax-case.low h3 { color: #1565c0; }
+    .tax-case.high h3 { color: #c2185b; }
+
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 15px;
+      background: white;
+      border-radius: 8px;
+      margin: 8px 0;
+    }
+    .calc-row.result {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    .calc-row.result.low { background: #e3f2fd; color: #1565c0; }
+    .calc-row.result.high { background: #fce4ec; color: #c2185b; }
+
+    /* 解決策カード */
+    .solution-card {
+      border: 3px solid #27ae60;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    }
+    .solution-card .card-title {
+      color: #27ae60;
+      border-bottom-color: #27ae60;
+    }
+
+    /* ステップ表示 */
+    .steps {
+      display: flex;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .step {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      border-left: 4px solid #667eea;
+    }
+    .step-number {
+      background: #667eea;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* アラートボックス */
+    .alert {
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin: 15px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .alert-icon { font-size: 1.3em; }
+    .alert.warning {
+      background: #fff3e0;
+      border: 1px solid #ffb74d;
+    }
+    .alert.info {
+      background: #e3f2fd;
+      border: 1px solid #64b5f6;
+    }
+    .alert.success {
+      background: #e8f5e9;
+      border: 1px solid #81c784;
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 768px) {
+      .comparison, .tax-comparison-grid, .steps { grid-template-columns: 1fr; flex-direction: column; }
+      h1 { font-size: 1.6em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>eBay手数料・広告費 計算問題の分析</h1>
+    <p class="subtitle">一括シートApps v2 - 収束計算による完全解決策</p>
+
+    <!-- ========== セクション1: 問題の概要 ========== -->
+    <div class="card problem-card">
+      <div class="card-title">
+        <span class="section-number">1</span>
+        問題の概要
+      </div>
+
+      <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
+        <strong>一括シートApps v2</strong>において、eBay手数料と広告費の計算基準が間違っています。
+      </p>
+
+      <div class="comparison">
+        <div class="comparison-box wrong">
+          <h3>❌ 現在の計算</h3>
+          <div class="label">計算基準</div>
+          <div class="value">販売価格（DDU）</div>
+          <div style="margin-top: 10px; font-size: 0.9em; color: #666;">R列の値を使用</div>
+        </div>
+        <div class="comparison-box correct">
+          <h3>✅ 正しい計算</h3>
+          <div class="label">計算基準</div>
+          <div class="value">関税込み価格（DDP）</div>
+          <div style="margin-top: 10px; font-size: 0.9em; color: #666;">S列の値を使用すべき</div>
+        </div>
+      </div>
+
+      <div class="alert warning">
+        <span class="alert-icon">⚠️</span>
+        <div>
+          <strong>重要:</strong> eBayの手数料・広告費は、購入者が支払う<strong>関税込み価格（DDP）</strong>に対して課されます。
+          現在の計算では関税分に対する手数料が考慮されておらず、利益が過大に計算されています。
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== セクション2: 変数の定義 ========== -->
+    <div class="card">
+      <div class="card-title">
+        <span class="section-number">2</span>
+        計算に使用する変数
+      </div>
+
+      <table class="var-table">
+        <tr>
+          <th>変数</th>
+          <th>セル</th>
+          <th>説明</th>
+          <th>例</th>
+        </tr>
+        <tr>
+          <td><code>f</code></td>
+          <td>V列 + F2</td>
+          <td>手数料率 + 広告費率</td>
+          <td>0.28 (28%)</td>
+        </tr>
+        <tr>
+          <td><code>p</code></td>
+          <td>Z2</td>
+          <td>Payoneer手数料率</td>
+          <td>0.02 (2%)</td>
+        </tr>
+        <tr>
+          <td><code>t</code></td>
+          <td>AF2</td>
+          <td>関税率</td>
+          <td>0.15 or 0.39</td>
+        </tr>
+        <tr>
+          <td><code>g</code></td>
+          <td>AG2</td>
+          <td>関税処理手数料率</td>
+          <td>0.021 (2.1%)</td>
+        </tr>
+        <tr>
+          <td><code>C</code></td>
+          <td>I列 + T列 + U列</td>
+          <td>仕入れ + 送料 + 利益額</td>
+          <td>（商品による）</td>
+        </tr>
+        <tr>
+          <td><code>E</code></td>
+          <td>C2</td>
+          <td>為替レート</td>
+          <td>150</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ========== セクション3: 問題の数式分析 ========== -->
+    <div class="card">
+      <div class="card-title">
+        <span class="section-number">3</span>
+        現在の計算式（問題あり）
+      </div>
+
+      <h4 style="margin-bottom: 10px; color: #e74c3c;">❌ 現在の販売価格計算式</h4>
+      <div class="formula-box">
+<span class="comment">// 現在のコード（行669-672）</span>
+R = (仕入れ + 送料 + 利益額) ÷ (1 - <span class="error">手数料 - 広告</span> - Payoneer) ÷ 為替
+
+<span class="comment">// 数式で表すと</span>
+R = C ÷ E ÷ (1 - <span class="error">f</span> - p)
+      </div>
+
+      <div class="alert warning">
+        <span class="alert-icon">💡</span>
+        <div>
+          <strong>問題点:</strong> 手数料・広告費 <code>f</code> がDDU価格ベースで計算されている。<br>
+          実際はDDP価格（= DDU + 関税）に対して課されるため、<code>f</code> の影響が過小評価されている。
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== セクション4: 収束計算の導出 ========== -->
+    <div class="card" style="border: 3px solid #9c27b0;">
+      <div class="card-title" style="color: #7b1fa2; border-bottom-color: #9c27b0;">
+        <span class="section-number" style="background: #9c27b0;">4</span>
+        収束計算の数学的導出
+      </div>
+
+      <h4 style="margin-bottom: 15px;">Step 1: 関係式の整理</h4>
+      <div class="formula-box">
+<span class="comment">// DDP価格とDDU価格の関係</span>
+DDP = R × (1 + t × (1 + g))
+<span class="comment">// ※ t=関税率, g=関税処理手数料率</span>
+
+<span class="comment">// 手数料・広告費はDDPに対して課される</span>
+手数料・広告 = DDP × f = R × (1 + t × (1 + g)) × f
+      </div>
+
+      <h4 style="margin: 20px 0 15px;">Step 2: 正しい利益の方程式</h4>
+      <div class="formula-box">
+<span class="comment">// 売上 - 手数料・広告 - Payoneer - コスト = 利益</span>
+R × E - DDP × f × E - R × E × p - (仕入れ + 送料) = 利益額
+
+<span class="comment">// 整理すると</span>
+R × E × (1 - p) - R × (1 + t(1+g)) × f × E = 仕入れ + 送料 + 利益額
+
+<span class="comment">// Rでまとめる</span>
+R × E × <span class="highlight">[(1 - p) - (1 + t(1+g)) × f]</span> = C
+      </div>
+
+      <h4 style="margin: 20px 0 15px;">Step 3: 販売価格Rを解く</h4>
+      <div class="formula-box">
+<span class="success">// 収束後の正しい販売価格計算式</span>
+R = C ÷ E ÷ <span class="highlight">[(1 - p) - (1 + t(1+g)) × f]</span>
+
+<span class="comment">// 展開すると</span>
+R = C ÷ E ÷ <span class="highlight">[1 - p - f - t(1+g) × f]</span>
+      </div>
+
+      <div class="alert info">
+        <span class="alert-icon">🔑</span>
+        <div>
+          <strong>ポイント:</strong> 現在の分母 <code>(1 - f - p)</code> に対して、<br>
+          正しい分母は <code>(1 - f - p) - t(1+g) × f</code><br>
+          つまり <code>t(1+g) × f</code> の分だけ分母が小さくなり、Rが大きくなる。
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== セクション5: 具体的な数値計算 ========== -->
+    <div class="card">
+      <div class="card-title">
+        <span class="section-number">5</span>
+        具体的な数値での検証（関税15% vs 39%）
+      </div>
+
+      <p style="margin-bottom: 20px; color: #666;">
+        前提: 手数料率+広告費率 = 28%、Payoneer = 2%、関税処理手数料率 = 2.1%
+      </p>
+
+      <div class="tax-comparison-grid">
+        <!-- 関税15%のケース -->
+        <div class="tax-case low">
+          <h3>📦 関税率 15% の場合</h3>
+
+          <div class="calc-row">
+            <span>t × (1 + g)</span>
+            <span>0.15 × 1.021 = <strong>0.153</strong></span>
+          </div>
+          <div class="calc-row">
+            <span>t(1+g) × f</span>
+            <span>0.153 × 0.28 = <strong>0.0428</strong></span>
+          </div>
+          <div class="calc-row">
+            <span>現在の分母</span>
+            <span>1 - 0.28 - 0.02 = <strong>0.70</strong></span>
+          </div>
+          <div class="calc-row">
+            <span>正しい分母</span>
+            <span>0.70 - 0.0428 = <strong>0.6572</strong></span>
+          </div>
+          <div class="calc-row result low">
+            <span>販売価格の上昇率</span>
+            <span>0.70 ÷ 0.6572 = <strong>1.065 (+6.5%)</strong></span>
+          </div>
+        </div>
+
+        <!-- 関税39%のケース -->
+        <div class="tax-case high">
+          <h3>📦 関税率 39% の場合</h3>
+
+          <div class="calc-row">
+            <span>t × (1 + g)</span>
+            <span>0.39 × 1.021 = <strong>0.398</strong></span>
+          </div>
+          <div class="calc-row">
+            <span>t(1+g) × f</span>
+            <span>0.398 × 0.28 = <strong>0.1115</strong></span>
+          </div>
+          <div class="calc-row">
+            <span>現在の分母</span>
+            <span>1 - 0.28 - 0.02 = <strong>0.70</strong></span>
+          </div>
+          <div class="calc-row">
+            <span>正しい分母</span>
+            <span>0.70 - 0.1115 = <strong>0.5885</strong></span>
+          </div>
+          <div class="calc-row result high">
+            <span>販売価格の上昇率</span>
+            <span>0.70 ÷ 0.5885 = <strong>1.189 (+18.9%)</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert warning">
+        <span class="alert-icon">💰</span>
+        <div>
+          <strong>月間影響（$100商品を100個販売、為替150円）:</strong><br>
+          ・関税15%: 約 <strong>¥97,500/月</strong> の利益過大計算<br>
+          ・関税39%: 約 <strong>¥283,500/月</strong> の利益過大計算
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== セクション6: 最終的な修正式 ========== -->
+    <div class="card solution-card">
+      <div class="card-title">
+        <span class="section-number" style="background: #27ae60;">6</span>
+        最終的な修正計算式（収束解）
+      </div>
+
+      <h4 style="margin-bottom: 15px;">✅ 修正後の販売価格計算式</h4>
+      <div class="formula-box" style="background: #1b5e20; border: 2px solid #4caf50;">
+<span class="comment">// 収束後の正確な計算式</span>
+R = (仕入れ + 送料 + 利益額) ÷ 為替 ÷ <span class="success">[(1 - Payoneer) - (1 + 関税率 × (1 + 関税処理手数料率)) × (手数料 + 広告)]</span>
+
+<span class="comment">// セル参照で表すと</span>
+R = (I + T + U) ÷ $C$2 ÷ <span class="success">[(1 - $Z$2) - (1 + $AF$2 × (1 + $AG$2)) × (V + $F$2)]</span>
+      </div>
+
+      <h4 style="margin: 25px 0 15px;">スプレッドシート用の数式（利益額モード）</h4>
+      <div class="formula-box">
+<span class="keyword">=ROUND(</span>
+  (I{row} + T{row} + U{row})
+  / $C$2
+  / ((1 - $Z$2) - (1 + $AF$2 * (1 + $AG$2)) * (V{row} + $F$2))
+  * 100
+<span class="keyword">) / 100</span>
+      </div>
+
+      <h4 style="margin: 25px 0 15px;">スプレッドシート用の数式（利益率モード）</h4>
+      <div class="formula-box">
+<span class="keyword">=ROUND(</span>
+  (I{row} + T{row})
+  / $C$2
+  / ((1 - $Z$2) - (1 + $AF$2 * (1 + $AG$2)) * (V{row} + $F$2) - W{row})
+  * 100
+<span class="keyword">) / 100</span>
+
+<span class="comment">// ※ W{row} = 利益率</span>
+      </div>
+    </div>
+
+    <!-- ========== セクション7: 具体例での検証 ========== -->
+    <div class="card" style="border: 3px solid #00bcd4;">
+      <div class="card-title" style="color: #00838f; border-bottom-color: #00bcd4;">
+        <span class="section-number" style="background: #00bcd4;">7</span>
+        具体例での検証
+      </div>
+
+      <!-- 検証条件 -->
+      <div style="background: #e0f7fa; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+        <h4 style="color: #00838f; margin-bottom: 15px;">📋 検証条件</h4>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">仕入れ値</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">¥10,000</div>
+          </div>
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">送料</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">¥3,000</div>
+          </div>
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">手数料+広告</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">28%</div>
+          </div>
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">Payoneer</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">2%</div>
+          </div>
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">関税率</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">15%</div>
+          </div>
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">関税処理手数料</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">2.1%</div>
+          </div>
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">為替レート</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">¥155</div>
+          </div>
+          <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.85em; color: #666;">t(1+g)</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #00838f;">0.15315</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 検証1: 利益額モード -->
+      <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 16px; padding: 25px; margin-bottom: 25px; border: 2px solid #2196f3;">
+        <h4 style="color: #1565c0; margin-bottom: 20px; font-size: 1.2em;">
+          <span style="background: #2196f3; color: white; padding: 4px 12px; border-radius: 4px; margin-right: 10px;">検証1</span>
+          利益額モード（目標利益 ¥2,000）
+        </h4>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+          <!-- 現在の式 -->
+          <div style="background: #ffebee; border-radius: 12px; padding: 20px; border: 2px solid #e74c3c;">
+            <h5 style="color: #c0392b; margin-bottom: 15px;">❌ 現在の式</h5>
+            <div class="formula-box" style="background: #c0392b; font-size: 0.8em; padding: 12px;">
+分母 = 1 - 0.28 - 0.02 = <span class="highlight">0.70</span>
+R = 15,000 / 155 / 0.70 = <span class="highlight">$138.25</span></div>
+            <div style="margin-top: 15px; background: white; border-radius: 8px; padding: 15px;">
+              <div style="font-size: 0.9em; color: #666; margin-bottom: 10px;">実際の利益計算:</div>
+              <table style="width: 100%; font-size: 0.85em;">
+                <tr><td>売上</td><td style="text-align: right;">$138.25 × 155 = ¥21,429</td></tr>
+                <tr><td>DDP</td><td style="text-align: right;">$138.25 × 1.153 = $159.42</td></tr>
+                <tr><td>手数料+広告</td><td style="text-align: right; color: #c0392b;">-¥6,919</td></tr>
+                <tr><td>Payoneer</td><td style="text-align: right; color: #c0392b;">-¥429</td></tr>
+                <tr><td>仕入れ+送料</td><td style="text-align: right; color: #c0392b;">-¥13,000</td></tr>
+                <tr style="border-top: 2px solid #e74c3c; font-weight: bold;">
+                  <td>実際の利益</td>
+                  <td style="text-align: right; color: #c0392b; font-size: 1.2em;">¥1,081</td>
+                </tr>
+              </table>
+            </div>
+            <div style="margin-top: 10px; text-align: center; padding: 10px; background: #ffcdd2; border-radius: 8px;">
+              <span style="color: #c0392b; font-weight: bold;">目標 ¥2,000 に対して ¥919 不足</span>
+            </div>
+          </div>
+
+          <!-- 修正後の式 -->
+          <div style="background: #e8f5e9; border-radius: 12px; padding: 20px; border: 2px solid #27ae60;">
+            <h5 style="color: #27ae60; margin-bottom: 15px;">✅ 修正後の式</h5>
+            <div class="formula-box" style="background: #2e7d32; font-size: 0.8em; padding: 12px;">
+分母 = 0.98 - 1.153 × 0.28 = <span class="highlight">0.65712</span>
+R = 15,000 / 155 / 0.657 = <span class="highlight">$147.27</span></div>
+            <div style="margin-top: 15px; background: white; border-radius: 8px; padding: 15px;">
+              <div style="font-size: 0.9em; color: #666; margin-bottom: 10px;">実際の利益計算:</div>
+              <table style="width: 100%; font-size: 0.85em;">
+                <tr><td>売上</td><td style="text-align: right;">$147.27 × 155 = ¥22,827</td></tr>
+                <tr><td>DDP</td><td style="text-align: right;">$147.27 × 1.153 = $169.82</td></tr>
+                <tr><td>手数料+広告</td><td style="text-align: right; color: #c0392b;">-¥7,370</td></tr>
+                <tr><td>Payoneer</td><td style="text-align: right; color: #c0392b;">-¥457</td></tr>
+                <tr><td>仕入れ+送料</td><td style="text-align: right; color: #c0392b;">-¥13,000</td></tr>
+                <tr style="border-top: 2px solid #27ae60; font-weight: bold;">
+                  <td>実際の利益</td>
+                  <td style="text-align: right; color: #27ae60; font-size: 1.2em;">¥2,000 ✓</td>
+                </tr>
+              </table>
+            </div>
+            <div style="margin-top: 10px; text-align: center; padding: 10px; background: #c8e6c9; border-radius: 8px;">
+              <span style="color: #27ae60; font-weight: bold;">目標利益を正確に達成</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 比較サマリー -->
+        <div style="background: white; border-radius: 10px; padding: 15px; display: flex; justify-content: space-around; text-align: center;">
+          <div>
+            <div style="font-size: 0.85em; color: #666;">販売価格の差</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #1565c0;">+$9.02 (+6.5%)</div>
+          </div>
+          <div style="border-left: 1px solid #ddd; padding-left: 30px;">
+            <div style="font-size: 0.85em; color: #666;">利益の差</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #e74c3c;">¥919 の損失回避</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 検証2: 利益率モード -->
+      <div style="background: linear-gradient(135deg, #f3e5f5, #e1bee7); border-radius: 16px; padding: 25px; border: 2px solid #9c27b0;">
+        <h4 style="color: #7b1fa2; margin-bottom: 20px; font-size: 1.2em;">
+          <span style="background: #9c27b0; color: white; padding: 4px 12px; border-radius: 4px; margin-right: 10px;">検証2</span>
+          利益率モード（目標利益率 20%）
+        </h4>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+          <!-- 現在の式 -->
+          <div style="background: #ffebee; border-radius: 12px; padding: 20px; border: 2px solid #e74c3c;">
+            <h5 style="color: #c0392b; margin-bottom: 15px;">❌ 現在の式</h5>
+            <div class="formula-box" style="background: #c0392b; font-size: 0.8em; padding: 12px;">
+分母 = 1 - 0.28 - 0.20 - 0.02 = <span class="highlight">0.50</span>
+R = 13,000 / 155 / 0.50 = <span class="highlight">$167.74</span></div>
+            <div style="margin-top: 15px; background: white; border-radius: 8px; padding: 15px;">
+              <div style="font-size: 0.9em; color: #666; margin-bottom: 10px;">実際の利益計算:</div>
+              <table style="width: 100%; font-size: 0.85em;">
+                <tr><td>売上</td><td style="text-align: right;">$167.74 × 155 = ¥26,000</td></tr>
+                <tr><td>DDP</td><td style="text-align: right;">$167.74 × 1.153 = $193.45</td></tr>
+                <tr><td>手数料+広告</td><td style="text-align: right; color: #c0392b;">-¥8,396</td></tr>
+                <tr><td>Payoneer</td><td style="text-align: right; color: #c0392b;">-¥520</td></tr>
+                <tr><td>仕入れ+送料</td><td style="text-align: right; color: #c0392b;">-¥13,000</td></tr>
+                <tr style="border-top: 2px solid #e74c3c; font-weight: bold;">
+                  <td>実際の利益</td>
+                  <td style="text-align: right; color: #333;">¥4,084</td>
+                </tr>
+                <tr style="font-weight: bold;">
+                  <td>実際の利益率</td>
+                  <td style="text-align: right; color: #c0392b; font-size: 1.2em;">15.7%</td>
+                </tr>
+              </table>
+            </div>
+            <div style="margin-top: 10px; text-align: center; padding: 10px; background: #ffcdd2; border-radius: 8px;">
+              <span style="color: #c0392b; font-weight: bold;">目標 20% に対して 4.3% 不足</span>
+            </div>
+          </div>
+
+          <!-- 修正後の式 -->
+          <div style="background: #e8f5e9; border-radius: 12px; padding: 20px; border: 2px solid #27ae60;">
+            <h5 style="color: #27ae60; margin-bottom: 15px;">✅ 修正後の式</h5>
+            <div class="formula-box" style="background: #2e7d32; font-size: 0.8em; padding: 12px;">
+分母 = 0.98 - 1.153 × 0.28 - 0.20 = <span class="highlight">0.45712</span>
+R = 13,000 / 155 / 0.457 = <span class="highlight">$183.48</span></div>
+            <div style="margin-top: 15px; background: white; border-radius: 8px; padding: 15px;">
+              <div style="font-size: 0.9em; color: #666; margin-bottom: 10px;">実際の利益計算:</div>
+              <table style="width: 100%; font-size: 0.85em;">
+                <tr><td>売上</td><td style="text-align: right;">$183.48 × 155 = ¥28,439</td></tr>
+                <tr><td>DDP</td><td style="text-align: right;">$183.48 × 1.153 = $211.57</td></tr>
+                <tr><td>手数料+広告</td><td style="text-align: right; color: #c0392b;">-¥9,180</td></tr>
+                <tr><td>Payoneer</td><td style="text-align: right; color: #c0392b;">-¥569</td></tr>
+                <tr><td>仕入れ+送料</td><td style="text-align: right; color: #c0392b;">-¥13,000</td></tr>
+                <tr style="border-top: 2px solid #27ae60; font-weight: bold;">
+                  <td>実際の利益</td>
+                  <td style="text-align: right; color: #333;">¥5,690</td>
+                </tr>
+                <tr style="font-weight: bold;">
+                  <td>実際の利益率</td>
+                  <td style="text-align: right; color: #27ae60; font-size: 1.2em;">20.0% ✓</td>
+                </tr>
+              </table>
+            </div>
+            <div style="margin-top: 10px; text-align: center; padding: 10px; background: #c8e6c9; border-radius: 8px;">
+              <span style="color: #27ae60; font-weight: bold;">目標利益率を正確に達成</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 比較サマリー -->
+        <div style="background: white; border-radius: 10px; padding: 15px; display: flex; justify-content: space-around; text-align: center;">
+          <div>
+            <div style="font-size: 0.85em; color: #666;">販売価格の差</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #7b1fa2;">+$15.74 (+9.4%)</div>
+          </div>
+          <div style="border-left: 1px solid #ddd; padding-left: 30px;">
+            <div style="font-size: 0.85em; color: #666;">利益率の差</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #e74c3c;">4.3% の損失回避</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 検証結果まとめ -->
+      <div style="background: linear-gradient(135deg, #fff8e1, #ffecb3); border: 2px solid #ffa000; border-radius: 12px; padding: 20px;">
+        <h4 style="color: #e65100; margin-bottom: 15px;">📊 検証結果まとめ</h4>
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden;">
+          <tr style="background: #fff3e0;">
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ffa000;">モード</th>
+            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ffa000;">設定値</th>
+            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ffa000;">現在の式</th>
+            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ffa000;">修正後</th>
+            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ffa000;">損失額</th>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #eee;">利益額モード</td>
+            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">¥2,000</td>
+            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee; color: #c0392b;">¥1,081</td>
+            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee; color: #27ae60; font-weight: bold;">¥2,000 ✓</td>
+            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee; color: #c0392b; font-weight: bold;">¥919/個</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px;">利益率モード</td>
+            <td style="padding: 12px; text-align: center;">20%</td>
+            <td style="padding: 12px; text-align: center; color: #c0392b;">15.7%</td>
+            <td style="padding: 12px; text-align: center; color: #27ae60; font-weight: bold;">20.0% ✓</td>
+            <td style="padding: 12px; text-align: center; color: #c0392b; font-weight: bold;">4.3%/個</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========== セクション8: コード修正の差分 ========== -->
+    <div class="card" style="border: 3px solid #ff9800;">
+      <div class="card-title" style="color: #e65100; border-bottom-color: #ff9800;">
+        <span class="section-number" style="background: #ff9800;">8</span>
+        コード修正の差分（コピペ用）
+      </div>
+
+      <!-- 利益額モード -->
+      <div style="margin-bottom: 30px;">
+        <h4 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+          <span style="background: #2196f3; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.85em;">利益額モード</span>
+          行 669-672
+        </h4>
+
+        <div style="margin-bottom: 10px;">
+          <div style="font-size: 0.9em; color: #c0392b; font-weight: bold; margin-bottom: 5px;">❌ 現在の式:</div>
+          <div class="formula-box" style="background: #ffebee; color: #c0392b; border: 2px solid #e74c3c; font-size: 0.85em;">
+'=ROUND(((I' + row + '+T' + row + '+U' + row + ')/(1-(V' + row + '+$F$2+$Z$2))/$C$2)*100)/100'</div>
+        </div>
+
+        <div style="text-align: center; font-size: 1.5em; color: #ff9800; margin: 10px 0;">↓</div>
+
+        <div>
+          <div style="font-size: 0.9em; color: #27ae60; font-weight: bold; margin-bottom: 5px;">✅ 修正後の式:</div>
+          <div class="formula-box" style="background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; font-size: 0.85em;">
+'=ROUND(((I' + row + '+T' + row + '+U' + row + ')/((1-$Z$2)-(1+$AF$2*(1+$AG$2))*(V' + row + '+$F$2))/$C$2)*100)/100'</div>
+        </div>
+
+        <div style="background: #fff3e0; border-radius: 8px; padding: 15px; margin-top: 15px;">
+          <div style="font-size: 0.9em; color: #e65100; font-weight: bold; margin-bottom: 8px;">変更点:</div>
+          <table style="width: 100%; font-size: 0.9em;">
+            <tr>
+              <td style="padding: 5px 0; color: #c0392b;"><code>(1-(V+$F$2+$Z$2))</code></td>
+              <td style="padding: 5px 10px;">→</td>
+              <td style="padding: 5px 0; color: #27ae60;"><code>((1-$Z$2)-(1+$AF$2*(1+$AG$2))*(V+$F$2))</code></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- 利益率モード -->
+      <div style="margin-bottom: 30px;">
+        <h4 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+          <span style="background: #9c27b0; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.85em;">利益率モード</span>
+          行 646-649
+        </h4>
+
+        <div style="margin-bottom: 10px;">
+          <div style="font-size: 0.9em; color: #c0392b; font-weight: bold; margin-bottom: 5px;">❌ 現在の式:</div>
+          <div class="formula-box" style="background: #ffebee; color: #c0392b; border: 2px solid #e74c3c; font-size: 0.85em;">
+'=ROUND(((I' + row + '+T' + row + ')/(1-(V' + row + '+W' + row + '+$F$2+$Z$2))/$C$2)*100)/100'</div>
+        </div>
+
+        <div style="text-align: center; font-size: 1.5em; color: #ff9800; margin: 10px 0;">↓</div>
+
+        <div>
+          <div style="font-size: 0.9em; color: #27ae60; font-weight: bold; margin-bottom: 5px;">✅ 修正後の式:</div>
+          <div class="formula-box" style="background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; font-size: 0.85em;">
+'=ROUND(((I' + row + '+T' + row + ')/((1-$Z$2)-(1+$AF$2*(1+$AG$2))*(V' + row + '+$F$2)-W' + row + ')/$C$2)*100)/100'</div>
+        </div>
+
+        <div style="background: #fff3e0; border-radius: 8px; padding: 15px; margin-top: 15px;">
+          <div style="font-size: 0.9em; color: #e65100; font-weight: bold; margin-bottom: 8px;">変更点:</div>
+          <table style="width: 100%; font-size: 0.9em;">
+            <tr>
+              <td style="padding: 5px 0; color: #c0392b;"><code>(1-(V+W+$F$2+$Z$2))</code></td>
+              <td style="padding: 5px 10px;">→</td>
+              <td style="padding: 5px 0; color: #27ae60;"><code>((1-$Z$2)-(1+$AF$2*(1+$AG$2))*(V+$F$2)-W)</code></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- 修正対象ファイル一覧 -->
+      <div style="background: #f5f5f5; border-radius: 10px; padding: 20px;">
+        <h4 style="margin-bottom: 15px; color: #333;">📁 修正対象ファイル</h4>
+        <table class="var-table" style="margin: 0;">
+          <tr>
+            <th>ファイル</th>
+            <th>行番号</th>
+            <th>内容</th>
+          </tr>
+          <tr>
+            <td><code>コード_Part1_価格計算・バッチ処理.gs</code></td>
+            <td>646-649</td>
+            <td>利益率モードの販売価格計算式（R列）</td>
+          </tr>
+          <tr>
+            <td><code>コード_Part1_価格計算・バッチ処理.gs</code></td>
+            <td>669-672</td>
+            <td>利益額モードの販売価格計算式（R列）</td>
+          </tr>
+          <tr>
+            <td><code>PriceCalc.txt</code></td>
+            <td>該当箇所</td>
+            <td>UI側の計算ロジック</td>
+          </tr>
+        </table>
+
+        <div class="alert info" style="margin-top: 15px; margin-bottom: 0;">
+          <span class="alert-icon">💡</span>
+          <div>
+            <strong>注:</strong> 利益計算式（U列、行652-655）は修正不要です。<br>
+            R列の計算が正しくなれば、利益も自動的に正しく計算されます。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== セクション9: まとめ ========== -->
+    <div class="card" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #27ae60;">
+      <div class="card-title" style="border-bottom-color: #27ae60; color: #2e7d32;">
+        <span class="section-number" style="background: #27ae60;">9</span>
+        まとめ
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h4 style="margin-bottom: 8px;">問題</h4>
+          <p style="font-size: 0.95em; color: #555;">手数料・広告費がDDU価格ベースで計算され、関税分が考慮されていない</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h4 style="margin-bottom: 8px;">影響</h4>
+          <p style="font-size: 0.95em; color: #555;">関税15%で+6.5%、関税39%で+18.9%の販売価格差が生じている</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h4 style="margin-bottom: 8px;">解決策</h4>
+          <p style="font-size: 0.95em; color: #555;">分母に <code>t(1+g) × f</code> を追加することで収束解を得る</p>
+        </div>
+      </div>
+
+      <div class="formula-box" style="background: #2e7d32; border: none; margin-top: 20px;">
+<span class="comment">// 最終的な修正</span>
+<span class="error">現在: </span> 分母 = 1 - f - p
+<span class="success">修正: </span> 分母 = 1 - f - p - <span class="highlight">$AF$2 × (1 + $AG$2) × (V + $F$2)</span>
+      </div>
+
+      <div class="alert success" style="margin-top: 20px;">
+        <span class="alert-icon">✅</span>
+        <div>
+          <strong>この修正により:</strong><br>
+          ・循環参照なしで正確な販売価格を計算<br>
+          ・利益計算が実際の手数料負担を反映<br>
+          ・関税率の変更にも自動対応
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== セクション10: 利益計算式の修正 ========== -->
+    <div class="card" style="border: 3px solid #673ab7;">
+      <div class="card-title" style="color: #512da8; border-bottom-color: #673ab7;">
+        <span class="section-number" style="background: #673ab7;">10</span>
+        利益計算式（U列）の修正
+      </div>
+
+      <div class="alert warning">
+        <span class="alert-icon">⚠️</span>
+        <div>
+          <strong>重要:</strong> 販売価格計算式（R列）だけでなく、利益計算式（U列）も修正が必要です。<br>
+          現在は利益計算もDDU価格ベースで手数料を計算しているため、実際の利益と表示が一致しません。
+        </div>
+      </div>
+
+      <!-- 現在の式 vs 修正後 -->
+      <div style="margin: 25px 0;">
+        <h4 style="margin-bottom: 15px;">利益計算式の比較</h4>
+
+        <div style="margin-bottom: 15px;">
+          <div style="font-size: 0.9em; color: #c0392b; font-weight: bold; margin-bottom: 5px;">❌ 現在の式（DDU価格ベース）:</div>
+          <div class="formula-box" style="background: #ffebee; color: #c0392b; border: 2px solid #e74c3c; font-size: 0.9em;">
+利益 = R × 為替 × (1 - (手数料 + 広告 + Payoneer)) - 仕入れ - 送料
+
+<span class="comment">// セル参照</span>
+= R × $C$2 × (1 - (V + $F$2 + $Z$2)) - I - T</div>
+        </div>
+
+        <div style="text-align: center; font-size: 1.5em; color: #673ab7; margin: 15px 0;">↓</div>
+
+        <div>
+          <div style="font-size: 0.9em; color: #27ae60; font-weight: bold; margin-bottom: 5px;">✅ 修正後の式（DDP価格ベース）:</div>
+          <div class="formula-box" style="background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; font-size: 0.9em;">
+利益 = R × 為替 × (1 - Payoneer) - S × 為替 × (手数料 + 広告) - 仕入れ - 送料
+
+<span class="comment">// セル参照</span>
+= R × $C$2 × (1 - $Z$2) - S × $C$2 × (V + $F$2) - I - T
+
+<span class="comment">// ポイント</span>
+・Payoneer手数料: DDU価格(R)に対して課される
+・eBay手数料+広告: DDP価格(S)に対して課される</div>
+        </div>
+      </div>
+
+      <!-- 具体例での検証 -->
+      <div style="background: linear-gradient(135deg, #ede7f6, #d1c4e9); border-radius: 16px; padding: 25px; margin: 25px 0; border: 2px solid #673ab7;">
+        <h4 style="color: #512da8; margin-bottom: 20px; font-size: 1.2em;">
+          <span style="background: #673ab7; color: white; padding: 4px 12px; border-radius: 4px; margin-right: 10px;">検証3</span>
+          利益率13%モードでの利益計算検証
+        </h4>
+
+        <!-- 検証条件 -->
+        <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+          <h5 style="color: #512da8; margin-bottom: 15px;">📋 検証条件</h5>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">仕入れ</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">¥30,000</div>
+            </div>
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">送料</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">¥2,497</div>
+            </div>
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">手数料率</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">18%</div>
+            </div>
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">広告費率</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">2%</div>
+            </div>
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">利益率</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">13%</div>
+            </div>
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">Payoneer</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">2%</div>
+            </div>
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">関税率</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">15%</div>
+            </div>
+            <div style="background: #ede7f6; padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.8em; color: #666;">為替</div>
+              <div style="font-size: 1.1em; font-weight: bold; color: #512da8;">¥155</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 販売価格計算 -->
+        <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+          <h5 style="color: #512da8; margin-bottom: 15px;">📐 販売価格計算（修正後の式）</h5>
+          <div class="formula-box" style="background: #512da8; font-size: 0.85em; padding: 15px;">
+tariffMultiplier = 1 + 0.15 × (1 + 0.021) = <span class="highlight">1.15315</span>
+feeAdRate = 0.18 + 0.02 = <span class="highlight">0.20</span>
+netRate = (1 - 0.02) - 1.15315 × 0.20 - 0.13 = <span class="highlight">0.61937</span>
+
+R = (30000 + 2497) ÷ 155 ÷ 0.61937 = <span class="success">$338.50</span>
+          </div>
+          <div style="display: flex; gap: 15px; margin-top: 15px;">
+            <div style="flex: 1; background: #ede7f6; padding: 15px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.85em; color: #666;">DDU価格 (R)</div>
+              <div style="font-size: 1.4em; font-weight: bold; color: #512da8;">$338.50</div>
+            </div>
+            <div style="flex: 1; background: #ede7f6; padding: 15px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.85em; color: #666;">想定関税</div>
+              <div style="font-size: 1.4em; font-weight: bold; color: #512da8;">$51.84</div>
+            </div>
+            <div style="flex: 1; background: #ede7f6; padding: 15px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.85em; color: #666;">DDP価格 (S)</div>
+              <div style="font-size: 1.4em; font-weight: bold; color: #512da8;">$390.34</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 利益計算比較 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- 現在の利益計算 -->
+          <div style="background: #ffebee; border-radius: 12px; padding: 20px; border: 2px solid #e74c3c;">
+            <h5 style="color: #c0392b; margin-bottom: 15px;">❌ 現在の利益計算式</h5>
+            <div class="formula-box" style="background: #c0392b; font-size: 0.8em; padding: 12px;">
+利益 = R × 為替 × (1 - 0.20 - 0.02) - I - T
+     = $338.50 × 155 × 0.78 - 32,497
+     = ¥52,468 × 0.78 - ¥32,497</div>
+            <div style="margin-top: 15px; background: white; border-radius: 8px; padding: 15px;">
+              <table style="width: 100%; font-size: 0.85em;">
+                <tr><td>売上 × (1-手数料等)</td><td style="text-align: right;">¥40,925</td></tr>
+                <tr><td>仕入れ + 送料</td><td style="text-align: right; color: #c0392b;">-¥32,497</td></tr>
+                <tr style="border-top: 2px solid #e74c3c; font-weight: bold;">
+                  <td>計算上の利益</td>
+                  <td style="text-align: right; color: #c0392b; font-size: 1.2em;">¥8,428</td>
+                </tr>
+                <tr>
+                  <td>計算上の利益率</td>
+                  <td style="text-align: right; color: #c0392b; font-weight: bold;">16.1%</td>
+                </tr>
+              </table>
+            </div>
+            <div style="margin-top: 10px; text-align: center; padding: 10px; background: #ffcdd2; border-radius: 8px;">
+              <span style="color: #c0392b; font-weight: bold;">目標13%に対して3.1%過大表示</span>
+            </div>
+          </div>
+
+          <!-- 修正後の利益計算 -->
+          <div style="background: #e8f5e9; border-radius: 12px; padding: 20px; border: 2px solid #27ae60;">
+            <h5 style="color: #27ae60; margin-bottom: 15px;">✅ 修正後の利益計算式</h5>
+            <div class="formula-box" style="background: #2e7d32; font-size: 0.8em; padding: 12px;">
+利益 = R × 為替 × (1 - Payoneer)
+     - S × 為替 × (手数料 + 広告)
+     - 仕入れ - 送料</div>
+            <div style="margin-top: 15px; background: white; border-radius: 8px; padding: 15px;">
+              <table style="width: 100%; font-size: 0.85em;">
+                <tr><td>売上</td><td style="text-align: right;">¥52,468</td></tr>
+                <tr><td>Payoneer手数料</td><td style="text-align: right; color: #c0392b;">-¥1,049</td></tr>
+                <tr><td>eBay手数料+広告 (DDP×20%)</td><td style="text-align: right; color: #c0392b;">-¥12,101</td></tr>
+                <tr><td>仕入れ + 送料</td><td style="text-align: right; color: #c0392b;">-¥32,497</td></tr>
+                <tr style="border-top: 2px solid #27ae60; font-weight: bold;">
+                  <td>実際の利益</td>
+                  <td style="text-align: right; color: #27ae60; font-size: 1.2em;">¥6,821</td>
+                </tr>
+                <tr>
+                  <td>実際の利益率</td>
+                  <td style="text-align: right; color: #27ae60; font-weight: bold;">13.0% ✓</td>
+                </tr>
+              </table>
+            </div>
+            <div style="margin-top: 10px; text-align: center; padding: 10px; background: #c8e6c9; border-radius: 8px;">
+              <span style="color: #27ae60; font-weight: bold;">目標利益率と正確に一致</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 差額の説明 -->
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-top: 20px;">
+          <h5 style="color: #512da8; margin-bottom: 15px;">📊 利益計算の差額分析</h5>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="background: #ede7f6;">
+              <th style="padding: 12px; text-align: left;">項目</th>
+              <th style="padding: 12px; text-align: right;">現在の式</th>
+              <th style="padding: 12px; text-align: right;">修正後の式</th>
+              <th style="padding: 12px; text-align: right;">差額</th>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">手数料+広告の計算基準</td>
+              <td style="padding: 10px; text-align: right; border-bottom: 1px solid #eee;">DDU ¥52,468</td>
+              <td style="padding: 10px; text-align: right; border-bottom: 1px solid #eee;">DDP ¥60,503</td>
+              <td style="padding: 10px; text-align: right; border-bottom: 1px solid #eee; color: #c0392b;">+¥8,035</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">手数料+広告（20%）</td>
+              <td style="padding: 10px; text-align: right; border-bottom: 1px solid #eee;">¥10,494</td>
+              <td style="padding: 10px; text-align: right; border-bottom: 1px solid #eee;">¥12,101</td>
+              <td style="padding: 10px; text-align: right; border-bottom: 1px solid #eee; color: #c0392b;">+¥1,607</td>
+            </tr>
+            <tr style="font-weight: bold;">
+              <td style="padding: 10px;">表示利益の差</td>
+              <td style="padding: 10px; text-align: right;">¥8,428</td>
+              <td style="padding: 10px; text-align: right;">¥6,821</td>
+              <td style="padding: 10px; text-align: right; color: #c0392b;">-¥1,607</td>
+            </tr>
+          </table>
+          <div class="alert warning" style="margin-top: 15px; margin-bottom: 0;">
+            <span class="alert-icon">💡</span>
+            <div>
+              現在の式では<strong>¥1,607の利益が過大表示</strong>されています。<br>
+              これは関税分（$51.84 = ¥8,035）に対する手数料+広告（20%）= ¥1,607 が考慮されていないためです。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 修正対象コード -->
+      <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-top: 20px;">
+        <h4 style="margin-bottom: 15px; color: #333;">📁 利益計算式の修正箇所</h4>
+
+        <!-- ARRAYFORMULA版 -->
+        <div style="margin-bottom: 20px;">
+          <h5 style="margin-bottom: 10px;">Part3 行3309（ARRAYFORMULA版）</h5>
+          <div style="margin-bottom: 10px;">
+            <div style="font-size: 0.85em; color: #c0392b; font-weight: bold; margin-bottom: 5px;">❌ 現在:</div>
+            <div class="formula-box" style="background: #ffebee; color: #c0392b; border: 2px solid #e74c3c; font-size: 0.8em; padding: 10px;">
+'=ARRAYFORMULA(IF(ROW(U4:U)=4,"利益",IF(R4:R="","",ROUND(R4:R*$C$2*(1-(V4:V+$F$2+$Z$2))-I4:I-T4:T,0))))'</div>
+          </div>
+          <div style="text-align: center; font-size: 1.2em; color: #673ab7; margin: 8px 0;">↓</div>
+          <div>
+            <div style="font-size: 0.85em; color: #27ae60; font-weight: bold; margin-bottom: 5px;">✅ 修正後:</div>
+            <div class="formula-box" style="background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; font-size: 0.8em; padding: 10px;">
+'=ARRAYFORMULA(IF(ROW(U4:U)=4,"利益",IF(R4:R="","",ROUND(R4:R*$C$2*(1-$Z$2)-S4:S*$C$2*(V4:V+$F$2)-I4:I-T4:T,0))))'</div>
+          </div>
+        </div>
+
+        <!-- 個別行版 -->
+        <div>
+          <h5 style="margin-bottom: 10px;">Part1 行3349（個別行版）</h5>
+          <div style="margin-bottom: 10px;">
+            <div style="font-size: 0.85em; color: #c0392b; font-weight: bold; margin-bottom: 5px;">❌ 現在:</div>
+            <div class="formula-box" style="background: #ffebee; color: #c0392b; border: 2px solid #e74c3c; font-size: 0.8em; padding: 10px;">
+'=ROUND(R' + row + '*$C$2*(1-(V' + row + '+$F$2+$Z$2)) - I' + row + ' - T' + row + ', 0)'</div>
+          </div>
+          <div style="text-align: center; font-size: 1.2em; color: #673ab7; margin: 8px 0;">↓</div>
+          <div>
+            <div style="font-size: 0.85em; color: #27ae60; font-weight: bold; margin-bottom: 5px;">✅ 修正後:</div>
+            <div class="formula-box" style="background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; font-size: 0.8em; padding: 10px;">
+'=ROUND(R' + row + '*$C$2*(1-$Z$2) - S' + row + '*$C$2*(V' + row + '+$F$2) - I' + row + ' - T' + row + ', 0)'</div>
+          </div>
+        </div>
+
+        <!-- 修正対象ファイル一覧 -->
+        <table class="var-table" style="margin-top: 20px;">
+          <tr>
+            <th>ファイル</th>
+            <th>行番号</th>
+            <th>内容</th>
+          </tr>
+          <tr>
+            <td><code>コード_Part3_メニュー・設定関連.gs</code></td>
+            <td>3309</td>
+            <td>利益率モードのARRAYFORMULA（U列全体）</td>
+          </tr>
+          <tr>
+            <td><code>コード_Part1_価格計算・バッチ処理.gs</code></td>
+            <td>3349</td>
+            <td>バッチ処理用の個別行式（U列）</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
