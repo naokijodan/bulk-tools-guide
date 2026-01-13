@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拡張機能まとめ - デザイン案プレビュー</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           Base & Reset
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            background: #F8FAFC;
+            color: #0F172A;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           Design Switcher (Top Bar)
+           ======================================== */
+        .design-switcher {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .design-switcher label {
+            color: #94a3b8;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .design-btn {
+            padding: 10px 20px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: rgba(255,255,255,0.1);
+            color: #e2e8f0;
+        }
+
+        .design-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .design-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* ========================================
+           Main Container
+           ======================================== */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 24px 60px;
+        }
+
+        /* ========================================
+           Design Sections (Hidden by default)
+           ======================================== */
+        .design-section {
+            display: none;
+        }
+
+        .design-section.active {
+            display: block;
+        }
+
+        /* ========================================
+           Common Header
+           ======================================== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: #64748b;
+            font-size: 1.1em;
+        }
+
+        .design-label {
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* ========================================
+           Extension Card (Common)
+           ======================================== */
+        .ext-icon {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+        }
+
+        .ext-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .ext-description {
+            color: #64748b;
+            font-size: 0.95em;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .ext-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .ext-features li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+            color: #475569;
+            font-size: 0.9em;
+        }
+
+        .ext-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-outline:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        /* Video Facade Pattern */
+        .video-facade {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .video-facade img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-facade .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 72px;
+            height: 72px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .video-facade .play-btn::after {
+            content: "";
+            width: 0;
+            height: 0;
+            border-left: 20px solid #1e293b;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 4px;
+        }
+
+        .video-facade:hover .play-btn {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: white;
+        }
+
+        .video-facade iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-published {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-preparing {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        /* ========================================
+           Design A: Bento Grid
+           ======================================== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bento-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: #3b82f6;
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        .bento-card.featured {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+        }
+
+        @media (max-width: 768px) {
+            .bento-card.featured {
+                grid-column: span 1;
+            }
+        }
+
+        .bento-card .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        /* ========================================
+           Design B: Zig-Zag Story
+           ======================================== */
+        .zigzag-section {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            padding: 60px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .zigzag-section:last-child {
+            border-bottom: none;
+        }
+
+        .zigzag-section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .zigzag-content {
+            flex: 1;
+        }
+
+        .zigzag-video {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .zigzag-video .video-facade {
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 900px) {
+            .zigzag-section,
+            .zigzag-section:nth-child(even) {
+                flex-direction: column;
+            }
+
+            .zigzag-video {
+                max-width: 100%;
+            }
+        }
+
+        /* ========================================
+           Design C: Compact Accordion
+           ======================================== */
+        .accordion-list {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 16px;
+        }
+
+        .accordion-header:hover {
+            background: #f8fafc;
+        }
+
+        .accordion-header .ext-icon {
+            font-size: 2em;
+            margin-bottom: 0;
+        }
+
+        .accordion-header-content {
+            flex: 1;
+        }
+
+        .accordion-header-content h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .accordion-header-content p {
+            font-size: 0.9em;
+            color: #64748b;
+        }
+
+        .accordion-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-toggle::after {
+            content: "▼";
+            font-size: 0.8em;
+            color: #64748b;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-toggle {
+            background: #3b82f6;
+        }
+
+        .accordion-item.active .accordion-toggle::after {
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: #f8fafc;
+        }
+
+        .accordion-item.active .accordion-body {
+            max-height: 800px;
+        }
+
+        .accordion-body-inner {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .accordion-body-inner {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .accordion-quick-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .accordion-quick-btns .btn {
+            padding: 8px 16px;
+            font-size: 0.85em;
+        }
+
+        /* ========================================
+           Design D: Hero + Cards
+           ======================================== */
+        .hero-section {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 40px;
+            color: white;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                padding: 32px;
+            }
+        }
+
+        .hero-content h2 {
+            font-size: 2em;
+            margin-bottom: 16px;
+        }
+
+        .hero-content h2 .ext-icon {
+            font-size: 1em;
+            margin-right: 12px;
+        }
+
+        .hero-content p {
+            color: #94a3b8;
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .hero-video .video-facade {
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .simple-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .simple-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            border-color: #3b82f6;
+        }
+
+        .simple-card .ext-icon {
+            font-size: 2em;
+        }
+
+        .simple-card .ext-name {
+            font-size: 1.1em;
+        }
+
+        /* ========================================
+           Design E: Store Style
+           ======================================== */
+        .store-header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .store-search {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .store-search:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .store-filter-btn {
+            padding: 14px 24px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .store-filter-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .store-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .store-card:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+
+        .store-card-banner {
+            height: 120px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .store-card-banner .ext-icon {
+            font-size: 3em;
+            margin: 0;
+            filter: grayscale(1) brightness(10);
+        }
+
+        .store-card-body {
+            padding: 20px;
+        }
+
+        .store-card-body .ext-name {
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+        }
+
+        .store-card-body .ext-description {
+            font-size: 0.9em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .store-card-footer {
+            padding: 16px 20px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .store-card-footer .btn {
+            padding: 10px 20px;
+            font-size: 0.9em;
+        }
+
+        .store-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #f59e0b;
+            font-size: 0.9em;
+        }
+
+        /* ========================================
+           Info Note
+           ======================================== */
+        .info-note {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-top: 40px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .info-note-icon {
+            font-size: 1.5em;
+        }
+
+        .info-note-content h4 {
+            font-size: 1em;
+            color: #92400e;
+            margin-bottom: 4px;
+        }
+
+        .info-note-content p {
+            font-size: 0.9em;
+            color: #78350f;
+        }
+    </style>
+</head>
+<body>
+    <!-- Design Switcher -->
+    <div class="design-switcher">
+        <label>デザイン案:</label>
+        <button class="design-btn active" data-design="a">A: Bento Grid</button>
+        <button class="design-btn" data-design="b">B: Zig-Zag</button>
+        <button class="design-btn" data-design="c">C: Accordion</button>
+        <button class="design-btn" data-design="d">D: Hero+Cards</button>
+        <button class="design-btn" data-design="e">E: Store風</button>
+    </div>
+
+    <div class="main-container">
+        <!-- ========================================
+             Design A: Bento Grid
+             ======================================== -->
+        <div class="design-section active" id="design-a">
+            <div class="page-header">
+                <span class="design-label">案A: Bento Grid スタイル</span>
+                <h1>便利な拡張機能</h1>
+                <p>eBay輸出・リサーチを効率化するChrome拡張機能</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- しらべる君（Featured） -->
+                <div class="bento-card featured">
+                    <span class="ext-icon">🔍</span>
+                    <h3 class="ext-name">しらべる君 <span class="status-badge status-preparing">準備中</span></h3>
+                    <p class="ext-description">
+                        メルカリ⇔eBay双方向リサーチツール。価格分析、テラピーク連携、AI翻訳機能で輸出入ビジネスの仕入れ判断を強力サポート。
+                    </p>
+                    <ul class="ext-features">
+                        <li>メルカリ→eBay Sold Listings検索</li>
+                        <li>価格統計の自動計算（平均・中央値・最安値）</li>
+                        <li>テラピーク連携で販売データ分析</li>
+                        <li>AI翻訳でキーワード自動生成</li>
+                    </ul>
+                    <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                        <div class="play-btn"></div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-secondary">詳細を見る</a>
+                    </div>
+                </div>
+
+                <!-- とりこみ君 -->
+                <div class="bento-card">
+                    <span class="ext-icon">🔧</span>
+                    <h3 class="ext-name">とりこみ君 <span class="status-badge status-published">公開中</span></h3>
+                    <p class="ext-description">
+                        商品情報を自動で取得してスプレッドシートに転送できる拡張機能です。
+                    </p>
+                    <div class="btn-group">
+                        <a href="https://chromewebstore.google.com/detail/pibfligoaakdjohpiapdgnldpkoicepb" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-secondary">詳細を見る</a>
+                    </div>
+                </div>
+
+                <!-- みちゃった君 -->
+                <div class="bento-card">
+                    <span class="ext-icon">👀</span>
+                    <h3 class="ext-name">みちゃった君 <span class="status-badge status-published">公開中</span></h3>
+                    <p class="ext-description">
+                        フリマサイトで出品者の売上・在庫状況をチェックできる拡張機能です。
+                    </p>
+                    <div class="btn-group">
+                        <a href="https://chromewebstore.google.com/detail/bpeiffjpdepilodkgahpnohpddpppphj" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-secondary">詳細を見る</a>
+                    </div>
+                </div>
+
+                <!-- ぶんせき君 -->
+                <div class="bento-card">
+                    <span class="ext-icon">📊</span>
+                    <h3 class="ext-name">ぶんせき君 <span class="status-badge status-pending">申請中</span></h3>
+                    <p class="ext-description">
+                        eBayの販売データを分析して、売れ筋商品を見つけられる拡張機能です。
+                    </p>
+                    <div class="btn-group">
+                        <a href="https://chromewebstore.google.com/detail/hgddhodfmildocppbnidapdhcccbkidn" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-secondary">詳細を見る</a>
+                    </div>
+                </div>
+
+                <!-- もじもじ君 -->
+                <div class="bento-card">
+                    <span class="ext-icon">🎬</span>
+                    <h3 class="ext-name">もじもじ君 <span class="status-badge status-published">公開中</span></h3>
+                    <p class="ext-description">
+                        YouTube・Vimeo動画を文字起こしして、AIで記事を自動生成できる拡張機能です。
+                    </p>
+                    <div class="btn-group">
+                        <a href="https://chromewebstore.google.com/detail/hljmojokjejdbcfmccbdjpcegmhlnhgk" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-secondary">詳細を見る</a>
+                    </div>
+                </div>
+
+                <!-- ぷろん君 -->
+                <div class="bento-card">
+                    <span class="ext-icon">📝</span>
+                    <h3 class="ext-name">ぷろん君 <span class="status-badge status-published">公開中</span></h3>
+                    <p class="ext-description">
+                        プロンプトを保存・管理できるフローティングツールです。どのサイトでも使えます。
+                    </p>
+                    <div class="btn-group">
+                        <a href="https://chromewebstore.google.com/detail/bkpplkbibhkkicfcgpmpgehmgcgedmcd" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-secondary">詳細を見る</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             Design B: Zig-Zag Story
+             ======================================== -->
+        <div class="design-section" id="design-b">
+            <div class="page-header">
+                <span class="design-label">案B: Zig-Zag Story スタイル</span>
+                <h1>便利な拡張機能</h1>
+                <p>eBay輸出・リサーチを効率化するChrome拡張機能</p>
+            </div>
+
+            <!-- しらべる君 -->
+            <div class="zigzag-section">
+                <div class="zigzag-content">
+                    <span class="ext-icon">🔍</span>
+                    <h3 class="ext-name">しらべる君 <span class="status-badge status-preparing">準備中</span></h3>
+                    <p class="ext-description">
+                        メルカリ⇔eBay双方向リサーチツール。価格分析、テラピーク連携、AI翻訳機能で輸出入ビジネスの仕入れ判断を強力サポート。
+                    </p>
+                    <ul class="ext-features">
+                        <li>メルカリ→eBay Sold Listings検索</li>
+                        <li>価格統計の自動計算</li>
+                        <li>テラピーク連携</li>
+                        <li>AI翻訳でキーワード生成</li>
+                    </ul>
+                    <div class="btn-group" style="display: flex; gap: 12px; margin-top: 20px;">
+                        <a href="#" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-outline">詳細を見る</a>
+                    </div>
+                </div>
+                <div class="zigzag-video">
+                    <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                        <div class="play-btn"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- とりこみ君 -->
+            <div class="zigzag-section">
+                <div class="zigzag-content">
+                    <span class="ext-icon">🔧</span>
+                    <h3 class="ext-name">とりこみ君 <span class="status-badge status-published">公開中</span></h3>
+                    <p class="ext-description">
+                        商品情報を自動で取得してスプレッドシートに転送できる拡張機能です。ワンクリックでシートにエクスポート。
+                    </p>
+                    <ul class="ext-features">
+                        <li>商品情報を自動取得</li>
+                        <li>スプレッドシートに直接転送</li>
+                        <li>一括シートと連携</li>
+                    </ul>
+                    <div class="btn-group" style="display: flex; gap: 12px; margin-top: 20px;">
+                        <a href="https://chromewebstore.google.com/detail/pibfligoaakdjohpiapdgnldpkoicepb" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-outline">詳細を見る</a>
+                    </div>
+                </div>
+                <div class="zigzag-video">
+                    <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                        <div class="play-btn"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- みちゃった君 -->
+            <div class="zigzag-section">
+                <div class="zigzag-content">
+                    <span class="ext-icon">👀</span>
+                    <h3 class="ext-name">みちゃった君 <span class="status-badge status-published">公開中</span></h3>
+                    <p class="ext-description">
+                        フリマサイトで出品者の売上・在庫状況をチェックできる拡張機能です。ライバルセラーの動向把握に。
+                    </p>
+                    <ul class="ext-features">
+                        <li>出品者の売上分析</li>
+                        <li>在庫状況チェック</li>
+                        <li>販売履歴の確認</li>
+                    </ul>
+                    <div class="btn-group" style="display: flex; gap: 12px; margin-top: 20px;">
+                        <a href="https://chromewebstore.google.com/detail/bpeiffjpdepilodkgahpnohpddpppphj" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn btn-outline">詳細を見る</a>
+                    </div>
+                </div>
+                <div class="zigzag-video">
+                    <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                        <div class="play-btn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             Design C: Compact Accordion
+             ======================================== -->
+        <div class="design-section" id="design-c">
+            <div class="page-header">
+                <span class="design-label">案C: Compact Accordion スタイル</span>
+                <h1>便利な拡張機能</h1>
+                <p>eBay輸出・リサーチを効率化するChrome拡張機能</p>
+            </div>
+
+            <div class="accordion-list">
+                <!-- しらべる君 -->
+                <div class="accordion-item active">
+                    <div class="accordion-header">
+                        <span class="ext-icon">🔍</span>
+                        <div class="accordion-header-content">
+                            <h3>しらべる君 <span class="status-badge status-preparing">準備中</span></h3>
+                            <p>メルカリ⇔eBay双方向リサーチツール</p>
+                        </div>
+                        <div class="accordion-quick-btns">
+                            <a href="#" class="btn btn-primary">Chromeに追加</a>
+                        </div>
+                        <div class="accordion-toggle"></div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            <div>
+                                <p class="ext-description">
+                                    価格分析、テラピーク連携、AI翻訳機能で輸出入ビジネスの仕入れ判断を強力サポート。
+                                </p>
+                                <ul class="ext-features">
+                                    <li>メルカリ→eBay Sold Listings検索</li>
+                                    <li>価格統計の自動計算</li>
+                                    <li>テラピーク連携</li>
+                                    <li>AI翻訳でキーワード生成</li>
+                                </ul>
+                                <a href="#" class="btn btn-outline" style="margin-top: 16px;">詳細を見る</a>
+                            </div>
+                            <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                                <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                                <div class="play-btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- とりこみ君 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span class="ext-icon">🔧</span>
+                        <div class="accordion-header-content">
+                            <h3>とりこみ君 <span class="status-badge status-published">公開中</span></h3>
+                            <p>商品情報を自動取得してスプレッドシートに転送</p>
+                        </div>
+                        <div class="accordion-quick-btns">
+                            <a href="https://chromewebstore.google.com/detail/pibfligoaakdjohpiapdgnldpkoicepb" class="btn btn-primary">Chromeに追加</a>
+                        </div>
+                        <div class="accordion-toggle"></div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            <div>
+                                <p class="ext-description">ワンクリックでシートにエクスポート。一括シートと連携して効率的な商品管理。</p>
+                                <a href="#" class="btn btn-outline" style="margin-top: 16px;">詳細を見る</a>
+                            </div>
+                            <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                                <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                                <div class="play-btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- みちゃった君 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span class="ext-icon">👀</span>
+                        <div class="accordion-header-content">
+                            <h3>みちゃった君 <span class="status-badge status-published">公開中</span></h3>
+                            <p>フリマサイトで出品者の売上・在庫をチェック</p>
+                        </div>
+                        <div class="accordion-quick-btns">
+                            <a href="https://chromewebstore.google.com/detail/bpeiffjpdepilodkgahpnohpddpppphj" class="btn btn-primary">Chromeに追加</a>
+                        </div>
+                        <div class="accordion-toggle"></div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            <div>
+                                <p class="ext-description">ライバルセラーの動向把握に最適。販売履歴も確認できます。</p>
+                                <a href="#" class="btn btn-outline" style="margin-top: 16px;">詳細を見る</a>
+                            </div>
+                            <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                                <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                                <div class="play-btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ぶんせき君 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span class="ext-icon">📊</span>
+                        <div class="accordion-header-content">
+                            <h3>ぶんせき君 <span class="status-badge status-pending">申請中</span></h3>
+                            <p>eBayの販売データを分析して売れ筋発見</p>
+                        </div>
+                        <div class="accordion-quick-btns">
+                            <a href="https://chromewebstore.google.com/detail/hgddhodfmildocppbnidapdhcccbkidn" class="btn btn-primary">Chromeに追加</a>
+                        </div>
+                        <div class="accordion-toggle"></div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            <div>
+                                <p class="ext-description">カテゴリ別の販売分析で、需要のある商品を効率的に発見。</p>
+                                <a href="#" class="btn btn-outline" style="margin-top: 16px;">詳細を見る</a>
+                            </div>
+                            <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                                <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                                <div class="play-btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- もじもじ君 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span class="ext-icon">🎬</span>
+                        <div class="accordion-header-content">
+                            <h3>もじもじ君 <span class="status-badge status-published">公開中</span></h3>
+                            <p>動画を文字起こしして記事を自動生成</p>
+                        </div>
+                        <div class="accordion-quick-btns">
+                            <a href="https://chromewebstore.google.com/detail/hljmojokjejdbcfmccbdjpcegmhlnhgk" class="btn btn-primary">Chromeに追加</a>
+                        </div>
+                        <div class="accordion-toggle"></div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            <div>
+                                <p class="ext-description">YouTube・Vimeo対応。OpenAI、Claude、Geminiで記事生成。</p>
+                                <a href="#" class="btn btn-outline" style="margin-top: 16px;">詳細を見る</a>
+                            </div>
+                            <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                                <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                                <div class="play-btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ぷろん君 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span class="ext-icon">📝</span>
+                        <div class="accordion-header-content">
+                            <h3>ぷろん君 <span class="status-badge status-published">公開中</span></h3>
+                            <p>プロンプトを保存・管理できるフローティングツール</p>
+                        </div>
+                        <div class="accordion-quick-btns">
+                            <a href="https://chromewebstore.google.com/detail/bkpplkbibhkkicfcgpmpgehmgcgedmcd" class="btn btn-primary">Chromeに追加</a>
+                        </div>
+                        <div class="accordion-toggle"></div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            <div>
+                                <p class="ext-description">変数入力やプリセット保存にも対応。どのサイトでも使えます。</p>
+                                <a href="#" class="btn btn-outline" style="margin-top: 16px;">詳細を見る</a>
+                            </div>
+                            <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                                <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                                <div class="play-btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             Design D: Hero + Cards
+             ======================================== -->
+        <div class="design-section" id="design-d">
+            <div class="page-header">
+                <span class="design-label">案D: Hero + Cards スタイル</span>
+                <h1>便利な拡張機能</h1>
+                <p>eBay輸出・リサーチを効率化するChrome拡張機能</p>
+            </div>
+
+            <!-- Hero: しらべる君 -->
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2><span class="ext-icon">🔍</span>しらべる君</h2>
+                    <p>
+                        メルカリ⇔eBay双方向リサーチツール。価格分析、テラピーク連携、AI翻訳機能で輸出入ビジネスの仕入れ判断を強力サポートします。
+                    </p>
+                    <ul class="ext-features" style="color: #94a3b8;">
+                        <li style="color: #94a3b8;">メルカリ→eBay Sold Listings検索</li>
+                        <li style="color: #94a3b8;">価格統計の自動計算</li>
+                        <li style="color: #94a3b8;">テラピーク連携</li>
+                        <li style="color: #94a3b8;">AI翻訳でキーワード生成</li>
+                    </ul>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <a href="#" class="btn btn-primary">Chromeに追加</a>
+                        <a href="#" class="btn" style="background: rgba(255,255,255,0.1); color: white;">詳細を見る</a>
+                    </div>
+                </div>
+                <div class="hero-video">
+                    <div class="video-facade" onclick="loadVideo(this, 'dQw4w9WgXcQ')">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="動画サムネイル">
+                        <div class="play-btn"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Cards -->
+            <h3 style="margin-bottom: 20px; color: #64748b; font-weight: 500;">その他の拡張機能</h3>
+            <div class="cards-grid">
+                <div class="simple-card">
+                    <span class="ext-icon">🔧</span>
+                    <h3 class="ext-name">とりこみ君</h3>
+                    <p class="ext-description">商品情報を自動取得してスプレッドシートに転送</p>
+                    <a href="https://chromewebstore.google.com/detail/pibfligoaakdjohpiapdgnldpkoicepb" class="btn btn-primary" style="margin-top: 12px; width: 100%;">Chromeに追加</a>
+                </div>
+
+                <div class="simple-card">
+                    <span class="ext-icon">👀</span>
+                    <h3 class="ext-name">みちゃった君</h3>
+                    <p class="ext-description">フリマサイトで出品者の売上・在庫をチェック</p>
+                    <a href="https://chromewebstore.google.com/detail/bpeiffjpdepilodkgahpnohpddpppphj" class="btn btn-primary" style="margin-top: 12px; width: 100%;">Chromeに追加</a>
+                </div>
+
+                <div class="simple-card">
+                    <span class="ext-icon">📊</span>
+                    <h3 class="ext-name">ぶんせき君</h3>
+                    <p class="ext-description">eBayの販売データを分析して売れ筋発見</p>
+                    <a href="https://chromewebstore.google.com/detail/hgddhodfmildocppbnidapdhcccbkidn" class="btn btn-primary" style="margin-top: 12px; width: 100%;">Chromeに追加</a>
+                </div>
+
+                <div class="simple-card">
+                    <span class="ext-icon">🎬</span>
+                    <h3 class="ext-name">もじもじ君</h3>
+                    <p class="ext-description">動画を文字起こしして記事を自動生成</p>
+                    <a href="https://chromewebstore.google.com/detail/hljmojokjejdbcfmccbdjpcegmhlnhgk" class="btn btn-primary" style="margin-top: 12px; width: 100%;">Chromeに追加</a>
+                </div>
+
+                <div class="simple-card">
+                    <span class="ext-icon">📝</span>
+                    <h3 class="ext-name">ぷろん君</h3>
+                    <p class="ext-description">プロンプトを保存・管理できるフローティングツール</p>
+                    <a href="https://chromewebstore.google.com/detail/bkpplkbibhkkicfcgpmpgehmgcgedmcd" class="btn btn-primary" style="margin-top: 12px; width: 100%;">Chromeに追加</a>
+                </div>
+
+                <div class="simple-card">
+                    <span class="ext-icon">🤖</span>
+                    <h3 class="ext-name">Claude（公式）</h3>
+                    <p class="ext-description">AIアシスタントをブラウザから使える公式拡張</p>
+                    <a href="https://chromewebstore.google.com/detail/fcoeoabgfenejglbffodgkkbkcdhcgfn" class="btn btn-primary" style="margin-top: 12px; width: 100%;">Chromeに追加</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             Design E: Store Style
+             ======================================== -->
+        <div class="design-section" id="design-e">
+            <div class="page-header">
+                <span class="design-label">案E: Store風 スタイル</span>
+                <h1>便利な拡張機能</h1>
+                <p>eBay輸出・リサーチを効率化するChrome拡張機能</p>
+            </div>
+
+            <div class="store-header">
+                <input type="text" class="store-search" placeholder="拡張機能を検索...">
+                <button class="store-filter-btn">すべて</button>
+                <button class="store-filter-btn">リサーチ</button>
+                <button class="store-filter-btn">AI</button>
+            </div>
+
+            <div class="store-grid">
+                <!-- しらべる君 -->
+                <div class="store-card">
+                    <div class="store-card-banner" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                        <span class="ext-icon">🔍</span>
+                    </div>
+                    <div class="store-card-body">
+                        <h3 class="ext-name">しらべる君 <span class="status-badge status-preparing">準備中</span></h3>
+                        <p class="ext-description">メルカリ⇔eBay双方向リサーチツール。価格分析、テラピーク連携、AI翻訳機能で仕入れ判断をサポート。</p>
+                    </div>
+                    <div class="store-card-footer">
+                        <div class="store-rating">★★★★★ <span style="color: #64748b;">5.0</span></div>
+                        <a href="#" class="btn btn-primary">追加</a>
+                    </div>
+                </div>
+
+                <!-- とりこみ君 -->
+                <div class="store-card">
+                    <div class="store-card-banner" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <span class="ext-icon">🔧</span>
+                    </div>
+                    <div class="store-card-body">
+                        <h3 class="ext-name">とりこみ君 <span class="status-badge status-published">公開中</span></h3>
+                        <p class="ext-description">商品情報を自動で取得してスプレッドシートに転送できる拡張機能です。</p>
+                    </div>
+                    <div class="store-card-footer">
+                        <div class="store-rating">★★★★★ <span style="color: #64748b;">5.0</span></div>
+                        <a href="https://chromewebstore.google.com/detail/pibfligoaakdjohpiapdgnldpkoicepb" class="btn btn-primary">追加</a>
+                    </div>
+                </div>
+
+                <!-- みちゃった君 -->
+                <div class="store-card">
+                    <div class="store-card-banner" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <span class="ext-icon">👀</span>
+                    </div>
+                    <div class="store-card-body">
+                        <h3 class="ext-name">みちゃった君 <span class="status-badge status-published">公開中</span></h3>
+                        <p class="ext-description">フリマサイトで出品者の売上・在庫状況をチェックできる拡張機能です。</p>
+                    </div>
+                    <div class="store-card-footer">
+                        <div class="store-rating">★★★★★ <span style="color: #64748b;">5.0</span></div>
+                        <a href="https://chromewebstore.google.com/detail/bpeiffjpdepilodkgahpnohpddpppphj" class="btn btn-primary">追加</a>
+                    </div>
+                </div>
+
+                <!-- ぶんせき君 -->
+                <div class="store-card">
+                    <div class="store-card-banner" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <span class="ext-icon">📊</span>
+                    </div>
+                    <div class="store-card-body">
+                        <h3 class="ext-name">ぶんせき君 <span class="status-badge status-pending">申請中</span></h3>
+                        <p class="ext-description">eBayの販売データを分析して、売れ筋商品を見つけられる拡張機能です。</p>
+                    </div>
+                    <div class="store-card-footer">
+                        <div class="store-rating">★★★★★ <span style="color: #64748b;">5.0</span></div>
+                        <a href="https://chromewebstore.google.com/detail/hgddhodfmildocppbnidapdhcccbkidn" class="btn btn-primary">追加</a>
+                    </div>
+                </div>
+
+                <!-- もじもじ君 -->
+                <div class="store-card">
+                    <div class="store-card-banner" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <span class="ext-icon">🎬</span>
+                    </div>
+                    <div class="store-card-body">
+                        <h3 class="ext-name">もじもじ君 <span class="status-badge status-published">公開中</span></h3>
+                        <p class="ext-description">YouTube・Vimeo動画を文字起こしして、AIで記事を自動生成できます。</p>
+                    </div>
+                    <div class="store-card-footer">
+                        <div class="store-rating">★★★★★ <span style="color: #64748b;">5.0</span></div>
+                        <a href="https://chromewebstore.google.com/detail/hljmojokjejdbcfmccbdjpcegmhlnhgk" class="btn btn-primary">追加</a>
+                    </div>
+                </div>
+
+                <!-- ぷろん君 -->
+                <div class="store-card">
+                    <div class="store-card-banner" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <span class="ext-icon">📝</span>
+                    </div>
+                    <div class="store-card-body">
+                        <h3 class="ext-name">ぷろん君 <span class="status-badge status-published">公開中</span></h3>
+                        <p class="ext-description">プロンプトを保存・管理できるフローティングツール。どのサイトでも使えます。</p>
+                    </div>
+                    <div class="store-card-footer">
+                        <div class="store-rating">★★★★★ <span style="color: #64748b;">5.0</span></div>
+                        <a href="https://chromewebstore.google.com/detail/bkpplkbibhkkicfcgpmpgehmgcgedmcd" class="btn btn-primary">追加</a>
+                    </div>
+                </div>
+
+                <!-- Claude公式 -->
+                <div class="store-card">
+                    <div class="store-card-banner" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+                        <span class="ext-icon">🤖</span>
+                    </div>
+                    <div class="store-card-body">
+                        <h3 class="ext-name">Claude（公式）<span class="status-badge status-published">公開中</span></h3>
+                        <p class="ext-description">AIアシスタントClaudeをブラウザから使える公式拡張機能です。</p>
+                    </div>
+                    <div class="store-card-footer">
+                        <div class="store-rating">★★★★☆ <span style="color: #64748b;">4.5</span></div>
+                        <a href="https://chromewebstore.google.com/detail/fcoeoabgfenejglbffodgkkbkcdhcgfn" class="btn btn-primary">追加</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Note -->
+        <div class="info-note">
+            <span class="info-note-icon">💡</span>
+            <div class="info-note-content">
+                <h4>デザイン案について</h4>
+                <p>5つのデザイン案をご確認ください。上部のボタンで切り替えられます。気に入った案をお選びください。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Design Switcher
+        document.querySelectorAll('.design-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const design = this.dataset.design;
+
+                // Update buttons
+                document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Update sections
+                document.querySelectorAll('.design-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById('design-' + design).classList.add('active');
+            });
+        });
+
+        // Accordion
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', function(e) {
+                if (e.target.closest('.accordion-quick-btns')) return;
+
+                const item = this.closest('.accordion-item');
+                const isActive = item.classList.contains('active');
+
+                // Close all
+                document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+
+                // Toggle current
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Video Facade Pattern
+        function loadVideo(element, videoId) {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+
+            element.innerHTML = '';
+            element.appendChild(iframe);
+            element.style.cursor = 'default';
+            element.onclick = null;
+        }
+    </script>
+</body>
+</html>
