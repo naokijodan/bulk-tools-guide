@@ -223,15 +223,13 @@
 
         .accordion-body-inner {
             padding: 24px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 24px;
         }
 
-        @media (max-width: 768px) {
-            .accordion-body-inner {
-                grid-template-columns: 1fr;
-            }
+        .accordion-body-inner .video-container {
+            max-width: 640px;
         }
 
         /* ========================================
@@ -475,10 +473,6 @@
                 display: flex;
                 width: 100%;
                 margin-top: 12px;
-            }
-
-            .accordion-body-inner {
-                padding: 16px;
             }
 
             .btn {
