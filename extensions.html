@@ -67,6 +67,139 @@
         }
 
         /* ========================================
+           News Section
+           ======================================== */
+        .news-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        .news-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .news-section-header h2 {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .news-icon {
+            font-size: 1.4em;
+        }
+
+        .news-list {
+            list-style: none;
+        }
+
+        .news-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .news-date {
+            font-size: 0.8em;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .news-content {
+            flex: 1;
+        }
+
+        .news-content strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .news-content p {
+            color: #475569;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+        .news-tag {
+            display: inline-block;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .news-tag-update {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .news-tag-new {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .news-tag-fix {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* ========================================
+           Feedback Section
+           ======================================== */
+        .feedback-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #bae6fd;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .feedback-section h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #0c4a6e;
+            margin-bottom: 8px;
+        }
+
+        .feedback-section p {
+            color: #0369a1;
+            font-size: 0.9em;
+            margin-bottom: 16px;
+        }
+
+        .btn-feedback {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-feedback:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        /* ========================================
            Accordion List
            ======================================== */
         .accordion-list {
@@ -491,6 +624,47 @@
             <p>eBay輸出・リサーチを効率化するChrome拡張機能</p>
         </div>
 
+        <!-- News Section -->
+        <div class="news-section">
+            <div class="news-section-header">
+                <span class="news-icon">📢</span>
+                <h2>新着ニュース・アップデート</h2>
+            </div>
+            <ul class="news-list">
+                <li class="news-item">
+                    <span class="news-date">2026/01/16</span>
+                    <div class="news-content">
+                        <strong>フィードバックフォームを追加</strong>
+                        <span class="news-tag news-tag-new">NEW</span>
+                        <p>機能リクエストやバグ報告ができるようになりました</p>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <span class="news-date">2026/01/14</span>
+                    <div class="news-content">
+                        <strong>拡張機能まとめページを公開</strong>
+                        <span class="news-tag news-tag-new">NEW</span>
+                        <p>7つの拡張機能を一覧で確認できるページをオープン</p>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <span class="news-date">2026/01/13</span>
+                    <div class="news-content">
+                        <strong>ぶんせき君 v4.5.7 アップデート</strong>
+                        <span class="news-tag news-tag-update">UPDATE</span>
+                        <p>時計3軸分析、ポケモンカード分析機能を追加</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="feedback-section">
+            <h3>ご意見・ご要望をお聞かせください</h3>
+            <p>新しい拡張機能のアイデア、改善提案、バグ報告など、お気軽にどうぞ</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhsa_rx3HXRSkSgkp0IVLpcVSqjCa1ksYy2_TT_B6tuJMO2A/viewform" target="_blank" class="btn btn-feedback">フィードバックを送る</a>
+        </div>
+
         <!-- Accordion List -->
         <div class="accordion-list">
 
@@ -778,7 +952,7 @@
         <!-- Footer -->
         <div class="page-footer">
             <p><a href="index.html">← 一括シート V3 総合ガイドに戻る</a></p>
-            <p style="margin-top: 8px;">最終更新: 2025年1月</p>
+            <p style="margin-top: 8px;">最終更新: 2026年1月</p>
         </div>
     </div>
 
