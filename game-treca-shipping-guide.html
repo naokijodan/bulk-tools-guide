@@ -639,35 +639,100 @@
             <div class="step">
                 <div class="step-number">1</div>
                 <div class="step-content">
-                    <h4>送料設定</h4>
-                    <p>作業シートの送料設定で、<strong>eパケットライトの送料</strong>を基準として設定します。</p>
+                    <h4>送料計算方法の変更</h4>
+                    <p>送料計算を<strong>固定金額（セル: AJ5）</strong>に設定します。</p>
                 </div>
             </div>
 
             <div class="step">
                 <div class="step-number">2</div>
                 <div class="step-content">
-                    <h4>関税率の調整</h4>
-                    <p>送料差額分を関税として徴収するため、関税額を調整します。</p>
-                    <div class="code-block">
-                        <span class="comment">// 追加関税額の計算</span><br>
-                        <span class="highlight">追加関税額</span> = Cpass送料 - eパケット送料<br><br>
-                        <span class="comment">// 例：100g商品の場合</span><br>
-                        追加関税額 = 1,227円 - 880円 = <span class="highlight">347円</span>
-                    </div>
+                    <h4>低価格配送方法の設定</h4>
+                    <p>低価格配送方法を<strong>Cpass Economy（セル: AJ2）</strong>に設定します。</p>
                 </div>
             </div>
 
             <div class="step">
                 <div class="step-number">3</div>
                 <div class="step-content">
-                    <h4>シッピングポリシーの設定</h4>
-                    <p>地域別に適切なポリシーを設定します：</p>
-                    <ul>
-                        <li><strong>ヨーロッパ向け</strong>: 通常のeパケットライト用ポリシー</li>
-                        <li><strong>アメリカ向け</strong>: 差額分を関税として設定したポリシー</li>
-                    </ul>
+                    <h4>式の再出力</h4>
+                    <p>設定変更後、<strong>式の再出力</strong>を行います。</p>
                 </div>
+            </div>
+
+            <h3>価格計算ツールでの設定</h3>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>設定を保存</h4>
+                    <p>価格計算ツールの設定を<strong>保存</strong>します。</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h4>EU送料差額の設定</h4>
+                    <p>送料差額を<strong>EU送料差額のセル（AC2）</strong>に入力します。</p>
+                    <div class="code-block">
+                        <span class="comment">// 送料差額の計算</span><br>
+                        <span class="highlight">差額</span> = Cpass送料 - eパケット送料<br><br>
+                        <span class="comment">// 例：100g商品の場合</span><br>
+                        差額 = 1,227円 - 880円 = <span class="highlight">347円</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h4>送料の設定</h4>
+                    <p>計算に利用した<strong>EU宛eパケットライトの送料</strong>を<strong>送料のセル（J1）</strong>に入力します。</p>
+                    <div class="code-block">
+                        <span class="comment">// 例：100g商品の場合</span><br>
+                        送料（J1） = <span class="highlight">880円</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">7</div>
+                <div class="step-content">
+                    <h4>利益率・広告費率の調整</h4>
+                    <p>最後に<strong>広告費率</strong>や<strong>利益率（または利益額）</strong>を調整して完了です。</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>📋 設定セルまとめ</h3>
+                <table>
+                    <tr>
+                        <th>セル</th>
+                        <th>設定項目</th>
+                        <th>設定値（例：100g）</th>
+                    </tr>
+                    <tr>
+                        <td><strong>AJ5</strong></td>
+                        <td>送料計算方法</td>
+                        <td>固定金額</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AJ2</strong></td>
+                        <td>低価格配送方法</td>
+                        <td>Cpass Economy</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AC2</strong></td>
+                        <td>EU送料差額</td>
+                        <td>347円</td>
+                    </tr>
+                    <tr>
+                        <td><strong>J1</strong></td>
+                        <td>送料（eパケット）</td>
+                        <td>880円</td>
+                    </tr>
+                </table>
             </div>
         </div>
 
