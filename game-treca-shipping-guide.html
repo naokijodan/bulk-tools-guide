@@ -419,6 +419,61 @@
             text-decoration: underline;
         }
 
+        /* 新機能お知らせボックス */
+        .update-notice {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px solid #4caf50;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 50px rgba(76, 175, 80, 0.3);
+        }
+
+        .update-notice h2 {
+            color: #2e7d32;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .update-notice p {
+            color: #1b5e20;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .update-notice .highlight-text {
+            background: #fff;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .update-notice .setup-image {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin: 20px 0;
+            border: 2px solid #a5d6a7;
+        }
+
+        .update-notice .note {
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .update-notice .note p {
+            margin: 0;
+            font-size: 0.95em;
+            color: #555;
+        }
+
         /* レスポンシブ */
         @media (max-width: 768px) {
             .header h1 {
@@ -451,6 +506,20 @@
             <h1>ゲーム・トレカ出品<br>送料差額調整ガイド</h1>
             <p>軽量商品の販売価格を最安値に設定する特殊な方法</p>
             <a href="index.html" class="back-link">← 総合ガイドに戻る</a>
+        </div>
+
+        <!-- 新機能お知らせ -->
+        <div class="update-notice">
+            <h2>🎉 V3.87 新機能：初期設定で自動適用できるようになりました！</h2>
+            <p>この記事で解説している設定は、<span class="highlight-text">V3の初期設定</span>から「ゲーム・トレカ プリセット」を選択することで<strong>自動適用</strong>できるようになりました。</p>
+
+            <img src="images/game-treca-preset-setup.png" alt="ゲーム・トレカ プリセット設定画面" class="setup-image">
+
+            <p><strong>新規導入の方：</strong>初期設定時に「ゲームソフト」または「トレーディングカード」を選択し、想定重量を設定するだけでOKです。</p>
+
+            <div class="note">
+                <p><strong>既存ユーザーの方、または詳細な設定内容を理解したい方</strong>は、引き続きこの記事をご参照ください。手動での設定方法や送料計算の仕組みを詳しく解説しています。</p>
+            </div>
         </div>
 
         <!-- 重要な警告 -->
