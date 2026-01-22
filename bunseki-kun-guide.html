@@ -296,6 +296,85 @@
         </div>
 
         <div class="section">
+            <h2>CSV出力機能（v4.5.9〜）</h2>
+            <p>市場データをCSV形式でエクスポートして、Excelやスプレッドシートで詳細分析できます。</p>
+
+            <h3>出力項目</h3>
+            <div class="highlight-box info">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <tr style="background: rgba(23, 162, 184, 0.1);">
+                        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #17a2b8;">カラム</th>
+                        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #17a2b8;">説明</th>
+                    </tr>
+                    <tr><td style="padding: 8px;">タイトル</td><td style="padding: 8px;">商品タイトル</td></tr>
+                    <tr><td style="padding: 8px;">価格</td><td style="padding: 8px;">販売価格（USD）</td></tr>
+                    <tr><td style="padding: 8px;">ブランド</td><td style="padding: 8px;">自動判定されたブランド名</td></tr>
+                    <tr><td style="padding: 8px;">カテゴリ</td><td style="padding: 8px;">自動判定されたカテゴリ</td></tr>
+                    <tr><td style="padding: 8px;"><strong>販売数</strong></td><td style="padding: 8px;">Total sold（何個売れたか）</td></tr>
+                    <tr><td style="padding: 8px;"><strong>販売日</strong></td><td style="padding: 8px;">Date last sold（最終販売日）</td></tr>
+                    <tr><td style="padding: 8px;">取得日時</td><td style="padding: 8px;">データ取得日時</td></tr>
+                </table>
+            </div>
+
+            <h3>活用例</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>季節性分析</h4>
+                    <ul>
+                        <li>販売日から売れる時期を把握</li>
+                        <li>補充タイミングの判断材料に</li>
+                        <li>「このブランドは○月に売れる」</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>売れ筋分析</h4>
+                    <ul>
+                        <li>販売数で人気商品を特定</li>
+                        <li>ブランド×販売数でトレンド把握</li>
+                        <li>仕入れ優先度の決定に</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>対応ブランド（v4.5.9〜）</h2>
+            <p>釣り具ブランドを含む多数のブランドを自動判定できます。</p>
+
+            <h3>釣り具ブランド（新規追加）</h3>
+            <div style="margin: 15px 0; display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">SHIMANO</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">DAIWA</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">ABU GARCIA</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">PENN</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">OKUMA</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">MEGABASS</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">JACKALL</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">G.LOOMIS</span>
+                <span class="ai-badge" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">他7種</span>
+            </div>
+
+            <h3>その他対応ブランド</h3>
+            <div style="margin: 15px 0; display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="ai-badge">ROLEX</span>
+                <span class="ai-badge">OMEGA</span>
+                <span class="ai-badge">SEIKO</span>
+                <span class="ai-badge">CASIO</span>
+                <span class="ai-badge">CHANEL</span>
+                <span class="ai-badge">HERMES</span>
+                <span class="ai-badge">LOUIS VUITTON</span>
+                <span class="ai-badge">GUCCI</span>
+                <span class="ai-badge">NIKE</span>
+                <span class="ai-badge">ADIDAS</span>
+                <span class="ai-badge">+ 多数</span>
+            </div>
+
+            <div class="highlight-box">
+                <strong>💡 ブランドマスター:</strong> 上記以外のブランドもブランドマスター機能でカスタム追加可能。AI学習で判定精度も向上します。
+            </div>
+        </div>
+
+        <div class="section">
             <h2>データ保存</h2>
             <div class="highlight-box">
                 <strong>安全なローカル保存:</strong>
