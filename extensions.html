@@ -639,9 +639,9 @@
                 <li class="news-item">
                     <span class="news-date">2026/09/25</span>
                     <div class="news-content">
-                        <strong>テラピーク検索君 を申請中</strong>
+                        <strong>けんさく君（旧: テラピーク検索君）を申請中</strong>
                         <span class="news-tag news-tag-pending">申請中</span>
-                        <p>eBay Seller Hub Research（テラピーク）の検索条件（キーワード・期間・カテゴリ大分類/中分類・商品の状態・出品形式・価格・Top Rated・出品者所在地・並び順）を入力して検索URLを組み立て、新しいタブで開くChrome拡張機能です。検索条件を保存して一覧からワンクリックで開けます。期間の日付は開くたびにその時刻から自動計算します。出品者所在地は sellerCountry=SellerLocation:::JP 形式で指定するため、画面操作でJapan絞り込みが外れる問題を避けられます。eBayのページには一切アクセスしません。ストアの審査通過後、下の一覧に「Chromeに追加」ボタンを付けます。</p>
+                        <p>名称を変更し、メルカリ検索とセラー保存を追加した v1.1.0 として申請し直しました。テラピーク（eBay Seller Hub Research）とメルカリの検索条件（キーワード・期間・カテゴリ大分類/中分類・商品の状態・出品形式・価格・出品者所在地・並び順など）を入力して検索URLを組み立て、新しいタブで開くChrome拡張機能です。検索条件を保存して一覧からワンクリックで開けます。メルカリ画面で選んだ検索結果のURLを貼り付けて保存することもできます。参考にするeBay／メルカリのセラーURLを表示名・メモ付きで保存して開けます。ブラウザのサイドパネルに表示されるため、ページを移動しても閉じません。期間の日付は開くたびにその時刻から自動計算します。出品者所在地は sellerCountry=SellerLocation:::JP 形式で指定するため、画面操作でJapan絞り込みが外れる問題を避けられます。使用する権限は storage と sidePanel のみで、eBay・メルカリのページには一切アクセスしません。ストアの審査通過後、下の一覧に「Chromeに追加」ボタンを付けます。</p>
                     </div>
                 </li>
                 <li class="news-item">
@@ -1357,13 +1357,13 @@
                 </div>
             </div>
 
-            <!-- 15. テラピーク検索君 -->
+            <!-- 15. けんさく君 -->
             <div class="accordion-item" data-vimeo="">
                 <div class="accordion-header">
-                    <img src="images/icons/terapeak-kensaku-kun.png" alt="テラピーク検索君" class="ext-icon">
+                    <img src="images/icons/kensaku-kun.png" alt="けんさく君" class="ext-icon">
                     <div class="accordion-header-content">
-                        <h3>テラピーク検索君 <span class="status-badge status-beta">審査中</span></h3>
-                        <p>テラピークの検索条件を保存してワンクリックで開く</p>
+                        <h3>けんさく君 <span class="status-badge status-beta">審査中</span></h3>
+                        <p>テラピーク・メルカリの検索条件やセラーを保存してワンクリックで開く</p>
                     </div>
                     <div class="accordion-quick-btns">
                     </div>
@@ -1373,15 +1373,18 @@
                     <div class="accordion-body-inner">
                         <div>
                             <p class="ext-description">
-                                eBay Seller Hub Research（テラピーク）の検索条件を入力して検索URLを組み立て、新しいタブで開くツールです。検索条件を保存しておけば、一覧からワンクリックで同じ条件を開き直せます。
+                                テラピーク（eBay Seller Hub Research）とメルカリの検索条件を入力して検索URLを組み立て、新しいタブで開くツールです。検索条件を保存しておけば、一覧からワンクリックで同じ条件を開き直せます。ブラウザのサイドパネルに表示されるので、ページを移動しても閉じません。
                             </p>
                             <ul class="ext-features">
-                                <li>キーワード・期間・カテゴリ（大分類/中分類）・商品の状態・出品形式・価格・Top Rated・出品者所在地・並び順を指定して検索URLを作成</li>
+                                <li>キーワード・期間・カテゴリ（大分類/中分類）・商品の状態・出品形式・価格・出品者所在地・並び順を指定して検索URLを作成（テラピーク／メルカリ両対応）</li>
                                 <li>期間の日付は開くたびにその時刻から自動で計算</li>
                                 <li>出品者所在地は sellerCountry=SellerLocation:::JP 形式で指定するため、画面操作でJapan絞り込みが外れる問題を回避（関連記事: <a href="https://naokijodan.github.io/ebay-research-japan-filter-guide/" target="_blank">テラピークJapan絞り込み対処ガイド</a>）</li>
                                 <li>検索条件を保存して一覧からワンクリックで開ける</li>
-                                <li>eBayのページには一切アクセスしません</li>
-                                <li>使用する権限は storage のみ</li>
+                                <li>メルカリ画面で選んだ検索結果のURLを貼り付けて保存できる</li>
+                                <li>参考にするeBay／メルカリのセラーURLを表示名・メモ付きで保存して開ける</li>
+                                <li>ブラウザのサイドパネルに表示され、ページ移動しても閉じない</li>
+                                <li>eBay・メルカリのページには一切アクセスしません</li>
+                                <li>使用する権限は storage と sidePanel のみ</li>
                             </ul>
                             <div class="btn-group">
                                 <span class="btn btn-secondary" style="pointer-events:none;opacity:.6">審査通過後に「Chromeに追加」を掲載します</span>
