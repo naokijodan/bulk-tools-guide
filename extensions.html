@@ -637,6 +637,22 @@
             </div>
             <ul class="news-list">
                 <li class="news-item">
+                    <span class="news-date">2026/09/28</span>
+                    <div class="news-content">
+                        <strong>けんさく君 v1.2.0 を公開</strong>
+                        <span class="news-tag news-tag-update">UPDATE</span>
+                        <p>eBay（ebay.com）やメルカリ（mercari.com）のページ上で右クリックして「けんさく君に保存」を選ぶと、サイドパネルが開き、そのページのURLが入力欄に入るようになりました。テラピークの検索結果・メルカリの検索結果・セラーのページを自動で見分けて、該当する入力欄に入れます。その場では保存されないので、表示名やメモを書き足してから保存ボタンを押してください。右クリックする場所は、けんさく君のパネルの中ではなくページの上です。ページの内容は読み取らず、受け取るのは右クリックした時のページのURLだけです。追加した権限（右クリックメニュー）は許可の確認が出ないものです。Chromeが自動更新します。</p>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <span class="news-date">2026/09/28</span>
+                    <div class="news-content">
+                        <strong>eBayカテゴリー発見君 v1.3.0 を公開</strong>
+                        <span class="news-tag news-tag-update">UPDATE</span>
+                        <p>eBay Motors（自動車・オートバイ部品）のカテゴリを追加しました。収録は18,076カテゴリ・35の大分類になり、日本語訳つきの主要カテゴリは6,822件です。キーワード検索・ツリー閲覧・絞り込みのいずれでも eBay Motors を選べます。Chromeが自動更新します。</p>
+                    </div>
+                </li>
+                <li class="news-item">
                     <span class="news-date">2026/09/25</span>
                     <div class="news-content">
                         <strong>けんさく君（旧: テラピーク検索君）を公開</strong>
@@ -1159,8 +1175,9 @@
                             </p>
                             <ul class="ext-features">
                                 <li>日本語キーワード検索（「トレカ」「腕時計」など、組み合わせ検索も対応）</li>
-                                <li>主要カテゴリ（厳選4,931件）に日本語訳を表示</li>
-                                <li>カテゴリツリー閲覧（34の大分類から辿る）</li>
+                                <li>主要カテゴリ（厳選6,822件）に日本語訳を表示</li>
+                                <li>カテゴリツリー閲覧（35の大分類から辿る）</li>
+                                <li>eBay Motors（自動車・オートバイ部品）のカテゴリにも対応（検索・ツリー・絞り込みで選べる）</li>
                                 <li>カテゴリIDのワンタッチコピー・検証</li>
                                 <li>オフライン動作（インターネット接続不要）</li>
                             </ul>
@@ -1383,9 +1400,10 @@
                                 <li>検索条件を保存して一覧からワンクリックで開ける</li>
                                 <li>メルカリ画面で選んだ検索結果のURLを貼り付けて保存できる</li>
                                 <li>参考にするeBay／メルカリのセラーURLを表示名・メモ付きで保存して開ける</li>
+                                <li>eBay（ebay.com）／メルカリ（mercari.com）のページ上で右クリック →「けんさく君に保存」で、そのページのURLを入力欄に入れられる（その場では保存されず、表示名・メモを書き足してから保存）</li>
                                 <li>ブラウザのサイドパネルに表示され、ページ移動しても閉じない</li>
-                                <li>eBay・メルカリのページには一切アクセスしません</li>
-                                <li>使用する権限は storage と sidePanel のみ</li>
+                                <li>ページの内容にはアクセスしません（受け取るのは右クリックした時のページのURLだけ）</li>
+                                <li>使用する権限は storage・sidePanel・contextMenus（右クリックメニュー）の3つ</li>
                             </ul>
                             <div class="btn-group">
                                 <a href="https://chromewebstore.google.com/detail/lglbjdkepaokbfgeapogenjmadlmkbnk" target="_blank" class="btn btn-primary">Chromeに追加</a>
